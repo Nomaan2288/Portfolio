@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Under Maintenance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f6f8ff, #e0eafc, #f8f9fa);
+
+      color: #2b2b2b;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .emoji {
+      font-size: 90px;
+      animation: pulse 2s infinite ease-in-out;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .code {
+      color: #ff5e5e;
+      font-weight: 700;
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+    }
+
+    p {
+      max-width: 900px;
+      font-size: 1.1rem;
+      color: #4b4b4b;
+      line-height: 1.6;
+      margin: 0 20px 20px;
+    }
+
+    .footer {
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+
+    .footer a {
+      color: #4e7eff;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: #2c40b9;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .code {
+        font-size: 1.7rem;
+      }
+
+      p {
+        font-size: 1rem;
+        padding: 0 10px;
+      }
+
+      .emoji {
+        font-size: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="code">Error Code: 503 — Service Temporarily Unavailable</div><br>
+  <div class="emoji">🛠️</div>
+  <h1>We're Currently Under Maintenance</h1>
+  <p>We're performing a quick tune-up to improve your experience. Everything will be back online shortly. Thank you for your patience!</p>
+
+  <div class="footer">
+    <a href="mailto:nomanshaikh0652@gmail.com">Email</a> |
+    <a href="https://github.com/Nomaan2288" target="_blank">GitHub</a> |
+    <a href="https://www.linkedin.com/in/shaikh-noman-m2288" target="_blank">LinkedIn</a>
+  </div>
+
+</body>
+</html>
