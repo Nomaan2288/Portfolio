@@ -92,49 +92,84 @@
     }
 
     /* Projects Section */
-    #projects {
-      background: linear-gradient(135deg, #f6f8ff, #e0eafc, #f8f9fa);
-      padding: 80px 20px;
-      text-align: center;
-    }
-    .project-card {
-      background: var(--card-bg);
-      border-radius: 14px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-      padding: 25px;
-      transition: all 0.3s ease;
-    }
-    .project-card:hover {
-      transform: translateY(-5px);
-      background: var(--hover-bg);
-    }
-    .project-card h4 {
-      color: var(--primary);
-      font-weight: 600;
-    }
-    .project-card .btn {
-      font-weight: 600;
-      border-radius: 10px;
-      padding: 8px 14px;
-      transition: all 0.3s ease;
-    }
-    .project-card .btn-outline-primary:hover {
-      background: linear-gradient(135deg, #4e7eff, #324fd6);
-      color: white;
-    }
-    .project-card .btn-primary {
-      background: linear-gradient(135deg, #4e7eff, #324fd6);
-      border: none;
-    }
-    .project-card .btn-primary:hover {
-      background: linear-gradient(135deg, #324fd6, #4e7eff);
-      transform: translateY(-2px);
-    }
-    @media (max-width: 767px) {
-      .desktop-only {
-        display: none !important;
-      }
-    }
+    /* Projects Section */
+#projects {
+  background: linear-gradient(135deg, #f6f8ff, #e0eafc, #f8f9fa);
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.project-card {
+  background: var(--card-bg);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  padding: 25px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures buttons stay at the bottom */
+  height: 100%;
+  min-height: 300px; /* All cards uniform height */
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  background: var(--hover-bg);
+}
+
+.project-card h4 {
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.project-card p {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+/* Button container aligned at the bottom center */
+.project-card .d-flex {
+  margin-top: auto; /* pushes buttons to bottom */
+  justify-content: center;
+}
+
+.project-card .btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 8px 14px;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.project-card .btn-outline-primary:hover {
+  background: linear-gradient(135deg, #4e7eff, #324fd6);
+  color: white;
+}
+
+.project-card .btn-primary {
+  background: linear-gradient(135deg, #4e7eff, #324fd6);
+  border: none;
+}
+
+.project-card .btn-primary:hover {
+  background: linear-gradient(135deg, #324fd6, #4e7eff);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 767px) {
+  .desktop-only {
+    display: none !important;
+  }
+  .project-card {
+    min-height: 250px; /* slightly smaller on mobile */
+  }
+}
+
 
     /* About & Education */
     .card-style {
@@ -283,7 +318,6 @@
             <p>An event/movie booking platform with login system, event listing, seat booking, and payment simulation.</p>
             <div class="d-flex flex-wrap gap-2">
               <a href="screenshots/bookmyevent.html" class="btn btn-sm btn-outline-primary">👀 How it Looks</a>
-              <a href="https://bookmyevent-demo.vercel.app" target="_blank" class="btn btn-sm btn-primary desktop-only">🌐 Visit Website</a>
             </div>
           </div>
         </div>
@@ -295,7 +329,6 @@
             <p>A hoarding advertisement booking system with advertiser login and admin portal for inventory management.</p>
             <div class="d-flex flex-wrap gap-2">
               <a href="Screenshots/spotadz.html" class="btn btn-sm btn-outline-primary">👀 How it Looks</a>
-              <a href="https://spotadz-demo.vercel.app" target="_blank" class="btn btn-sm btn-primary desktop-only">🌐 Visit Website</a>
             </div>
           </div>
         </div>
@@ -306,7 +339,7 @@
             <p><strong>Tech Stack:</strong> HTML, CSS, JavaScript</p>
             <p>A coding education portal offering interactive tutorials and project-based learning.</p>
             <div class="d-flex flex-wrap gap-2">
-              <a href="https://codingcraft-demo.vercel.app" target="_blank" class="btn btn-sm btn-outline-primary">🌐 Visit Website</a>
+              <a href="https://nomaan2288.github.io/Coding-Craft/" target="_blank" class="btn btn-sm btn-outline-primary">🌐 Visit Website</a>
             </div>
           </div>
         </div>
