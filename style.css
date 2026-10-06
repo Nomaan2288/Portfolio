@@ -319,7 +319,8 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   min-height: calc(100vh - 65px);
   display: flex;
   align-items: center;
-  padding: 95px 24px 35px;
+  justify-content: center;
+  padding: 50px 24px 25px;
   position: relative;
   z-index: 2;
   overflow: hidden;
@@ -334,9 +335,9 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 /* --- Hero 2-Column Grid & Profile Avatar Showcase --- */
 .hero-grid {
   display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  align-items: flex-start;
-  gap: 48px;
+  grid-template-columns: 1.25fr 0.95fr;
+  align-items: center;
+  gap: 40px;
 }
 
 .hero-avatar-column {
@@ -344,13 +345,12 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   justify-content: center;
   align-items: center;
   position: relative;
-  align-self: flex-start;
-  margin-top: 6px;
+  align-self: center;
 }
 
 .hero-avatar-card {
   position: relative;
-  width: 290px;
+  width: 280px;
   max-width: 100%;
   display: flex;
   flex-direction: column;
@@ -375,13 +375,13 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 
 .hero-avatar-frame {
   position: relative;
-  width: 275px;
-  height: 325px;
-  border-radius: 28px;
+  width: 265px;
+  height: 315px;
+  border-radius: 26px;
   overflow: hidden;
   background: var(--bg-card);
   border: 2px solid var(--border-accent);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08);
   z-index: 1;
   transition: transform 0.45s var(--ease-spring), box-shadow 0.45s var(--ease-spring), border-color 0.45s ease;
 }
@@ -495,12 +495,12 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 }
 
 .hero-title {
-  font-size: clamp(2.4rem, 5.2vw, 4.4rem);
+  font-size: clamp(2rem, 3.4vw, 3.2rem);
   font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 1.1;
-  margin-bottom: 16px;
-  max-width: 950px;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 14px;
+  max-width: 820px;
 }
 
 .hero-title .text-gradient {
@@ -513,11 +513,11 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 .hero-subtitle-box {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  gap: 10px;
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .hero-typed-text {
@@ -526,11 +526,11 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 }
 
 .hero-bio {
-  font-size: clamp(0.98rem, 1.25vw, 1.12rem);
+  font-size: clamp(0.92rem, 1.1vw, 1.05rem);
   color: var(--text-secondary);
-  max-width: 720px;
-  line-height: 1.68;
-  margin-bottom: 26px;
+  max-width: 660px;
+  line-height: 1.6;
+  margin-bottom: 20px;
 }
 
 .hero-bio strong {
@@ -542,8 +542,8 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 14px;
-  margin-bottom: 30px;
+  gap: 12px;
+  margin-bottom: 22px;
 }
 
 .btn-primary-magnetic {
@@ -618,9 +618,9 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 /* Quick Telemetry Bar in Hero */
 .hero-telemetry {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  padding-top: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  padding-top: 16px;
   border-top: 1px solid var(--border-subtle);
   max-width: 860px;
 }
@@ -2046,6 +2046,10 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
    TABLET RESPONSIVENESS (<= 992px)
    ========================================================================== */
 @media (max-width: 992px) {
+  .nav-brand-tag {
+    display: none !important;
+  }
+
   .nav-resume-btn {
     display: none;
   }
@@ -2226,7 +2230,7 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   }
 
   .nav-brand-tag {
-    display: none;
+    display: none !important;
   }
 
   .nav-actions {
@@ -2471,17 +2475,35 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 
   .preview-badge-btn {
     pointer-events: auto;
-    background: rgba(11, 15, 25, 0.88);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    font-size: 0.75rem;
-    padding: 6px 12px;
+    background: #ffffff !important;
+    color: #0b0f19 !important;
+    border: 1px solid rgba(255, 255, 255, 0.95) !important;
+    font-size: 0.78rem;
+    font-weight: 700 !important;
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
 
-  [data-theme="light"] .preview-badge-btn {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: rgba(0, 0, 0, 0.12);
-    color: var(--text-primary);
+  .preview-badge-btn i {
+    color: #0b0f19 !important;
+  }
+
+  [data-theme="dark"] .preview-badge-btn,
+  body[data-theme="dark"] .preview-badge-btn {
+    background: #ffffff !important;
+    color: #0b0f19 !important;
+    border-color: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  [data-theme="light"] .preview-badge-btn,
+  body[data-theme="light"] .preview-badge-btn {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: #0b0f19 !important;
   }
 
   .project-body {
@@ -2737,6 +2759,10 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
    EXTRA COMPACT MOBILE DEVICES (<= 480px)
    ========================================================================== */
 @media (max-width: 480px) {
+  .nav-brand-tag {
+    display: none !important;
+  }
+
   .nav-container {
     padding: 0 8px;
   }
