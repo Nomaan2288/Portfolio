@@ -179,6 +179,13 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   font-weight: 700;
   font-size: 1.15rem;
   letter-spacing: -0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav-brand span,
+.nav-brand-name {
+  white-space: nowrap !important;
 }
 
 .nav-avatar-img {
@@ -309,10 +316,10 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 
 /* --- Hero Section --- */
 .hero-section {
-  min-height: 100vh;
+  min-height: calc(100vh - 65px);
   display: flex;
   align-items: center;
-  padding: 140px 24px 80px;
+  padding: 95px 24px 35px;
   position: relative;
   z-index: 2;
   overflow: hidden;
@@ -328,8 +335,8 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 .hero-grid {
   display: grid;
   grid-template-columns: 1.35fr 1fr;
-  align-items: center;
-  gap: 56px;
+  align-items: flex-start;
+  gap: 48px;
 }
 
 .hero-avatar-column {
@@ -337,11 +344,13 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   justify-content: center;
   align-items: center;
   position: relative;
+  align-self: flex-start;
+  margin-top: 6px;
 }
 
 .hero-avatar-card {
   position: relative;
-  width: 320px;
+  width: 290px;
   max-width: 100%;
   display: flex;
   flex-direction: column;
@@ -366,9 +375,9 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 
 .hero-avatar-frame {
   position: relative;
-  width: 300px;
-  height: 360px;
-  border-radius: 36px;
+  width: 275px;
+  height: 325px;
+  border-radius: 28px;
   overflow: hidden;
   background: var(--bg-card);
   border: 2px solid var(--border-accent);
@@ -398,13 +407,13 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 
 .hero-avatar-status {
   position: absolute;
-  bottom: -16px;
+  bottom: -14px;
   background: var(--bg-card);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);
-  padding: 8px 18px;
+  padding: 6px 16px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -486,11 +495,11 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 }
 
 .hero-title {
-  font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+  font-size: clamp(2.4rem, 5.2vw, 4.4rem);
   font-weight: 800;
   letter-spacing: -0.035em;
-  line-height: 1.08;
-  margin-bottom: 20px;
+  line-height: 1.1;
+  margin-bottom: 16px;
   max-width: 950px;
 }
 
@@ -505,10 +514,10 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 
 .hero-typed-text {
@@ -517,11 +526,11 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 }
 
 .hero-bio {
-  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  font-size: clamp(0.98rem, 1.25vw, 1.12rem);
   color: var(--text-secondary);
   max-width: 720px;
-  line-height: 1.75;
-  margin-bottom: 38px;
+  line-height: 1.68;
+  margin-bottom: 26px;
 }
 
 .hero-bio strong {
@@ -533,8 +542,8 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 48px;
+  gap: 14px;
+  margin-bottom: 30px;
 }
 
 .btn-primary-magnetic {
@@ -610,8 +619,8 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
 .hero-telemetry {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  padding-top: 30px;
+  gap: 16px;
+  padding-top: 22px;
   border-top: 1px solid var(--border-subtle);
   max-width: 860px;
 }
@@ -2190,11 +2199,30 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   /* --- Mobile Header & Slide-down Navigation Sheet --- */
   .navbar-custom {
     height: 64px;
-    padding: 0 16px;
+    padding: 0 12px;
+  }
+
+  .nav-container {
+    padding: 0 10px;
+    width: 100%;
   }
 
   .nav-brand {
-    font-size: 1.05rem;
+    font-size: 0.98rem;
+    gap: 8px;
+    white-space: nowrap !important;
+    flex-shrink: 0;
+  }
+
+  .nav-brand span {
+    white-space: nowrap !important;
+    display: inline-block;
+  }
+
+  .nav-avatar-img {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
   }
 
   .nav-brand-tag {
@@ -2202,23 +2230,26 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   }
 
   .nav-actions {
-    gap: 8px;
+    gap: 6px;
+    flex-shrink: 0;
   }
 
   .control-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 0.88rem;
+    width: 34px;
+    height: 34px;
+    font-size: 0.84rem;
+    flex-shrink: 0;
   }
 
   .nav-mobile-toggle {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: var(--radius-md);
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     color: var(--text-primary);
-    font-size: 0.95rem;
+    font-size: 0.92rem;
+    flex-shrink: 0;
   }
 
   .nav-links {
@@ -2706,6 +2737,45 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
    EXTRA COMPACT MOBILE DEVICES (<= 480px)
    ========================================================================== */
 @media (max-width: 480px) {
+  .nav-container {
+    padding: 0 8px;
+  }
+
+  .nav-brand {
+    font-size: 0.92rem;
+    gap: 6px;
+    white-space: nowrap !important;
+    flex-shrink: 0;
+  }
+
+  .nav-brand span {
+    white-space: nowrap !important;
+  }
+
+  .nav-avatar-img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .nav-actions {
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .control-btn {
+    width: 31px;
+    height: 31px;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+  }
+
+  .nav-mobile-toggle {
+    width: 31px;
+    height: 31px;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
   .hero-avatar-frame {
     width: 180px;
     height: 220px;
