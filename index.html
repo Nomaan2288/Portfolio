@@ -50,6 +50,7 @@
   <header class="navbar-custom">
     <div class="nav-container">
       <a href="#" class="nav-brand" aria-label="Shaikh Noman Home">
+        <img src="Assets/images/shaikh-noman.png" alt="Shaikh Noman" class="nav-avatar-img">
         <span>Shaikh Noman</span>
         <span class="nav-brand-tag">Software Engineer</span>
       </a>
@@ -111,37 +112,58 @@
   <section class="hero-section" id="hero">
     <div class="hero-container">
 
-      <div class="hero-eyebrow reveal-on-scroll">Software Developer & Backend Systems Architect</div>
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-eyebrow reveal-on-scroll">Software Developer & Backend Systems Architect</div>
 
-      <h1 class="hero-title reveal-on-scroll">
-        Hi, I'm <span class="text-gradient">Shaikh Noman</span>. Architecting resilient Java backends & intelligent web systems.
-      </h1>
+          <h1 class="hero-title reveal-on-scroll">
+            Hi, I'm <span class="text-gradient">Shaikh Noman</span>. Architecting resilient Java backends & intelligent web systems.
+          </h1>
 
-      <div class="hero-subtitle-box reveal-on-scroll">
-        <span>Specializing in:</span>
-        <span id="typed-hero" class="hero-typed-text">Java Backend Specialist</span>
-      </div>
+          <div class="hero-subtitle-box reveal-on-scroll">
+            <span>Specializing in:</span>
+            <span id="typed-hero" class="hero-typed-text">Java Backend Specialist</span>
+          </div>
 
-      <p class="hero-bio reveal-on-scroll">
-        Software Developer Intern at <strong>LaunchPad Technology</strong> (August 2026 – Present) and Computer Science Engineering undergraduate (9.32 CGPA). Hands-on engineer with proven expertise in <strong>Java, Spring Boot, MySQL concurrency, REST APIs, and Generative AI workflows</strong>. Passionate about building high-availability backends, clean relational schemas, and seamless digital interactions.
-      </p>
+          <p class="hero-bio reveal-on-scroll">
+            Software Developer Intern at <strong>LaunchPad Technology</strong> (August 2026 – Present) and Computer Science Engineering undergraduate (9.32 CGPA). Hands-on engineer with proven expertise in <strong>Java, Spring Boot, MySQL concurrency, REST APIs, and Generative AI workflows</strong>. Passionate about building high-availability backends, clean relational schemas, and seamless digital interactions.
+          </p>
 
-      <!-- Primary CTA Actions -->
-      <div class="hero-cta-group reveal-on-scroll">
-        <a href="#projects" class="btn-primary-magnetic">
-          <span>Explore Work</span>
-          <i class="fas fa-arrow-down"></i>
-        </a>
+          <!-- Primary CTA Actions -->
+          <div class="hero-cta-group reveal-on-scroll">
+            <a href="#projects" class="btn-primary-magnetic">
+              <span>Explore Work</span>
+              <i class="fas fa-arrow-down"></i>
+            </a>
 
-        <a href="Resume/Noman Resume.pdf" target="_blank" class="btn-secondary-magnetic">
-          <i class="fas fa-file-arrow-down"></i>
-          <span>Verified Resume</span>
-        </a>
+            <a href="Resume/Noman Resume.pdf" target="_blank" class="btn-secondary-magnetic">
+              <i class="fas fa-file-arrow-down"></i>
+              <span>Verified Resume</span>
+            </a>
 
-        <button class="btn-terminal-trigger" onclick="PortfolioApp.openTerminal()" title="Launch interactive terminal drawer">
-          <i class="fas fa-code"></i>
-          <span>$ open_terminal [K]</span>
-        </button>
+            <button class="btn-terminal-trigger" onclick="PortfolioApp.openTerminal()" title="Launch interactive terminal drawer">
+              <i class="fas fa-code"></i>
+              <span>$ open_terminal [K]</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Floating Profile Avatar Showcase Card -->
+        <div class="hero-avatar-column reveal-on-scroll">
+          <div class="hero-avatar-card">
+            <div class="hero-avatar-glow" aria-hidden="true"></div>
+            <div class="hero-avatar-frame">
+              <img src="Assets/images/shaikh-noman.png" alt="Shaikh Noman — Software Developer" class="hero-avatar-img" />
+            </div>
+            <div class="hero-avatar-status">
+              <span class="status-pulse"></span>
+              <div class="avatar-status-text">
+                <span class="status-title">LaunchPad Technology</span>
+                <span class="status-sub">Software Developer Intern</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Quick Engineering Telemetry -->
@@ -828,6 +850,14 @@
 
         <!-- Left: Quick Direct Info -->
         <div class="contact-info-panel reveal-on-scroll">
+          <div class="contact-profile-card">
+            <img src="Assets/images/shaikh-noman.png" alt="Shaikh Noman" class="contact-profile-avatar" />
+            <div class="contact-profile-text">
+              <h4 class="contact-profile-name">Shaikh Noman</h4>
+              <p class="contact-profile-role">Software Developer Intern @ LaunchPad Technology</p>
+            </div>
+          </div>
+
           <div class="contact-quick-item">
             <div class="quick-icon-box"><i class="fas fa-envelope"></i></div>
             <div class="quick-details">
