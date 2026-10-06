@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#08090d" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090a0f" />
+    </linearGradient>
+
+    <!-- Glowing Accent Gradient -->
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="50%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+
+    <!-- Emerald Glow for LaunchPad Active Role -->
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- Window Border Subtle Gradient -->
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255, 255, 255, 0.2)" />
+      <stop offset="100%" stop-color="rgba(255, 255, 255, 0.05)" />
+    </linearGradient>
+
+    <!-- Radial Glow Behind Text -->
+    <radialGradient id="ambientGlow" cx="50%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="rgba(99, 102, 241, 0.15)" />
+      <stop offset="100%" stop-color="rgba(0, 0, 0, 0)" />
+    </radialGradient>
+
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <style>
+    .font-sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace; }
+  </style>
+
+  <!-- Ambient Glow -->
+  <rect width="1200" height="560" fill="url(#bgGrad)" rx="24" />
+  <circle cx="600" cy="220" r="450" fill="url(#ambientGlow)" />
+
+  <!-- Outer Window Border Frame -->
+  <rect x="2" y="2" width="1196" height="556" rx="22" fill="none" stroke="url(#borderGrad)" stroke-width="2" />
+
+  <!-- Browser Chrome Top Bar -->
+  <path d="M 0 24 C 0 10.7 10.7 0 24 0 L 1176 0 C 1189.3 0 1200 10.7 1200 24 L 1200 56 L 0 56 Z" fill="#0b0f19" />
+  <line x1="0" y1="56" x2="1200" y2="56" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+
+  <!-- Window Control Buttons (Red, Yellow, Green) -->
+  <circle cx="36" cy="28" r="6" fill="#ef4444" />
+  <circle cx="56" cy="28" r="6" fill="#eab308" />
+  <circle cx="76" cy="28" r="6" fill="#22c55e" />
+
+  <!-- Browser Address URL Pill -->
+  <rect x="360" y="14" width="480" height="28" rx="14" fill="#1e293b" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1" />
+  <!-- Lock Icon -->
+  <path d="M 505 24 L 505 22 C 505 19.8 506.8 18 509 18 C 511.2 18 513 19.8 513 22 L 513 24 M 503 24 L 515 24 L 515 31 L 503 31 Z" fill="none" stroke="#10b981" stroke-width="1.5" />
+  <text x="524" y="32" class="font-mono" font-size="12" fill="#94a3b8">https://nomaan2288.github.io/Portfolio/</text>
+
+  <!-- Live Status Chip in Header -->
+  <rect x="1010" y="15" width="155" height="26" rx="13" fill="rgba(16, 185, 129, 0.12)" stroke="rgba(16, 185, 129, 0.3)" stroke-width="1" />
+  <circle cx="1026" cy="28" r="4" fill="#10b981" />
+  <text x="1038" y="32" class="font-sans" font-size="11" font-weight="600" fill="#10b981">LIVE PORTFOLIO</text>
+
+  <!-- ================= PORTFOLIO INNER CONTENT ================= -->
+
+  <!-- Mini Navbar in Page -->
+  <g transform="translate(60, 92)">
+    <!-- Brand -->
+    <text x="0" y="0" class="font-sans" font-size="18" font-weight="800" fill="#ffffff" letter-spacing="-0.5">Shaikh Noman</text>
+    <rect x="135" y="-14" width="130" height="20" rx="4" fill="#1e293b" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+    <text x="144" y="0" class="font-sans" font-size="10" font-weight="600" fill="#38bdf8">SOFTWARE DEVELOPER</text>
+
+    <!-- Nav Links Mockup -->
+    <text x="680" y="0" class="font-sans" font-size="13" font-weight="500" fill="#94a3b8">Projects</text>
+    <text x="755" y="0" class="font-sans" font-size="13" font-weight="500" fill="#94a3b8">Skills</text>
+    <text x="815" y="0" class="font-sans" font-size="13" font-weight="500" fill="#94a3b8">Experience</text>
+    <text x="910" y="0" class="font-sans" font-size="13" font-weight="500" fill="#94a3b8">Credentials</text>
+    <rect x="1005" y="-16" width="75" height="26" rx="13" fill="url(#accentGrad)" />
+    <text x="1025" y="1" class="font-sans" font-size="11" font-weight="700" fill="#ffffff">Contact</text>
+  </g>
+
+  <!-- Hero Eyebrow Pill -->
+  <g transform="translate(60, 155)">
+    <rect x="0" y="0" width="365" height="26" rx="13" fill="rgba(99, 102, 241, 0.12)" stroke="rgba(99, 102, 241, 0.3)" stroke-width="1" />
+    <circle cx="16" cy="13" r="3.5" fill="#6366f1" />
+    <text x="28" y="17" class="font-mono" font-size="10" font-weight="600" fill="#818cf8" letter-spacing="1">SOFTWARE DEVELOPER &amp; BACKEND ARCHITECT</text>
+  </g>
+
+  <!-- Hero Main Title -->
+  <g transform="translate(60, 225)">
+    <text x="0" y="0" class="font-sans" font-size="38" font-weight="800" fill="#ffffff" letter-spacing="-1.2">
+      Hi, I'm <tspan fill="url(#accentGrad)">Shaikh Noman</tspan>.
+    </text>
+    <text x="0" y="44" class="font-sans" font-size="30" font-weight="700" fill="#cbd5e1" letter-spacing="-0.8">
+      Architecting resilient Java backends &amp; intelligent systems.
+    </text>
+  </g>
+
+  <!-- Hero Active Role Highlight -->
+  <g transform="translate(60, 310)">
+    <rect x="0" y="0" width="560" height="34" rx="8" fill="rgba(16, 185, 129, 0.08)" stroke="rgba(16, 185, 129, 0.25)" stroke-width="1" />
+    <circle cx="18" cy="17" r="4.5" fill="#10b981" />
+    <text x="32" y="22" class="font-sans" font-size="13" font-weight="600" fill="#e2e8f0">
+      Software Developer Intern @ <tspan fill="#10b981" font-weight="700">LaunchPad Technology</tspan> (Aug 2026 – Present)
+    </text>
+  </g>
+
+  <!-- Hero Bio -->
+  <text x="60" y="375" class="font-sans" font-size="14" fill="#94a3b8" line-height="24">
+    Computer Science Engineering undergraduate (9.32 CGPA). Specializing in Java, Spring Boot 3,
+  </text>
+  <text x="60" y="397" class="font-sans" font-size="14" fill="#94a3b8">
+    MySQL concurrency, RESTful microservices, and Generative AI workflows.
+  </text>
+
+  <!-- CTA Buttons -->
+  <g transform="translate(60, 440)">
+    <!-- Primary CTA -->
+    <rect x="0" y="0" width="165" height="42" rx="21" fill="url(#accentGrad)" />
+    <text x="32" y="26" class="font-sans" font-size="13" font-weight="700" fill="#ffffff">Explore Portfolio ➔</text>
+
+    <!-- Secondary CTA -->
+    <rect x="180" y="0" width="155" height="42" rx="21" fill="#1e293b" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1" />
+    <text x="210" y="26" class="font-sans" font-size="13" font-weight="600" fill="#e2e8f0">Verified Resume ↗</text>
+
+    <!-- Terminal Trigger CTA -->
+    <rect x="350" y="0" width="155" height="42" rx="21" fill="#0f172a" stroke="rgba(99, 102, 241, 0.3)" stroke-width="1" />
+    <text x="374" y="26" class="font-mono" font-size="12" font-weight="600" fill="#a5b4fc">$ open_terminal</text>
+  </g>
+
+  <!-- Telemetry 2x2 Grid (Right Side Cards) -->
+  <g transform="translate(740, 160)" filter="url(#cardShadow)">
+    <!-- Card 1: CGPA -->
+    <g transform="translate(0, 0)">
+      <rect width="185" height="130" rx="16" fill="#131b2e" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+      <text x="20" y="55" class="font-mono" font-size="34" font-weight="800" fill="#ffffff">9.32<tspan font-size="16" fill="#64748b">/10</tspan></text>
+      <text x="20" y="85" class="font-sans" font-size="12" font-weight="600" fill="#38bdf8">B.Tech Academic CGPA</text>
+      <text x="20" y="105" class="font-sans" font-size="11" fill="#64748b">Silver Oak University</text>
+    </g>
+
+    <!-- Card 2: LaunchPad Role -->
+    <g transform="translate(205, 0)">
+      <rect width="185" height="130" rx="16" fill="#131b2e" stroke="rgba(16, 185, 129, 0.2)" stroke-width="1" />
+      <text x="20" y="55" class="font-mono" font-size="34" font-weight="800" fill="#10b981">2026<tspan font-size="18" fill="#10b981">+</tspan></text>
+      <text x="20" y="85" class="font-sans" font-size="12" font-weight="600" fill="#10b981">LaunchPad Active</text>
+      <text x="20" y="105" class="font-sans" font-size="11" fill="#64748b">Software Developer Intern</text>
+    </g>
+
+    <!-- Card 3: Credentials -->
+    <g transform="translate(0, 150)">
+      <rect width="185" height="130" rx="16" fill="#131b2e" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+      <text x="20" y="55" class="font-mono" font-size="34" font-weight="800" fill="#ffffff">4<tspan font-size="18" fill="#64748b">x</tspan></text>
+      <text x="20" y="85" class="font-sans" font-size="12" font-weight="600" fill="#818cf8">Verified Credentials</text>
+      <text x="20" y="105" class="font-sans" font-size="11" fill="#64748b">Google &amp; ISRO Hackathon</text>
+    </g>
+
+    <!-- Card 4: ACID Concurrency -->
+    <g transform="translate(205, 150)">
+      <rect width="185" height="130" rx="16" fill="#131b2e" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+      <text x="20" y="55" class="font-mono" font-size="34" font-weight="800" fill="#ffffff">100<tspan font-size="18" fill="#64748b">%</tspan></text>
+      <text x="20" y="85" class="font-sans" font-size="12" font-weight="600" fill="#38bdf8">ACID Concurrency</text>
+      <text x="20" y="105" class="font-sans" font-size="11" fill="#64748b">MySQL &amp; Spring Boot</text>
+    </g>
+  </g>
+
+  <!-- Verified Badges Bottom Pill Strip -->
+  <g transform="translate(60, 508)">
+    <text x="0" y="16" class="font-sans" font-size="12" font-weight="700" fill="#64748b">OFFICIAL CREDENTIALS:</text>
+    <rect x="160" y="0" width="220" height="24" rx="12" fill="rgba(66, 133, 244, 0.12)" stroke="rgba(66, 133, 244, 0.3)" stroke-width="1" />
+    <text x="175" y="16" class="font-sans" font-size="11" font-weight="600" fill="#60a5fa">Google Build with AI (Verified)</text>
+
+    <rect x="390" y="0" width="230" height="24" rx="12" fill="rgba(249, 115, 22, 0.12)" stroke="rgba(249, 115, 22, 0.3)" stroke-width="1" />
+    <text x="405" y="16" class="font-sans" font-size="11" font-weight="600" fill="#fb923c">ISRO Antariksh Hackathon 2026</text>
+  </g>
+</svg>
