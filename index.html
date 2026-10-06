@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Shaikh Noman — Software Developer Intern at LaunchPad Technology & Backend Engineer. Specializing in Java, Spring Boot, MySQL, RESTful APIs, React.js, and Generative AI systems.">
   <meta name="keywords" content="Shaikh Noman, Software Developer, Java Backend, Spring Boot, LaunchPad Technology, ISRO Hackathon, Google AI Bootcamp, MySQL, React, Portfolio">
   <meta name="author" content="Shaikh Noman">
@@ -63,6 +63,14 @@
           <li><a href="#experience" class="nav-link-item">Experience</a></li>
           <li><a href="#certifications" class="nav-link-item">Credentials</a></li>
           <li><a href="#contact" class="nav-link-item">Contact</a></li>
+          <li class="mobile-drawer-extra">
+            <a href="Resume/Noman Resume.pdf" target="_blank" class="mobile-drawer-btn resume">
+              <i class="fas fa-file-pdf"></i> Verified Resume PDF
+            </a>
+            <button class="mobile-drawer-btn terminal" onclick="PortfolioApp.openTerminal(); document.querySelector('.nav-links').classList.remove('mobile-open');">
+              <i class="fas fa-terminal"></i> Terminal Shell [K]
+            </button>
+          </li>
         </ul>
       </nav>
 
@@ -100,7 +108,7 @@
   <!-- ==========================================================================
        HERO SECTION
        ========================================================================== -->
-  <section class="hero-section">
+  <section class="hero-section" id="hero">
     <div class="hero-container">
 
       <div class="hero-eyebrow reveal-on-scroll">Software Developer & Backend Systems Architect</div>
@@ -944,6 +952,32 @@
   </footer>
 
   <!-- ==========================================================================
+       BESPOKE MOBILE FLOATING NAVIGATION DOCK (APP-LIKE EXPERIENCE)
+       ========================================================================== -->
+  <nav class="mobile-bottom-dock" aria-label="Mobile Bottom Navigation">
+    <a href="#hero" class="dock-tab active" data-section="hero" aria-label="Home Section">
+      <i class="fas fa-house"></i>
+      <span>Home</span>
+    </a>
+    <a href="#projects" class="dock-tab" data-section="projects" aria-label="Projects Showcase">
+      <i class="fas fa-folder-open"></i>
+      <span>Work</span>
+    </a>
+    <a href="#skills" class="dock-tab" data-section="skills" aria-label="Technical Skills Matrix">
+      <i class="fas fa-layer-group"></i>
+      <span>Stack</span>
+    </a>
+    <a href="#experience" class="dock-tab" data-section="experience" aria-label="Experience & Milestones">
+      <i class="fas fa-briefcase"></i>
+      <span>Exp</span>
+    </a>
+    <a href="#contact" class="dock-tab" data-section="contact" aria-label="Direct Contact Channels">
+      <i class="fas fa-paper-plane"></i>
+      <span>Contact</span>
+    </a>
+  </nav>
+
+  <!-- ==========================================================================
        INTERACTIVE DEVELOPER TERMINAL DRAWER (CLI MODAL)
        ========================================================================== -->
   <div id="terminal-modal" class="terminal-modal-overlay" onclick="if(event.target===this) PortfolioApp.closeTerminal()">
@@ -1015,6 +1049,11 @@
       <div class="gallery-caption-bar">
         <div id="gallery-caption" class="gallery-caption-text">Screenshot Caption</div>
         <div id="gallery-counter" class="gallery-counter">1 / 10</div>
+      </div>
+
+      <div class="gallery-touch-hint">
+        <i class="fas fa-arrows-left-right"></i>
+        <span>Swipe left or right to switch screenshots</span>
       </div>
 
       <div id="gallery-thumbnails" class="gallery-thumbnail-strip">

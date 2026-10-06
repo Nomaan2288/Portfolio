@@ -590,15 +590,91 @@ Location: Gujarat, India (UTC +5:30)
         sound.playClick();
       });
 
-      navLinks.querySelectorAll('a').forEach((link) => {
+      navLinks.querySelectorAll('a, button').forEach((link) => {
         link.addEventListener('click', () => {
           navLinks.classList.remove('mobile-open');
         });
       });
     }
+
+    // Bespoke Mobile Bottom Dock Navigation & ScrollSpy
+    const dockTabs = document.querySelectorAll('.dock-tab');
+    if (dockTabs.length > 0) {
+      dockTabs.forEach((tab) => {
+        tab.addEventListener('click', (e) => {
+          const targetId = tab.getAttribute('href');
+          const targetElem = document.querySelector(targetId);
+          if (targetElem) {
+            e.preventDefault();
+            sound.playClick();
+            targetElem.scrollIntoView({ behavior: 'smooth' });
+            dockTabs.forEach((t) => t.classList.remove('active'));
+            tab.classList.add('active');
+          }
+        });
+      });
+
+      // Active Section ScrollSpy for Bottom Dock
+      const spySectionIds = ['hero', 'projects', 'skills', 'experience', 'contact'];
+      const spySections = spySectionIds.map((id) => document.getElementById(id)).filter(Boolean);
+
+      window.addEventListener('scroll', () => {
+        const scrollPosition = window.scrollY + window.innerHeight * 0.35;
+        let activeId = 'hero';
+        for (let i = 0; i < spySections.length; i++) {
+          const section = spySections[i];
+          if (section.offsetTop <= scrollPosition) {
+            activeId = section.id;
+          }
+        }
+        dockTabs.forEach((tab) => {
+          const href = tab.getAttribute('href');
+          if (href === `#${activeId}`) {
+            tab.classList.add('active');
+          } else {
+            tab.classList.remove('active');
+          }
+        });
+      }, { passive: true });
+    }
   }
 
-  // --- 11. Staggered IntersectionObserver Reveal ---
+  // --- 11. Touch Swipe Gesture Handler for Lightbox Gallery ---
+  function initGalleryTouchSwipe() {
+    const stage = document.querySelector('.gallery-stage');
+    if (!stage) return;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    stage.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    stage.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+
+      // Only trigger if horizontal swipe is significantly stronger than vertical scroll
+      if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+        if (deltaX < 0) {
+          // Swipe left -> Next Image
+          setGalleryIndex(currentGalleryIndex + 1);
+          sound.playClick();
+        } else {
+          // Swipe right -> Previous Image
+          setGalleryIndex(currentGalleryIndex - 1);
+          sound.playClick();
+        }
+      }
+    }, { passive: true });
+  }
+
+  // --- 12. Staggered IntersectionObserver Reveal ---
   function initScrollReveal() {
     const reveals = document.querySelectorAll('.reveal-on-scroll');
     const observer = new IntersectionObserver((entries, obs) => {
@@ -688,6 +764,7 @@ Location: Gujarat, India (UTC +5:30)
     initEmailForm();
     initTerminal();
     initScrollBehaviors();
+    initGalleryTouchSwipe();
     initScrollReveal();
     initKeyboardShortcuts();
 
