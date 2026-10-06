@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120">
+  <rect width="160" height="120" rx="16" fill="#ffffff"/>
+  <g transform="translate(20, 10)">
+    <!-- ISRO Satellite / Rocket Chevron Mark -->
+    <!-- Central Orange Arrow -->
+    <path fill="#f97316" d="M60 4 L48 50 L60 42 L72 50 Z" />
+    <polygon points="56,30 40,30 36,36 54,36" fill="#3b82f6"/>
+    <polygon points="64,30 80,30 84,36 66,36" fill="#3b82f6"/>
+    <polygon points="58,20 44,20 42,24 57,24" fill="#3b82f6"/>
+    <polygon points="62,20 76,20 78,24 63,24" fill="#3b82f6"/>
+
+    <!-- Hindi Text: इसरो -->
+    <text x="32" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="18" fill="#f97316" text-anchor="middle">इसरो</text>
+
+    <!-- English Text: isro -->
+    <text x="88" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="18" fill="#0284c7" text-anchor="middle">isro</text>
+
+    <!-- Subtitle: Indian Space Research Organisation -->
+    <text x="60" y="94" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="7.5" fill="#334155" text-anchor="middle" letter-spacing="0.5">INDIAN SPACE RESEARCH ORGANISATION</text>
+  </g>
+</svg>
+

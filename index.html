@@ -1,491 +1,1033 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Portfolio of Shaikh Noman - Backend Java Developer with skills in Spring Boot, JSP, MySQL, and more.">
-  <meta name="keywords" content="Java, Spring Boot, JSP, Backend Developer, Shaikh Noman, Portfolio">
+  <meta name="description" content="Shaikh Noman — Software Developer Intern at LaunchPad Technology & Backend Engineer. Specializing in Java, Spring Boot, MySQL, RESTful APIs, React.js, and Generative AI systems.">
+  <meta name="keywords" content="Shaikh Noman, Software Developer, Java Backend, Spring Boot, LaunchPad Technology, ISRO Hackathon, Google AI Bootcamp, MySQL, React, Portfolio">
   <meta name="author" content="Shaikh Noman">
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <title>Noman | Java Backend Developer</title>
+  <meta name="theme-color" content="#08090d">
+  <title>Shaikh Noman — Software Developer & Backend Engineer</title>
 
-  <!-- Bootstrap & Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- Vector Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="alternate icon" href="favicon.svg" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  
-  <!--  CSS  -->
+
+  <!-- Main Design & Motion Stylesheet -->
   <link rel="stylesheet" href="style.css">
-  
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-md fixed-top">
-    <div class="container">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
-<li class="nav-item"><a class="nav-link" href="#experience">Experience</a></li>
-<li class="nav-item"><a class="nav-link" href="#education">Education</a></li>
-<li class="nav-item"><a class="nav-link" href="#certifications">Certifications</a></li>
-<li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+  <!-- Laser Scroll Progress -->
+  <div class="scroll-progress-bar" aria-hidden="true"></div>
+
+  <!-- Ambient Engineering Grid -->
+  <div class="ambient-grid" aria-hidden="true"></div>
+
+  <!-- Toast Notification -->
+  <div id="toast-feedback" class="toast-feedback" role="alert" aria-live="polite">
+    <i class="fas fa-check-circle text-primary"></i>
+    <span class="toast-msg">Copied to clipboard!</span>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button class="btn-scroll-top" aria-label="Scroll to top of page" title="Scroll to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- ==========================================================================
+       HEADER & NAVIGATION
+       ========================================================================== -->
+  <header class="navbar-custom">
+    <div class="nav-container">
+      <a href="#" class="nav-brand" aria-label="Shaikh Noman Home">
+        <span>Shaikh Noman</span>
+        <span class="nav-brand-tag">Software Engineer</span>
+      </a>
+
+      <!-- Desktop & Mobile Navigation Links -->
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#architecture" class="nav-link-item">Architecture</a></li>
+          <li><a href="#projects" class="nav-link-item">Projects</a></li>
+          <li><a href="#skills" class="nav-link-item">Skills</a></li>
+          <li><a href="#experience" class="nav-link-item">Experience</a></li>
+          <li><a href="#certifications" class="nav-link-item">Credentials</a></li>
+          <li><a href="#contact" class="nav-link-item">Contact</a></li>
         </ul>
+      </nav>
+
+      <!-- Interface Controls -->
+      <div class="nav-actions">
+        <!-- Sound Haptics Toggle -->
+        <button id="sound-toggle-btn" class="control-btn" onclick="PortfolioApp.toggleSound()" aria-label="Toggle Interface Sounds" title="Enable Interface Sounds [M]">
+          <i class="fas fa-volume-mute"></i>
+        </button>
+
+        <!-- Terminal Console Trigger -->
+        <button class="control-btn" onclick="PortfolioApp.openTerminal()" aria-label="Open Developer Terminal" title="Developer Console [K]">
+          <i class="fas fa-terminal"></i>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button id="theme-toggle-btn" class="control-btn" onclick="PortfolioApp.toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme [T]">
+          <i class="fas fa-sun"></i>
+        </button>
+
+        <!-- Fast Resume Action -->
+        <a href="Resume/Noman Resume.pdf" target="_blank" class="nav-resume-btn">
+          <i class="fas fa-file-pdf"></i>
+          <span>Resume</span>
+        </a>
+
+        <!-- Mobile Menu Hamburger -->
+        <button class="nav-mobile-toggle" aria-label="Toggle Navigation Menu">
+          <i class="fas fa-bars"></i>
+        </button>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
-  <button id="scroll-top-btn" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
+  <!-- ==========================================================================
+       HERO SECTION
+       ========================================================================== -->
+  <section class="hero-section">
+    <div class="hero-container">
 
-  <!-- HERO -->
-  <section class="hero">
+      <div class="hero-eyebrow reveal-on-scroll">Software Developer & Backend Systems Architect</div>
 
-    <div class="hero-content">
-  
-        <h1>Noman Shaikh</h1>
-  
-        <h3 id="typed-text">
-            Java Developer | Full Stack Developer
-        </h3>
-  
-        <p>
-          Computer Science Engineering student with hands-on experience in Java,
-          Spring Boot, Python, MERN Stack, MySQL, and modern web technologies.
+      <h1 class="hero-title reveal-on-scroll">
+        Hi, I'm <span class="text-gradient">Shaikh Noman</span>. Architecting resilient Java backends & intelligent web systems.
+      </h1>
+
+      <div class="hero-subtitle-box reveal-on-scroll">
+        <span>Specializing in:</span>
+        <span id="typed-hero" class="hero-typed-text">Java Backend Specialist</span>
+      </div>
+
+      <p class="hero-bio reveal-on-scroll">
+        Software Developer Intern at <strong>LaunchPad Technology</strong> (August 2026 – Present) and Computer Science Engineering undergraduate (9.32 CGPA). Hands-on engineer with proven expertise in <strong>Java, Spring Boot, MySQL concurrency, REST APIs, and Generative AI workflows</strong>. Passionate about building high-availability backends, clean relational schemas, and seamless digital interactions.
+      </p>
+
+      <!-- Primary CTA Actions -->
+      <div class="hero-cta-group reveal-on-scroll">
+        <a href="#projects" class="btn-primary-magnetic">
+          <span>Explore Work</span>
+          <i class="fas fa-arrow-down"></i>
+        </a>
+
+        <a href="Resume/Noman Resume.pdf" target="_blank" class="btn-secondary-magnetic">
+          <i class="fas fa-file-arrow-down"></i>
+          <span>Verified Resume</span>
+        </a>
+
+        <button class="btn-terminal-trigger" onclick="PortfolioApp.openTerminal()" title="Launch interactive terminal drawer">
+          <i class="fas fa-code"></i>
+          <span>$ open_terminal [K]</span>
+        </button>
+      </div>
+
+      <!-- Quick Engineering Telemetry -->
+      <div class="hero-telemetry reveal-on-scroll">
+        <div class="telemetry-item">
+          <div class="telemetry-val">9.32<span class="unit">/10</span></div>
+          <div class="telemetry-label">B.Tech Academic CGPA</div>
+        </div>
+        <div class="telemetry-item">
+          <div class="telemetry-val">4<span class="unit">x</span></div>
+          <div class="telemetry-label">Badges & Certifications</div>
+        </div>
+        <div class="telemetry-item">
+          <div class="telemetry-val">100<span class="unit">%</span></div>
+          <div class="telemetry-label">ACID Concurrency Safe</div>
+        </div>
+        <div class="telemetry-item">
+          <div class="telemetry-val">2026<span class="unit">+</span></div>
+          <div class="telemetry-label">LaunchPad Active Role</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION: ENGINEERING PHILOSOPHY & ARCHITECTURE
+       ========================================================================== -->
+  <section class="section-wrapper alternate" id="architecture">
+    <div class="content-container">
+      <div class="section-header reveal-on-scroll">
+        <div class="section-eyebrow">
+          <i class="fas fa-layer-group"></i>
+          <span>Engineering Principles</span>
+        </div>
+        <h2 class="section-title">How I Architect & Build Systems</h2>
+        <p class="section-desc">
+          High-availability software requires more than just code that runs—it demands clean separation of concerns, defensive programming, and rigorous data modeling.
         </p>
-  
-        <div class="hero-buttons">
-            <a href="Resume/Noman Resume.pdf" class="btn btn-primary">
-              View Resume
-            </a>
-  
-            <a href="https://github.com/Nomaan2288" target="_blank" class="btn btn-primary">
-              GitHub
-            </a>
-  
-            <a href="https://www.linkedin.com/in/shaikh-noman-m2288" target="_blank" class="btn btn-primary">
-              LinkedIn
-            </a>
-        </div>
-  
-    </div>
-  
-  </section>
-
-  <!-- SKILLS -->
-
-  <section class="section" id="skills">
-    <div class="container">
-  
-      <h2 class="section-title">Technical Skills</h2>
-  
-      <div class="skills-container">
-  
-        <div class="skill-category">
-          <h4><i class="fas fa-code"></i> Programming Languages</h4>
-  
-          <div class="skill-tags">
-            <span>Java</span>
-            <span>Python</span>
-            <span>JavaScript</span>
-          </div>
-        </div>
-  
-        <div class="skill-category">
-          <h4><i class="fas fa-laptop-code"></i> Frontend Development</h4>
-  
-          <div class="skill-tags">
-            <span>HTML5</span>
-            <span>CSS3</span>
-            <span>Bootstrap</span>
-            <span>React.js</span>
-          </div>
-        </div>
-  
-        <div class="skill-category">
-          <h4><i class="fas fa-server"></i> Backend Development</h4>
-  
-          <div class="skill-tags">
-            <span>Spring Boot</span>
-            <span>JSP</span>
-            <span>Servlet</span>
-            <span>Hibernate</span>
-            <span>Node.js</span>
-            <span>Express.js</span>
-          </div>
-        </div>
-  
-        <div class="skill-category">
-          <h4><i class="fas fa-database"></i> Databases</h4>
-  
-          <div class="skill-tags">
-            <span>MySQL</span>
-            <span>MongoDB</span>
-          </div>
-        </div>
-  
-        <div class="skill-category">
-          <h4><i class="fas fa-tools"></i> Tools & Platforms</h4>
-  
-          <div class="skill-tags">
-            <span>Git</span>
-            <span>GitHub</span>
-            <span>Maven</span>
-            <span>VS Code</span>
-          </div>
-        </div>
-  
-        <div class="skill-category">
-          <h4><i class="fas fa-lightbulb"></i> Core Concepts</h4>
-  
-          <div class="skill-tags">
-            <span>OOP</span>
-            <span>Data Structures</span>
-            <span>DBMS</span>
-            <span>REST APIs</span>
-          </div>
-        </div>
-  
-        <div class="skill-category">
-          <h4><i class="fas fa-cloud"></i> Other Technologies</h4>
-  
-          <div class="skill-tags">
-            <span>MERN Stack</span>
-            <span>Cloud Computing</span>
-            <span>IoT</span>
-          </div>
-        </div>
-  
-        <div class="skill-category">
-          <h4><i class="fas fa-users"></i> Soft Skills</h4>
-  
-          <div class="skill-tags">
-            <span>Problem Solving</span>
-            <span>Team Leadership</span>
-            <span>Team Collaboration</span>
-            <span>Communication</span>
-          </div>
-        </div>
-  
       </div>
-  
-    </div>
-  </section>
 
-  <!-- PROJECTS -->
-  <section class="section" id="projects">
-    <h2 class="section-title">Projects</h2>
-    <div class="container">
-      <div class="row gy-4">
-
-        <div class="col-md-6 col-lg-4">
-          <div class="project-card">
-            <h4>BookMyEvent</h4>
-            <p><strong>Tech Stack:</strong> Spring Boot, JSP, MySQL</p>
-            <p>An event/movie booking platform with login system, event listing, seat booking, and payment simulation.</p>
-            <div class="d-flex flex-wrap gap-2">
-              <a href="Screenshots/bookmyevent.html" class="btn btn-sm btn-outline-primary">👀 How it Looks</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-          <div class="project-card">
-            <h4>SpotAdz</h4>
-            <p><strong>Tech Stack:</strong> Spring Boot, JSP, MySQL</p>
-            <p>A hoarding advertisement booking system with advertiser login and admin portal for inventory management.</p>
-            <div class="d-flex flex-wrap gap-2">
-              <a href="Screenshots/spotadz.html" class="btn btn-sm btn-outline-primary">👀 How it Looks</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-          <div class="project-card">
-            <h4>Coding Craft</h4>
-            <p><strong>Tech Stack:</strong> HTML, CSS, JavaScript</p>
-            <p>A coding education portal offering interactive tutorials and project-based learning.</p>
-            <div class="d-flex flex-wrap gap-2">
-              <a href="https://nomaan2288.github.io/Coding-Craft/" target="_blank" class="btn btn-sm btn-outline-primary">🌐 Visit Website</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-          <div class="project-card">
-            <h4>Smart Home Awareness System</h4>
-            <p><strong>Tech Stack:</strong> Arduino UNO, NodeMCU, React.js, Python</p>
-            <p>An IoT-based smart home monitoring system integrating fire detection, rain detection, moisture monitoring, voltage monitoring, and smart parking management with real-time alerts.</p>
-        
-        
-        <div class="d-flex flex-wrap gap-2">
-          <a href="#" class="btn btn-sm btn-outline-primary">📸 View Project</a>
-        </div>
-        
-        
-          </div>
-        </div>
-        
-
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="experience">
-    <div class="container">
-      <h2 class="section-title">Experience</h2>
-  
-  
-  <div class="card-style mb-4">
-    <h4>Java Intern</h4>
-    <h6>Royal Technosoft Pvt. Ltd.</h6>
-    <small>December 2024 – April 2025</small>
-  
-    <ul class="mt-3">
-      <li>Worked on web development projects using Java and related technologies.</li>
-      <li>Assisted in database design and application development.</li>
-      <li>Collaborated with team members on project implementation.</li>
-    </ul>
-  </div>
-  
-  <div class="card-style">
-    <h4>MERN Stack Intern</h4>
-    <h6>LaunchPad Technology</h6>
-    <small>June 2024 – July 2024</small>
-  
-    <ul class="mt-3">
-      <li>Developed responsive web applications using MongoDB, Express.js, React.js, and Node.js.</li>
-      <li>Worked on frontend and backend integration.</li>
-      <li>Participated in debugging and testing activities.</li>
-    </ul>
-  </div>
-  
-  
-    </div>
-  </section>
-  
-
-  <!-- ABOUT -->
-  <section class="section" id="about">
-    <div class="container">
-      <h2 class="section-title">About Me</h2>
-      <div class="card-style text-center mx-auto">
-        <p>
-          I am a Computer Science Engineering student with hands-on experience in Java, Spring Boot, JSP/Servlet, MySQL, Python, and the MERN Stack through academic projects and internships.
-          </p>
-          
+      <div class="architecture-grid">
+        <!-- Pillar 01 -->
+        <div class="arch-card reveal-on-scroll">
+          <span class="arch-number">01 / BACKEND & CONCURRENCY</span>
+          <h3>Thread-Safe Java Services</h3>
           <p>
-          I enjoy developing web applications, solving technical challenges, and learning new technologies. Through internships and personal projects, I have gained practical experience in software development, database management, and team collaboration.
+            Architecting modular Spring Boot applications following SOLID guidelines. Implementing connection pooling, defensive input validation, transaction management, and optimistic locking to prevent race conditions in booking workflows.
           </p>
-          
+          <div class="arch-tags">
+            <span class="arch-tag">Spring Boot 3</span>
+            <span class="arch-tag">HikariCP</span>
+            <span class="arch-tag">Session Security</span>
+            <span class="arch-tag">OOP & SOLID</span>
+          </div>
+        </div>
+
+        <!-- Pillar 02 -->
+        <div class="arch-card reveal-on-scroll">
+          <span class="arch-number">02 / DATA PERSISTENCE</span>
+          <h3>Normalized Relational Schemas</h3>
           <p>
-          My work includes full-stack applications such as SpotAdz and BookMyEvent, as well as IoT-based solutions like Smart Home Awareness System. I am currently seeking opportunities as a Java Developer, Full Stack Developer, or Software Development Intern.
+            Designing normalized 3NF MySQL schemas with explicit indexing, foreign key constraints, and optimized queries. Preventing N+1 query traps using Hibernate/JPA and native queries when raw performance is critical.
           </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- EDUCATION -->
-  <section class="section" id="education">
-    <h2 class="section-title">Education</h2>
-  
-    <div class="container">
-  
-      <div class="card-style mb-4">
-        <h4>Bachelor of Technology (B.Tech)</h4>
-        <p><strong>Computer Science & Engineering</strong></p>
-        <p>Silver Oak University</p>
-        <p>2025 - Present</p>
-        <p>CGPA: 9.32</p>
-      </div>
-  
-      <div class="card-style mb-4">
-        <h4>Diploma in Information Technology</h4>
-        <p>Silver Oak University</p>
-        <p>2022 - 2025</p>
-        <p>CGPA: 8.98</p>
-      </div>
-  
-      <div class="card-style">
-        <h4>SSC (10th Standard)</h4>
-        <p>Jay Jalaram International School</p>
-        <p>2019 - 2020</p>
-        <p>Percentage: 63%</p>
-      </div>
-  
-    </div>
-  </section>
-
-  <!-- CERTIFICATIONS -->
-<section class="section" id="certifications">
-  <h2 class="section-title">Certifications</h2>
-
-  <div class="container">
-    <div class="row gy-4 justify-content-center">
-
-      <!-- AWS Certification -->
-      <div class="col-md-6 col-lg-5">
-        <div class="project-card p-4">
-          <div class="d-flex align-items-center gap-3">
-            <img src="Certifications/aws-academy-graduate-cloud-foundations-training-bad (1).png"
-                 alt="AWS Badge"
-                 style="width:120px; height:120px; border-radius:12px; background:white; padding:6px;">
-            <div>
-              <h4 class="mb-1">AWS Academy Graduate: Cloud Foundations</h4>
-              <p class=" small mb-1">Issued by AWS Academy</p>
-              <p class=" small">Issued on: Oct 2025</p>
-            </div>
+          <div class="arch-tags">
+            <span class="arch-tag">MySQL</span>
+            <span class="arch-tag">Indexing</span>
+            <span class="arch-tag">ACID Transactions</span>
+            <span class="arch-tag">Schema Migration</span>
           </div>
+        </div>
 
-          <p class="mt-3">Learned cloud fundamentals, AWS services and core architecture principles.</p>
+        <!-- Pillar 03 -->
+        <div class="arch-card reveal-on-scroll">
+          <span class="arch-number">03 / CONTRACT-FIRST APIS</span>
+          <h3>RESTful Contract Design</h3>
+          <p>
+            Building self-describing REST APIs with standardized HTTP status codes, structured JSON error payloads, DTO segregation from domain entities, and stateless token/session authentication.
+          </p>
+          <div class="arch-tags">
+            <span class="arch-tag">RESTful APIs</span>
+            <span class="arch-tag">DTO Pattern</span>
+            <span class="arch-tag">Stateless Auth</span>
+            <span class="arch-tag">CORS & Security</span>
+          </div>
+        </div>
 
-          <div class="d-flex flex-wrap gap-2 justify-content-center mt-auto">
-
-            <!-- View Certificate -->
-            <a href="Certifications\AWS-Certificate.pdf"
-               target="_blank"
-               class="btn btn-sm btn-primary">
-              <i class="fas fa-file-pdf me-1"></i> View Certificate
-            </a>
-
-            <!-- Verify Badge -->
-            <a href="https://www.credly.com/go/5YuUyYV9"
-               target="_blank"
-               class="btn btn-sm btn-outline-primary">
-              <i class="fas fa-shield-check me-1"></i> Verify Badge
-            </a>
-
+        <!-- Pillar 04 -->
+        <div class="arch-card reveal-on-scroll">
+          <span class="arch-number">04 / AI & CLOUD TELEMETRY</span>
+          <h3>AI Workflows & Cloud Architecture</h3>
+          <p>
+            Integrating Generative AI agent workflows into production pipelines, connecting physical sensor nodes (ESP8266/Arduino) to cloud workloads, and deploying on AWS and IBM Cloud infrastructures.
+          </p>
+          <div class="arch-tags">
+            <span class="arch-tag">Google AI Agents</span>
+            <span class="arch-tag">AWS Cloud</span>
+            <span class="arch-tag">IBM Cloud</span>
+            <span class="arch-tag">IoT / ESP8266</span>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <!-- IBM Certification -->
-      <div class="col-md-6 col-lg-5">
-        <div class="project-card p-4">
-          <div class="d-flex align-items-center gap-3">
-            <img src="Certifications\cloud-computing-fundamentals (2).png"
-                 alt="IBM Badge"
-                 style="width:120px; height:120px; border-radius:12px; background:white; padding:6px;">
-            <div>
-              <h4 class="mb-1">IBM Cloud Computing Fundamentals</h4>
-              <p class="small mb-1">Issued by IBM SkillsBuild</p>
-              <p class=" small">Issued on: Sep 2025</p>
+  <!-- ==========================================================================
+       SECTION: FEATURED PRODUCTION PROJECTS
+       ========================================================================== -->
+  <section class="section-wrapper" id="projects">
+    <div class="content-container">
+      <div class="section-header reveal-on-scroll">
+        <div class="section-eyebrow">
+          <i class="fas fa-folder-open"></i>
+          <span>Selected Work</span>
+        </div>
+        <h2 class="section-title">Production Systems & Real-World Projects</h2>
+        <p class="section-desc">
+          Explore complete full-stack applications with live screenshot galleries, architectural breakdowns, and verification links.
+        </p>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="project-filter-bar reveal-on-scroll">
+        <button class="filter-btn active" data-filter="all">All Projects (4)</button>
+        <button class="filter-btn" data-filter="java">Java & Spring Boot (2)</button>
+        <button class="filter-btn" data-filter="fullstack">Full Stack Web (3)</button>
+        <button class="filter-btn" data-filter="iot">IoT & Embedded (1)</button>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="projects-grid">
+
+        <!-- Project 1: BookMyEvent -->
+        <div class="project-card-modern reveal-on-scroll" data-category="java fullstack">
+          <div class="project-media-wrapper" onclick="PortfolioApp.openGallery('bookmyevent', 0)">
+            <img src="Screenshots/bookmyevent/Screenshot 2025-10-22 121347.png" alt="BookMyEvent Platform Preview" loading="lazy">
+            <span class="project-category-badge">Enterprise Backend</span>
+            <div class="project-media-overlay">
+              <span class="preview-badge-btn">
+                <i class="fas fa-images"></i> Interactive Gallery (13 Views)
+              </span>
             </div>
           </div>
+          <div class="project-body">
+            <h3 class="project-title">BookMyEvent</h3>
+            <p class="project-description">
+              Full-lifecycle ticket and event booking ecosystem. Features active OTP-based password recovery, dynamic event filters, an interactive real-time seat lock algorithm preventing duplicate reservations, and an admin dashboard for venues and organizers.
+            </p>
+            <div class="project-tech-stack">
+              <span class="tech-pill highlight">Spring Boot</span>
+              <span class="tech-pill highlight">MySQL</span>
+              <span class="tech-pill">JSP / Servlets</span>
+              <span class="tech-pill">Real-Time Seat Lock</span>
+              <span class="tech-pill">Payment Simulation</span>
+            </div>
+            <div class="project-footer-actions">
+              <button class="project-link-btn primary" onclick="PortfolioApp.openGallery('bookmyevent', 0)">
+                <i class="fas fa-eye"></i> Quick Preview
+              </button>
+              <a href="Screenshots/bookmyevent.html" class="project-link-btn secondary">
+                <i class="fas fa-external-link-alt"></i> Full Gallery
+              </a>
+              <a href="https://github.com/Nomaan2288" target="_blank" class="project-link-btn secondary" title="GitHub Repository">
+                <i class="fab fa-github"></i>
+              </a>
+            </div>
+          </div>
+        </div>
 
-          <p class="mt-3">Covered cloud concepts, deployment models, and real-world cloud workloads.</p>
+        <!-- Project 2: SpotAdz -->
+        <div class="project-card-modern reveal-on-scroll" data-category="java fullstack">
+          <div class="project-media-wrapper" onclick="PortfolioApp.openGallery('spotadz', 3)">
+            <img src="Screenshots/spotadz/Screenshot 2025-10-21 213459.png" alt="SpotAdz Platform Preview" loading="lazy">
+            <span class="project-category-badge">Commercial Marketplace</span>
+            <div class="project-media-overlay">
+              <span class="preview-badge-btn">
+                <i class="fas fa-images"></i> Interactive Gallery (10 Views)
+              </span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">SpotAdz</h3>
+            <p class="project-description">
+              Outdoor billboard and hoarding advertisement marketplace. Built with role-based access for advertisers and administrators. Includes live billboard availability calendars, invoice ledgers, client management, and exportable analytics reports.
+            </p>
+            <div class="project-tech-stack">
+              <span class="tech-pill highlight">Spring Boot</span>
+              <span class="tech-pill highlight">MySQL</span>
+              <span class="tech-pill">Role-Based Access</span>
+              <span class="tech-pill">Inventory Management</span>
+              <span class="tech-pill">Ledger & Reports</span>
+            </div>
+            <div class="project-footer-actions">
+              <button class="project-link-btn primary" onclick="PortfolioApp.openGallery('spotadz', 0)">
+                <i class="fas fa-eye"></i> Quick Preview
+              </button>
+              <a href="Screenshots/spotadz.html" class="project-link-btn secondary">
+                <i class="fas fa-external-link-alt"></i> Full Gallery
+              </a>
+              <a href="https://github.com/Nomaan2288" target="_blank" class="project-link-btn secondary" title="GitHub Repository">
+                <i class="fab fa-github"></i>
+              </a>
+            </div>
+          </div>
+        </div>
 
-          <div class="d-flex flex-wrap gap-2 justify-content-center mt-auto">
+        <!-- Project 3: Coding Craft -->
+        <div class="project-card-modern reveal-on-scroll" data-category="fullstack">
+          <div class="project-media-wrapper" onclick="window.open('https://nomaan2288.github.io/Coding-Craft/', '_blank')">
+            <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(135deg, #1e293b, #0f172a); color:#38bdf8; padding:20px; text-align:center;">
+              <i class="fas fa-code fa-3x mb-3" style="color:var(--accent-primary)"></i>
+              <div style="font-family:var(--font-mono); font-weight:700; font-size:1.1rem; color:#f8fafc;">Coding Craft Portal</div>
+              <div style="font-size:0.8rem; color:#94a3b8; margin-top:4px;">Interactive Web Learning Playground</div>
+            </div>
+            <span class="project-category-badge">Frontend Education</span>
+            <div class="project-media-overlay">
+              <span class="preview-badge-btn">
+                <i class="fas fa-globe"></i> Visit Live Portal
+              </span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Coding Craft</h3>
+            <p class="project-description">
+              Interactive web education platform created to empower aspiring developers through guided tutorials, structured curriculum roadmaps, and instant project-based browser coding exercises.
+            </p>
+            <div class="project-tech-stack">
+              <span class="tech-pill highlight">HTML5 / CSS3</span>
+              <span class="tech-pill highlight">JavaScript ES6+</span>
+              <span class="tech-pill">Responsive Design</span>
+              <span class="tech-pill">Interactive Demos</span>
+            </div>
+            <div class="project-footer-actions">
+              <a href="https://nomaan2288.github.io/Coding-Craft/" target="_blank" class="project-link-btn primary">
+                <i class="fas fa-globe"></i> Launch Website
+              </a>
+              <a href="https://github.com/Nomaan2288/Coding-Craft" target="_blank" class="project-link-btn secondary">
+                <i class="fab fa-github"></i> Source Code
+              </a>
+            </div>
+          </div>
+        </div>
 
-            <!-- View Certificate -->
-            <a href="Certifications\IBM-Certificate.pdf"
-               target="_blank"
-               class="btn btn-sm btn-primary">
-              <i class="fas fa-file-pdf me-1"></i> View Certificate
-            </a>
+        <!-- Project 4: Smart Home Safety & Awareness System -->
+        <div class="project-card-modern reveal-on-scroll" data-category="iot fullstack">
+          <div class="project-media-wrapper" onclick="window.open('IoT/Smart Home Safety & Awareness System .pdf', '_blank')">
+            <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(135deg, #111827, #1f2937); color:#10b981; padding:20px; text-align:center;">
+              <i class="fas fa-microchip fa-3x mb-3" style="color:var(--status-emerald)"></i>
+              <div style="font-family:var(--font-mono); font-weight:700; font-size:1.1rem; color:#f8fafc;">Smart Home IoT Architecture</div>
+              <div style="font-size:0.8rem; color:#94a3b8; margin-top:4px;">Multi-Sensor Hardware Telemetry</div>
+            </div>
+            <span class="project-category-badge">IoT & Embedded</span>
+            <div class="project-media-overlay">
+              <span class="preview-badge-btn">
+                <i class="fas fa-file-pdf"></i> Read Technical Paper
+              </span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Smart Home Safety & Awareness</h3>
+            <p class="project-description">
+              End-to-end IoT monitoring framework integrating fire detection, rain sensors, soil moisture telemetry, mains voltage oversight, and automated parking bay management with instant alert triggers.
+            </p>
+            <div class="project-tech-stack">
+              <span class="tech-pill highlight">Arduino UNO</span>
+              <span class="tech-pill highlight">NodeMCU (ESP8266)</span>
+              <span class="tech-pill">Python Backend</span>
+              <span class="tech-pill">React.js Dashboard</span>
+              <span class="tech-pill">Sensor Networks</span>
+            </div>
+            <div class="project-footer-actions">
+              <a href="IoT/Smart Home Safety & Awareness System .pdf" target="_blank" class="project-link-btn primary">
+                <i class="fas fa-file-pdf"></i> View Research PDF
+              </a>
+              <a href="Resume/Noman Resume.pdf" target="_blank" class="project-link-btn secondary">
+                <i class="fas fa-info-circle"></i> Project Specs
+              </a>
+            </div>
+          </div>
+        </div>
 
-            <!-- Verify Badge -->
-            <a href="https://www.credly.com/badges/43cbdc22-7707-48b6-9f9e-89f609555599"
-               target="_blank"
-               class="btn btn-sm btn-outline-primary">
-              <i class="fas fa-shield-check me-1"></i> Verify Badge
-            </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION: TECHNICAL SKILLS MATRIX
+       ========================================================================== -->
+  <section class="section-wrapper alternate" id="skills">
+    <div class="content-container">
+      <div class="section-header reveal-on-scroll">
+        <div class="section-eyebrow">
+          <i class="fas fa-cubes"></i>
+          <span>Proficiencies</span>
+        </div>
+        <h2 class="section-title">Technical Skills & Tooling</h2>
+        <p class="section-desc">
+          Structured by architectural layers—from core programming languages to production cloud platforms and AI systems.
+        </p>
+      </div>
+
+      <div class="skills-matrix-grid">
+
+        <!-- Domain 1: Languages -->
+        <div class="skill-domain-card reveal-on-scroll">
+          <div class="skill-domain-header">
+            <div class="domain-icon"><i class="fas fa-code"></i></div>
+            <h3 class="domain-title">Core Languages</h3>
+          </div>
+          <div class="domain-tags">
+            <div class="skill-tag-modern"><i class="fab fa-java"></i> Java (Core & Advanced)</div>
+            <div class="skill-tag-modern"><i class="fab fa-python"></i> Python</div>
+            <div class="skill-tag-modern"><i class="fab fa-js"></i> JavaScript (ES6+)</div>
+            <div class="skill-tag-modern"><i class="fas fa-terminal"></i> Bash / Shell</div>
+          </div>
+        </div>
+
+        <!-- Domain 2: Backend Architecture -->
+        <div class="skill-domain-card reveal-on-scroll">
+          <div class="skill-domain-header">
+            <div class="domain-icon"><i class="fas fa-server"></i></div>
+            <h3 class="domain-title">Backend & Frameworks</h3>
+          </div>
+          <div class="domain-tags">
+            <div class="skill-tag-modern"><i class="fas fa-leaf"></i> Spring Boot 3</div>
+            <div class="skill-tag-modern"><i class="fas fa-database"></i> Hibernate / JPA</div>
+            <div class="skill-tag-modern"><i class="fas fa-network-wired"></i> RESTful APIs</div>
+            <div class="skill-tag-modern"><i class="fas fa-cogs"></i> JSP & Servlets</div>
+            <div class="skill-tag-modern"><i class="fab fa-node-js"></i> Node.js & Express</div>
+          </div>
+        </div>
+
+        <!-- Domain 3: Databases -->
+        <div class="skill-domain-card reveal-on-scroll">
+          <div class="skill-domain-header">
+            <div class="domain-icon"><i class="fas fa-database"></i></div>
+            <h3 class="domain-title">Databases & Storage</h3>
+          </div>
+          <div class="domain-tags">
+            <div class="skill-tag-modern"><i class="fas fa-table"></i> MySQL (Schema & Queries)</div>
+            <div class="skill-tag-modern"><i class="fas fa-leaf"></i> MongoDB (NoSQL)</div>
+            <div class="skill-tag-modern"><i class="fas fa-key"></i> Indexing & Optimization</div>
+            <div class="skill-tag-modern"><i class="fas fa-shield-alt"></i> ACID Integrity</div>
+          </div>
+        </div>
+
+        <!-- Domain 4: Frontend Development -->
+        <div class="skill-domain-card reveal-on-scroll">
+          <div class="skill-domain-header">
+            <div class="domain-icon"><i class="fab fa-react"></i></div>
+            <h3 class="domain-title">Frontend Engineering</h3>
+          </div>
+          <div class="domain-tags">
+            <div class="skill-tag-modern"><i class="fab fa-react"></i> React.js</div>
+            <div class="skill-tag-modern"><i class="fab fa-html5"></i> Semantic HTML5</div>
+            <div class="skill-tag-modern"><i class="fab fa-css3-alt"></i> Modern CSS3 / Flex / Grid</div>
+            <div class="skill-tag-modern"><i class="fab fa-bootstrap"></i> Bootstrap 5</div>
+            <div class="skill-tag-modern"><i class="fas fa-magic"></i> Motion & Web Audio</div>
+          </div>
+        </div>
+
+        <!-- Domain 5: Cloud, AI & DevOps -->
+        <div class="skill-domain-card reveal-on-scroll">
+          <div class="skill-domain-header">
+            <div class="domain-icon"><i class="fas fa-cloud"></i></div>
+            <h3 class="domain-title">Cloud, AI & Tooling</h3>
+          </div>
+          <div class="domain-tags">
+            <div class="skill-tag-modern"><i class="fab fa-google"></i> Google Build with AI</div>
+            <div class="skill-tag-modern"><i class="fab fa-aws"></i> AWS Cloud Foundations</div>
+            <div class="skill-tag-modern"><i class="fas fa-cloud"></i> IBM Cloud Computing</div>
+            <div class="skill-tag-modern"><i class="fab fa-git-alt"></i> Git & GitHub</div>
+            <div class="skill-tag-modern"><i class="fas fa-box-open"></i> Apache Maven</div>
+            <div class="skill-tag-modern"><i class="fas fa-paper-plane"></i> Postman</div>
+          </div>
+        </div>
+
+        <!-- Domain 6: Systems & Hardware -->
+        <div class="skill-domain-card reveal-on-scroll">
+          <div class="skill-domain-header">
+            <div class="domain-icon"><i class="fas fa-microchip"></i></div>
+            <h3 class="domain-title">IoT & Systems</h3>
+          </div>
+          <div class="domain-tags">
+            <div class="skill-tag-modern"><i class="fas fa-microchip"></i> Arduino UNO</div>
+            <div class="skill-tag-modern"><i class="fas fa-wifi"></i> NodeMCU (ESP8266)</div>
+            <div class="skill-tag-modern"><i class="fas fa-broadcast-tower"></i> Sensor Telemetry</div>
+            <div class="skill-tag-modern"><i class="fas fa-brain"></i> Data Structures & OOP</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION: EXPERIENCE & EDUCATION DUAL TIMELINE
+       ========================================================================== -->
+  <section class="section-wrapper" id="experience">
+    <div class="content-container">
+      <div class="section-header reveal-on-scroll">
+        <div class="section-eyebrow">
+          <i class="fas fa-briefcase"></i>
+          <span>Background</span>
+        </div>
+        <h2 class="section-title">Experience & Education Milestones</h2>
+        <p class="section-desc">
+          Industry internships paired with academic excellence in Computer Science & Engineering.
+        </p>
+      </div>
+
+      <div class="dual-timeline-container">
+
+        <!-- Column 1: Experience -->
+        <div class="timeline-column">
+          <h3 class="reveal-on-scroll"><i class="fas fa-laptop-code text-primary"></i> Professional Experience</h3>
+          <div class="timeline-items">
+
+            <!-- Active Item: LaunchPad Technology (Aug 2026 – Present) -->
+            <div class="timeline-item-modern reveal-on-scroll">
+              <div class="timeline-marker active"></div>
+              <div class="timeline-card" style="border-color: rgba(16, 185, 129, 0.35); background: rgba(16, 185, 129, 0.03);">
+                <div class="timeline-header-meta">
+                  <div class="timeline-role" style="color: var(--status-emerald);">Software Developer Intern</div>
+                  <span class="timeline-date-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--status-emerald);">Aug 2026 – Present</span>
+                </div>
+                <div class="timeline-org">LaunchPad Technology <span style="font-size:0.75rem; color:var(--status-emerald); font-weight:700;">[CURRENT ACTIVE ROLE]</span></div>
+                <ul class="timeline-desc">
+                  <li>Engineering modular backend services and scalable full-stack features using modern frameworks.</li>
+                  <li>Designing robust RESTful API endpoints, optimizing database queries, and ensuring high system responsiveness.</li>
+                  <li>Collaborating in active production sprints, conducting code reviews, and automating development workflows.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Item 2: Royal Technosoft -->
+            <div class="timeline-item-modern reveal-on-scroll">
+              <div class="timeline-marker"></div>
+              <div class="timeline-card">
+                <div class="timeline-header-meta">
+                  <div class="timeline-role">Java Developer Intern</div>
+                  <span class="timeline-date-badge">Dec 2024 – Apr 2025</span>
+                </div>
+                <div class="timeline-org">Royal Technosoft Pvt. Ltd.</div>
+                <ul class="timeline-desc">
+                  <li>Engineered enterprise web application modules using Java, Servlets, and Spring principles.</li>
+                  <li>Assisted in relational database modeling, indexing, and optimizing MySQL transaction queries.</li>
+                  <li>Collaborated closely with cross-functional engineering teams on code reviews and modular deployment.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Item 3: LaunchPad Technology (Early MERN Internship) -->
+            <div class="timeline-item-modern reveal-on-scroll">
+              <div class="timeline-marker"></div>
+              <div class="timeline-card">
+                <div class="timeline-header-meta">
+                  <div class="timeline-role">MERN Stack Intern</div>
+                  <span class="timeline-date-badge">Jun 2024 – Jul 2024</span>
+                </div>
+                <div class="timeline-org">LaunchPad Technology</div>
+                <ul class="timeline-desc">
+                  <li>Built responsive full-stack features utilizing MongoDB, Express.js, React.js, and Node.js.</li>
+                  <li>Implemented REST API endpoints and connected asynchronous frontend data-fetching hooks.</li>
+                  <li>Participated in sprint testing, bug remediation, and user experience optimizations.</li>
+                </ul>
+              </div>
+            </div>
 
           </div>
         </div>
+
+        <!-- Column 2: Education -->
+        <div class="timeline-column" id="education">
+          <h3 class="reveal-on-scroll"><i class="fas fa-graduation-cap text-primary"></i> Academic Journey</h3>
+          <div class="timeline-items">
+
+            <!-- Item 1: B.Tech in CSE (Active Degree) -->
+            <div class="timeline-item-modern reveal-on-scroll">
+              <div class="timeline-marker active"></div>
+              <div class="timeline-card" style="border-color: rgba(16, 185, 129, 0.35); background: rgba(16, 185, 129, 0.03);">
+                <div class="timeline-header-meta">
+                  <div class="timeline-role" style="color: var(--status-emerald);">B.Tech in Computer Science & Eng.</div>
+                  <span class="timeline-date-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--status-emerald);">2025 – Present [PURSUING]</span>
+                </div>
+                <div class="timeline-org">Silver Oak University <span style="font-size:0.75rem; color:var(--status-emerald); font-weight:700;">[CURRENT DEGREE]</span></div>
+                <p class="timeline-desc" style="margin-bottom: 8px;">
+                  Core focus on Advanced Algorithms, Distributed Computing, Database Management Systems, and Cloud Architectures.
+                </p>
+                <div style="font-family: var(--font-mono); font-size: 0.88rem; color: var(--status-emerald); font-weight: 700;">
+                  ★ Cumulative Grade Point: 9.32 CGPA
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="timeline-item-modern reveal-on-scroll">
+              <div class="timeline-marker"></div>
+              <div class="timeline-card">
+                <div class="timeline-header-meta">
+                  <div class="timeline-role">Diploma in Information Technology</div>
+                  <span class="timeline-date-badge">2022 – 2025</span>
+                </div>
+                <div class="timeline-org">Silver Oak University</div>
+                <p class="timeline-desc" style="margin-bottom: 8px;">
+                  Practical grounding in Object-Oriented Programming, Web Engineering, Data Structures, and Software Methodologies.
+                </p>
+                <div style="font-family: var(--font-mono); font-size: 0.88rem; color: var(--accent-primary); font-weight: 600;">
+                  ★ Cumulative Grade Point: 8.98 CGPA
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="timeline-item-modern reveal-on-scroll">
+              <div class="timeline-marker"></div>
+              <div class="timeline-card">
+                <div class="timeline-header-meta">
+                  <div class="timeline-role">Secondary School Certificate (SSC)</div>
+                  <span class="timeline-date-badge">2019 – 2020</span>
+                </div>
+                <div class="timeline-org">Jay Jalaram International School</div>
+                <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted);">
+                  Score: 63%
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION: VERIFIED CERTIFICATIONS & HACKATHONS
+       ========================================================================== -->
+  <section class="section-wrapper alternate" id="certifications">
+    <div class="content-container">
+      <div class="section-header reveal-on-scroll">
+        <div class="section-eyebrow">
+          <i class="fas fa-award"></i>
+          <span>Credentials & Achievements</span>
+        </div>
+        <h2 class="section-title">Verified Certifications & Hackathons</h2>
+        <p class="section-desc">
+          Official engineering credentials issued by Google for Developers, Indian Space Research Organisation (ISRO), AWS Academy, and IBM SkillsBuild.
+        </p>
+      </div>
+
+      <div class="certs-grid">
+
+        <!-- Credential 1: Google for Developers Build with AI Bootcamp -->
+        <div class="cert-card-modern reveal-on-scroll">
+          <div class="cert-badge-row">
+            <img src="Certifications/google-developers-logo.svg" alt="Google for Developers Logo" class="cert-badge-img">
+            <div class="cert-info">
+              <h4>Build with AI Bootcamp, Ahmedabad</h4>
+              <div class="cert-issuer">Google for Developers & Hack2skill</div>
+              <div class="cert-date">Dated: 30 September 2026</div>
+              <span class="cert-id-tag">ID: 2026H2S09BWAIBAHM-P00226</span>
+            </div>
+          </div>
+          <p class="cert-desc">
+            Hands-on demonstration of technical competencies required to build autonomous AI agents, architect workflow automations, and integrate production-ready Generative AI into modern software systems.
+          </p>
+          <div class="cert-actions">
+            <a href="Certifications/Google-Build-With-AI-Bootcamp-Certificate.pdf" target="_blank" class="project-link-btn primary">
+              <i class="fas fa-file-pdf"></i> View Certificate PDF
+            </a>
+            <a href="https://certificate.hack2skill.com/verify/2026H2S09BWAIBAHM-P00226" target="_blank" class="project-link-btn secondary">
+              <i class="fas fa-shield-alt"></i> Verify Credential
+            </a>
+          </div>
+        </div>
+
+        <!-- Credential 2: ISRO Bharatiya Antariksh Hackathon 2026 -->
+        <div class="cert-card-modern reveal-on-scroll">
+          <div class="cert-badge-row">
+            <img src="Certifications/isro-logo.svg" alt="ISRO Logo" class="cert-badge-img" style="object-fit: contain; padding: 4px;">
+            <div class="cert-info">
+              <h4>Bharatiya Antariksh Hackathon 2026</h4>
+              <div class="cert-issuer">Indian Space Research Organisation (ISRO)</div>
+              <div class="cert-date">Issued: 2026</div>
+              <span class="cert-id-tag">ID: 2026H2SO6BAH-P00396</span>
+            </div>
+          </div>
+          <p class="cert-desc">
+            Awarded in recognition of active participation and successful idea submission in the Bharatiya Antariksh Hackathon 2026 presented by ISRO and powered by Hack2skill, contributing innovative technical solutions to national space exploration challenges.
+          </p>
+          <div class="cert-actions">
+            <a href="Certifications/ISRO-Antariksh-Hackathon-Certificate.pdf" target="_blank" class="project-link-btn primary">
+              <i class="fas fa-file-pdf"></i> View Certificate PDF
+            </a>
+            <a href="https://certificate.hack2skill.com/verify/2026H2SO6BAH-P00396" target="_blank" class="project-link-btn secondary">
+              <i class="fas fa-shield-alt"></i> Verify Credential
+            </a>
+          </div>
+        </div>
+
+        <!-- Credential 3: AWS Academy Graduate -->
+        <div class="cert-card-modern reveal-on-scroll">
+          <div class="cert-badge-row">
+            <img src="Certifications/aws-academy-graduate-cloud-foundations-training-bad (1).png" alt="AWS Academy Graduate Badge" class="cert-badge-img">
+            <div class="cert-info">
+              <h4>AWS Academy Graduate: Cloud Foundations</h4>
+              <div class="cert-issuer">AWS Academy</div>
+              <div class="cert-date">Issued: October 2025</div>
+              <span class="cert-id-tag">Credly Verified</span>
+            </div>
+          </div>
+          <p class="cert-desc">
+            Comprehensive curriculum on AWS global cloud architecture, compute (EC2), storage (S3), relational databases (RDS), VPC networking, IAM security policies, and cost optimization.
+          </p>
+          <div class="cert-actions">
+            <a href="Certifications/AWS-Certificate.pdf" target="_blank" class="project-link-btn primary">
+              <i class="fas fa-file-pdf"></i> View Certificate PDF
+            </a>
+            <a href="https://www.credly.com/go/5YuUyYV9" target="_blank" class="project-link-btn secondary">
+              <i class="fas fa-shield-alt"></i> Verify on Credly
+            </a>
+          </div>
+        </div>
+
+        <!-- Credential 4: IBM Cloud Computing Fundamentals -->
+        <div class="cert-card-modern reveal-on-scroll">
+          <div class="cert-badge-row">
+            <img src="Certifications/cloud-computing-fundamentals (2).png" alt="IBM SkillsBuild Cloud Badge" class="cert-badge-img">
+            <div class="cert-info">
+              <h4>IBM Cloud Computing Fundamentals</h4>
+              <div class="cert-issuer">IBM SkillsBuild</div>
+              <div class="cert-date">Issued: September 2025</div>
+              <span class="cert-id-tag">Credly Verified</span>
+            </div>
+          </div>
+          <p class="cert-desc">
+            Foundations of cloud deployment models (public, private, hybrid), infrastructure delivery layers (IaaS, PaaS, SaaS), virtualization concepts, and container workloads.
+          </p>
+          <div class="cert-actions">
+            <a href="Certifications/IBM-Certificate.pdf" target="_blank" class="project-link-btn primary">
+              <i class="fas fa-file-pdf"></i> View Certificate PDF
+            </a>
+            <a href="https://www.credly.com/badges/43cbdc22-7707-48b6-9f9e-89f609555599" target="_blank" class="project-link-btn secondary">
+              <i class="fas fa-shield-alt"></i> Verify on Credly
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Resume Download Banner -->
+      <div style="margin-top: 48px; text-align: center;" class="reveal-on-scroll">
+        <a href="Resume/Noman Resume.pdf" target="_blank" class="btn-primary-magnetic me-2">
+          <i class="fas fa-file-pdf"></i>
+          <span>View Verified Resume</span>
+        </a>
+        <a href="Resume/Noman Resume.pdf" download="Shaikh_Noman_Resume.pdf" class="btn-secondary-magnetic">
+          <i class="fas fa-download"></i>
+          <span>Download PDF</span>
+        </a>
       </div>
 
     </div>
-  </div>
-
-
-
-  <!-- RESUME -->
-  <div class="text-center my-4">
-    <a href="Resume/Noman Resume.pdf" target="_blank" class="btn btn-primary"><i class="fas fa-eye me-2"></i>View Resume</a>
-    <a href="Resume/Noman Resume.pdf" download class="btn btn-outline-primary me-3"><i class="fas fa-download me-2"></i>Download Resume</a>
-  </div>
-</section>
-
-  <!-- CONTACT -->
-  <section id="contact-section">
-    <h2>📩 Get in Touch</h2>
-    <form id="contactForm">
-      <input type="text" name="from_name" placeholder="Your Name" required />
-      <input type="email" name="reply_to" placeholder="Your Email" required />
-      <textarea name="message" placeholder="Your Message" required></textarea>
-      <button type="submit">Send Message</button>
-    </form>
-    <p id="status"></p>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="footer-themed">
-    <div class="container">
-      <h2>Contact</h2>
-      <p>Email: <a href="mailto:shaikhnoman0652@gmail.com" class="footer-link">shaikhnoman0652@gmail.com</a></p>
-      <p>GitHub: <a href="https://github.com/Nomaan2288" target="_blank" class="footer-link">github.com/Nomaan2288</a></p>
-      <p>LinkedIn: <a href="https://www.linkedin.com/in/shaikh-noman-m2288" target="_blank" class="footer-link">linkedin.com/in/Shaikh-Noman-M2288</a></p>
-      <hr>
-      <p class="small text-white-50">&copy; 2025 Noman. Built using HTML, Bootstrap, and JavaScript.</p>
+  <!-- ==========================================================================
+       SECTION: CONTACT & INQUIRY
+       ========================================================================== -->
+  <section class="section-wrapper" id="contact">
+    <div class="content-container">
+      <div class="section-header reveal-on-scroll">
+        <div class="section-eyebrow">
+          <i class="fas fa-paper-plane"></i>
+          <span>Direct Channel</span>
+        </div>
+        <h2 class="section-title">Let's Build Something Exceptional</h2>
+        <p class="section-desc">
+          Interested in discussing full-time opportunities, backend architecture challenges, or engineering collaborations? Send a message directly or connect on socials.
+        </p>
+      </div>
+
+      <div class="contact-container-modern">
+
+        <!-- Left: Quick Direct Info -->
+        <div class="contact-info-panel reveal-on-scroll">
+          <div class="contact-quick-item">
+            <div class="quick-icon-box"><i class="fas fa-envelope"></i></div>
+            <div class="quick-details">
+              <h5>Email Address</h5>
+              <a href="mailto:shaikhnoman0652@gmail.com">shaikhnoman0652@gmail.com</a>
+              <br>
+              <button class="copy-email-pill" onclick="PortfolioApp.copyEmail()" title="Click to copy email address">
+                <i class="fas fa-copy"></i>
+                <span>Copy to Clipboard [C]</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="contact-quick-item">
+            <div class="quick-icon-box"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="quick-details">
+              <h5>Location & Timezone</h5>
+              <p>Gujarat, India (IST / UTC+5:30)</p>
+            </div>
+          </div>
+
+          <div class="contact-quick-item">
+            <div class="quick-icon-box"><i class="fas fa-user-check"></i></div>
+            <div class="quick-details">
+              <h5>Current Status</h5>
+              <p>Software Developer Intern @ LaunchPad Technology</p>
+            </div>
+          </div>
+
+          <!-- Social Links -->
+          <div>
+            <h5 style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.05em; margin-bottom:12px; font-weight:600;">Verified Profiles</h5>
+            <div class="social-pills-row">
+              <a href="https://github.com/Nomaan2288" target="_blank" class="social-pill">
+                <i class="fab fa-github"></i> GitHub
+              </a>
+              <a href="https://www.linkedin.com/in/shaikh-noman-m2288" target="_blank" class="social-pill">
+                <i class="fab fa-linkedin"></i> LinkedIn
+              </a>
+              <a href="mailto:shaikhnoman0652@gmail.com" class="social-pill">
+                <i class="fas fa-envelope"></i> Direct Email
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Modern Email Form -->
+        <div class="contact-form-box reveal-on-scroll">
+          <form id="contactForm">
+            <input type="hidden" name="to_name" value="Shaikh Noman">
+            <input type="hidden" name="user_email" id="hidden_user_email">
+            <input type="hidden" name="from_email" id="hidden_from_email">
+
+            <div class="form-group-modern">
+              <label for="from_name">Your Name</label>
+              <input type="text" id="from_name" name="from_name" class="form-input-modern" placeholder="e.g. Alex Henderson" required />
+            </div>
+
+            <div class="form-group-modern">
+              <label for="reply_to">Your Email Address</label>
+              <input type="email" id="reply_to" name="reply_to" class="form-input-modern" placeholder="alex@company.com" required />
+            </div>
+
+            <div class="form-group-modern">
+              <label for="message">Your Message</label>
+              <textarea id="message" name="message" class="form-textarea-modern" placeholder="Hi Noman, I came across your portfolio and would love to discuss an engineering role..." required></textarea>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <button type="submit" id="form-submit-btn" class="form-submit-btn">
+                <i class="fas fa-paper-plane me-2"></i>
+                <span>Send Message (Direct Reply-To)</span>
+              </button>
+
+              <button type="button" class="btn-secondary-magnetic" onclick="PortfolioApp.openMailClient()" style="padding: 12px 18px; font-size: 0.9rem; width: 100%; justify-content: center; border-radius: var(--radius-md);">
+                <i class="fas fa-envelope-open-text me-2" style="color:var(--accent-primary)"></i>
+                <span>Or Send from Your Mail App (Gmail / Outlook)</span>
+              </button>
+            </div>
+
+            <p style="font-size:0.78rem; color:var(--text-muted); margin-top:12px; text-align:center;">
+              <i class="fas fa-shield-alt me-1"></i> Responses will be sent directly to your email address.
+            </p>
+
+            <!-- Dynamic Alert Feedback -->
+            <div id="form-status-alert" class="form-status-alert"></div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="footer-modern">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          Shaikh Noman <span style="color:var(--accent-primary)">/ Software Developer</span>
+        </div>
+        <div class="footer-shortcuts-legend">
+          <span class="shortcut-chip"><kbd>T</kbd> Theme</span>
+          <span class="shortcut-chip"><kbd>K</kbd> Console</span>
+          <span class="shortcut-chip"><kbd>M</kbd> Audio</span>
+          <span class="shortcut-chip"><kbd>C</kbd> Copy Email</span>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 Shaikh Noman. Engineered with semantic HTML5, modern CSS tokens & Vanilla JS.
+        </div>
+        <div style="display:flex; gap:16px;">
+          <a href="https://github.com/Nomaan2288" target="_blank">GitHub</a>
+          <a href="https://www.linkedin.com/in/shaikh-noman-m2288" target="_blank">LinkedIn</a>
+          <a href="Resume/Noman Resume.pdf" target="_blank">Resume PDF</a>
+        </div>
+      </div>
     </div>
   </footer>
 
-  <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- ==========================================================================
+       INTERACTIVE DEVELOPER TERMINAL DRAWER (CLI MODAL)
+       ========================================================================== -->
+  <div id="terminal-modal" class="terminal-modal-overlay" onclick="if(event.target===this) PortfolioApp.closeTerminal()">
+    <div class="terminal-window">
+      <div class="terminal-topbar">
+        <div class="terminal-buttons">
+          <div class="t-btn close" onclick="PortfolioApp.closeTerminal()" title="Close Terminal"></div>
+          <div class="t-btn minimize" onclick="PortfolioApp.closeTerminal()" title="Minimize"></div>
+          <div class="t-btn maximize" title="Fullscreen"></div>
+        </div>
+        <div class="terminal-title">shaikh-noman@system-shell: ~ (zsh)</div>
+        <div style="font-size:0.75rem; color:#64748b;">ESC to exit</div>
+      </div>
+
+      <div class="terminal-body">
+        <div id="terminal-output" class="terminal-output">
+          <div style="color:#60a5fa; font-weight:600; margin-bottom:8px;">
+            ✦ Shaikh Noman — Developer Console [System Shell v2.4]
+          </div>
+          <div style="color:#94a3b8; margin-bottom:12px;">
+            Type <span style="color:#38bdf8; font-weight:600; cursor:pointer;" onclick="runTermCmd('help')">help</span> to explore available shell commands, or click any chip below:
+          </div>
+        </div>
+
+        <div class="terminal-prompt-line">
+          <span class="terminal-prompt-symbol">noman@system:~$</span>
+          <input type="text" id="terminal-cli-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="type 'skills', 'projects', 'exp', 'certs'..." />
+        </div>
+      </div>
+
+      <!-- Quick Action Chips -->
+      <div class="terminal-quick-chips">
+        <span class="terminal-chip" onclick="runTermCmd('help')">help</span>
+        <span class="terminal-chip" onclick="runTermCmd('about')">about</span>
+        <span class="terminal-chip" onclick="runTermCmd('skills')">skills</span>
+        <span class="terminal-chip" onclick="runTermCmd('projects')">projects</span>
+        <span class="terminal-chip" onclick="runTermCmd('exp')">exp</span>
+        <span class="terminal-chip" onclick="runTermCmd('certs')">certs</span>
+        <span class="terminal-chip" onclick="runTermCmd('resume')">resume</span>
+        <span class="terminal-chip" onclick="runTermCmd('contact')">contact</span>
+        <span class="terminal-chip" onclick="runTermCmd('theme')">theme</span>
+        <span class="terminal-chip" onclick="runTermCmd('clear')">clear</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       INTERACTIVE SCREENSHOTS GALLERY LIGHTBOX
+       ========================================================================== -->
+  <div id="gallery-modal" class="gallery-modal-overlay" onclick="if(event.target===this) PortfolioApp.closeGallery()">
+    <div class="gallery-modal-content">
+      <div class="gallery-header">
+        <h3 id="gallery-modal-title">Project Screenshot Showcase</h3>
+        <button class="gallery-close-btn" onclick="PortfolioApp.closeGallery()" title="Close Lightbox (ESC)">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="gallery-stage">
+        <button class="gallery-nav-btn prev" onclick="PortfolioApp.prevGalleryImg()" title="Previous Image (←)">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <img id="gallery-main-img" class="gallery-main-img" src="" alt="Active Project Screenshot">
+        <button class="gallery-nav-btn next" onclick="PortfolioApp.nextGalleryImg()" title="Next Image (→)">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="gallery-caption-bar">
+        <div id="gallery-caption" class="gallery-caption-text">Screenshot Caption</div>
+        <div id="gallery-counter" class="gallery-counter">1 / 10</div>
+      </div>
+
+      <div id="gallery-thumbnails" class="gallery-thumbnail-strip">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       EXTERNAL DEPENDENCIES & APPLICATION LOGIC
+       ========================================================================== -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-
-  <script>
-    (function(){
-      emailjs.init("8_b-U2usEu90CDWvj");
-    })();
-
-    document.getElementById("contactForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      emailjs.sendForm("service_k0f6w2o", "template_5tb4il5", this)
-        .then(() => {
-          document.getElementById("status").innerText = "✅ Message Sent Successfully!";
-          this.reset();
-        }, () => {
-          document.getElementById("status").innerText = "❌ Something went wrong.";
-        });
-    });
-
-    function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme');
-      if (current === 'dark') {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'light');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-      }
-    }
-
-    window.onload = () => {
-      const saved = localStorage.getItem('theme');
-      if (saved) document.documentElement.setAttribute('data-theme', saved);
-      new Typed("#typed-text", {
-        strings: ["Backend Java Developer", "Spring Boot | JSP | MySQL"],
-        typeSpeed: 70,
-        backSpeed: 35,
-        loop: true,
-        showCursor: false
-      });
-    };
-
-    const scrollBtn = document.getElementById('scroll-top-btn');
-    window.onscroll = () => {
-      scrollBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
-    };
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Under Maintenance</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>System Maintenance | Shaikh Noman</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="alternate icon" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -12,107 +17,143 @@
       box-sizing: border-box;
     }
 
-    html, body {
-      height: 100%;
+    body {
+      min-height: 100vh;
       width: 100%;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #f6f8ff, #e0eafc, #f8f9fa);
-
-      color: #2b2b2b;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #08090d;
+      color: #f8fafc;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      animation: fadeIn 1.2s ease-in-out;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+
+    .maintenance-card {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      background: rgba(18, 20, 31, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 48px 36px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+      animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .emoji {
-      font-size: 90px;
-      animation: pulse 2s infinite ease-in-out;
-      margin-bottom: 10px;
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+      box-shadow: 0 0 10px #f59e0b;
     }
 
     h1 {
-      font-size: 2.5rem;
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-
-    .code {
-      color: #ff5e5e;
-      font-weight: 700;
-      font-size: 1.6rem;
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
       margin-bottom: 12px;
+      color: #f8fafc;
     }
 
     p {
-      max-width: 900px;
-      font-size: 1.1rem;
-      color: #4b4b4b;
-      line-height: 1.6;
-      margin: 0 20px 20px;
+      font-size: 1.02rem;
+      color: #94a3b8;
+      line-height: 1.7;
+      margin-bottom: 32px;
     }
 
-    .footer {
-      font-size: 1rem;
-      margin-top: 10px;
+    .action-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
-    .footer a {
-      color: #4e7eff;
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 9999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #f8fafc;
       text-decoration: none;
-      margin: 0 12px;
-      font-weight: 500;
-      transition: color 0.3s ease;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
     }
 
-    .footer a:hover {
-      color: #2c40b9;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.05); opacity: 0.9; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.8rem;
-      }
-
-      .code {
-        font-size: 1.7rem;
-      }
-
-      p {
-        font-size: 1rem;
-        padding: 0 10px;
-      }
-
-      .emoji {
-        font-size: 70px;
-      }
+    .btn-action:hover {
+      background: #3b82f6;
+      border-color: #3b82f6;
+      transform: translateY(-2px);
     }
   </style>
 </head>
 <body>
 
-  <div class="code">Error Code: 503 — Service Temporarily Unavailable</div><br>
-  <div class="emoji">🛠️</div>
-  <h1>We're Currently Under Maintenance</h1>
-  <p>We're performing a quick tune-up to improve your experience. Everything will be back online shortly. Thank you for your patience!</p>
+  <div class="maintenance-card">
+    <div class="status-badge">
+      <span class="status-dot"></span>
+      <span>Routine Deployment & Tuning</span>
+    </div>
 
-  <div class="footer">
-    <a href="mailto:nomanshaikh0652@gmail.com">Email</a> |
-    <a href="https://github.com/Nomaan2288" target="_blank">GitHub</a> |
-    <a href="https://www.linkedin.com/in/shaikh-noman-m2288" target="_blank">LinkedIn</a>
+    <h1>Platform Currently Updating</h1>
+    <p>
+      Deploying system optimizations and architectural updates. Everything will be active shortly. For urgent inquiries or role discussions, please reach out directly:
+    </p>
+
+    <div class="action-links">
+      <a href="mailto:shaikhnoman0652@gmail.com" class="btn-action">
+        <i class="fas fa-envelope"></i> Email Noman
+      </a>
+      <a href="https://github.com/Nomaan2288" target="_blank" class="btn-action">
+        <i class="fab fa-github"></i> GitHub
+      </a>
+      <a href="https://www.linkedin.com/in/shaikh-noman-m2288" target="_blank" class="btn-action">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      <a href="index.html" class="btn-action" style="background:#3b82f6;">
+        <i class="fas fa-home"></i> Try Main Page
+      </a>
+    </div>
   </div>
 
 </body>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="snGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="50%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Base Dark Obsidian Tile with Subtle Border -->
+  <rect width="64" height="64" rx="16" fill="#08090d" />
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" />
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#snGrad)" opacity="0.12" />
+
+  <!-- Stylized Terminal Prompt / Accent Dot -->
+  <circle cx="16" cy="18" r="3" fill="#10b981" />
+
+  <!-- Monogram SN in Engineered Typography -->
+  <text x="32" y="44" 
+        font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif" 
+        font-size="24" 
+        font-weight="800" 
+        letter-spacing="-1" 
+        fill="url(#snGrad)" 
+        text-anchor="middle"
+        filter="url(#glow)">SN</text>
+</svg>
+

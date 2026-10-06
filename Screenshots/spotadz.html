@@ -1,303 +1,386 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SpotAdz | Project Screenshots</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <title>SpotAdz — Marketplace System Architecture & UI Views</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="alternate icon" href="../favicon.svg" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
- /* Base */
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #f8f9fa;
-  color: #212529;
-  margin: 0;
-  padding: 0;
-  scroll-behavior: smooth;
-}
+    :root {
+      --bg-primary: #08090d;
+      --bg-secondary: #0f1118;
+      --bg-card: rgba(18, 20, 31, 0.75);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(59, 130, 246, 0.35);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #3b82f6;
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
 
-/* Navbar */
-.navbar {
-  background-color: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(6px);
-}
-.navbar-brand,
-.nav-link {
-  color: white !important;
-  font-weight: 500;
-}
-.nav-link:hover {
-  text-decoration: underline;
-}
-.navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-}
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding-top: 80px;
+    }
 
-/* Hero Section */
-.project-hero {
-  background: linear-gradient(135deg, #0d6efd, #6f42c1);
-  color: white;
-  text-align: center;
-  padding: 140px 20px 100px; /* Increased top padding to flow behind navbar */
-  margin-top: -80px; /* Pulls gradient behind navbar */
-  position: relative;
-  z-index: 0;
-}
-.project-hero h1 {
-  font-size: 2.8rem;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-.project-hero p {
-  font-size: 1.15rem;
-  opacity: 0.9;
-  margin-bottom: 0;
-}
+    /* Ambient Grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-/* Gallery Section */
-.gallery-section {
-  padding: 60px 5%;
-  background-color: #ffffff;
-}
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 25px;
-  justify-items: center;
-  align-items: start;
-}
-.gallery-item {
-  background: #ffffff;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: 100%;
-  max-width: 360px;
-}
-.gallery-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-}
-.gallery-item img {
-  width: 100%;
-  height: auto;
-  display: block;
-  cursor: zoom-in;
-  border-bottom: 1px solid #e9ecef;
-}
-.caption {
-  text-align: center;
-  padding: 12px 10px 14px;
-  font-weight: 500;
-  font-size: 1rem;
-  color: #333;
-  background-color: #f9f9f9;
-  border-top: 1px solid #eee;
-}
+    /* Navbar */
+    .top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(12, 14, 21, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      z-index: 1000;
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .back-btn {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-subtle);
+      transition: all 0.2s ease;
+    }
+    .back-btn:hover {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      transform: translateX(-3px);
+    }
 
-/* Lightbox */
-.lightbox {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  padding-top: 60px;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  text-align: center;
-}
-.lightbox img {
-  max-width: 90%;
-  max-height: 80vh;
-  border-radius: 10px;
-}
-.lightbox:target {
-  display: block;
-}
-.close-btn {
-  position: fixed;
-  top: 20px;
-  right: 40px;
-  color: white;
-  font-size: 2rem;
-  cursor: pointer;
-}
+    /* Hero */
+    .project-hero {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 40px auto 60px;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .project-pill {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-primary);
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid var(--border-accent);
+      padding: 4px 14px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .project-hero h1 {
+      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .project-hero p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 720px;
+      margin: 0 auto 28px;
+    }
+    .tech-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .tech-tag {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 5px 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      color: var(--text-secondary);
+    }
 
-/* Footer */
-.footer-themed {
-  background-color: #2c1035;
-  color: white;
-  padding: 2.5rem 1rem;
-  text-align: center;
-}
-.footer-link {
-  color: white;
-  text-decoration: underline;
-}
-.footer-link:hover {
-  color: #f1c40f;
-}
+    /* Gallery Grid */
+    .gallery-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 28px;
+    }
+    .gallery-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .gallery-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--border-accent);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    }
+    .card-img-wrap {
+      width: 100%;
+      height: 220px;
+      background: #000;
+      overflow: hidden;
+    }
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      transition: transform 0.4s ease;
+    }
+    .gallery-card:hover .card-img-wrap img {
+      transform: scale(1.04);
+    }
+    .card-meta {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .card-num {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-primary);
+    }
 
-/* Responsive Fixes */
-@media (max-width: 992px) {
-  .project-hero {
-    padding: 120px 15px 80px;
-  }
-  .project-hero h1 {
-    font-size: 2.3rem;
-  }
-  .gallery {
-    gap: 18px;
-  }
-}
-@media (max-width: 576px) {
-  .project-hero {
-    padding: 110px 10px 70px;
-  }
-  .project-hero h1 {
-    font-size: 2rem;
-  }
-  .gallery {
-    padding: 20px;
-  }
-}
+    /* Modal Lightbox */
+    .lightbox-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 99999;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .lightbox-modal.active { display: flex; }
+    .lightbox-box {
+      max-width: 1100px;
+      width: 100%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .lightbox-header {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .lightbox-stage {
+      position: relative;
+      background: #000;
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox-stage img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(18,20,31,0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .nav-arrow:hover { background: var(--accent-primary); }
+    .nav-arrow.prev { left: 16px; }
+    .nav-arrow.next { right: 16px; }
+    .close-icon {
+      background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer;
+    }
 
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+    }
   </style>
 </head>
-
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-md fixed-top">
-    <div class="container">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="../index.html#skills">Skills</a></li>
-          <li class="nav-item"><a class="nav-link" href="../index.html#projects">Projects</a></li>
-          <li class="nav-item"><a class="nav-link" href="../index.html#certifications">Certifications</a></li>
-          <li class="nav-item"><a class="nav-link" href="../index.html#about">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="../index.html#contact-section">Contact</a></li>
-        </ul>
-      </div>
+
+  <!-- Top Nav -->
+  <nav class="top-nav">
+    <a href="../index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      <span>Back to Portfolio</span>
+    </a>
+    <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-primary);">
+      10 Verified Architecture Views
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="project-hero mt-5">
-    <h1>SpotAdz Screenshots</h1>
-    <p>Explore all 16 views of the SpotAdz project below.</p>
-  </section>
-
-  <!-- Gallery -->
-  <section class="gallery-section">
-    <div class="gallery">
-
-      <div class="gallery-item">
-        <a href="#img1"><img src="spotadz/Screenshot 2025-10-21 213344.png" alt="Screenshot 1"></a>
-        <div class="caption">Sign Up Page</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img2"><img src="spotadz/Screenshot 2025-10-21 213412.png" alt="Screenshot 2"></a>
-        <div class="caption">Login Page</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img3"><img src="spotadz/Screenshot 2025-10-21 213439.png" alt="Screenshot 3"></a>
-        <div class="caption">Forget Password Page</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img4"><img src="spotadz/Screenshot 2025-10-21 213459.png" alt="Screenshot 4"></a>
-        <div class="caption">Admin Dashbooard Page</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img5"><img src="spotadz/Screenshot 2025-10-21 213556.png" alt="Screenshot 5"></a>
-        <div class="caption">My Booking Page</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img6"><img src="spotadz/Screenshot 2025-10-21 213614.png" alt="Screenshot 6"></a>
-        <div class="caption">My Payment Page</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img7"><img src="spotadz/Screenshot 2025-10-21 213712.png" alt="Screenshot 7"></a>
-        <div class="caption">List of User Page</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img8"><img src="spotadz/Screenshot 2025-10-21 213737.png" alt="Screenshot 8"></a>
-        <div class="caption">ADD New Booking Page</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img9"><img src="spotadz/Screenshot 2025-10-21 213754.png" alt="Screenshot 9"></a>
-        <div class="caption">List of Bookings Page</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img10"><img src="spotadz/Screenshot 2025-10-21 213827.png" alt="Screenshot 10"></a>
-        <div class="caption">Report of Active Users (Downloadable)</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img11"><img src="spotadz/ss11.png" alt="Screenshot 11"></a>
-        <div class="caption">SpotAdz View 11</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img12"><img src="spotadz/ss12.png" alt="Screenshot 12"></a>
-        <div class="caption">SpotAdz View 12</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img13"><img src="spotadz/ss13.png" alt="Screenshot 13"></a>
-        <div class="caption">SpotAdz View 13</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img14"><img src="spotadz/ss14.png" alt="Screenshot 14"></a>
-        <div class="caption">SpotAdz View 14</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img15"><img src="spotadz/ss15.png" alt="Screenshot 15"></a>
-        <div class="caption">SpotAdz View 15</div>
-      </div>
-      <div class="gallery-item">
-        <a href="#img16"><img src="spotadz/ss16.png" alt="Screenshot 16"></a>
-        <div class="caption">SpotAdz View 16</div>
-      </div>
-
+  <!-- Hero Header -->
+  <section class="project-hero">
+    <div class="project-pill">Commercial Web Platform</div>
+    <h1>SpotAdz Marketplace System Views</h1>
+    <p>
+      Scalable billboard & hoarding advertisement booking ecosystem. Built with strict role segregation, live availability tracking, payment reconciliation ledgers, and downloadable analytics.
+    </p>
+    <div class="tech-row">
+      <span class="tech-tag">Spring Boot 3</span>
+      <span class="tech-tag">MySQL Relational DB</span>
+      <span class="tech-tag">Role-Based Access Control</span>
+      <span class="tech-tag">Invoice Engine</span>
+      <span class="tech-tag">Exportable Reports</span>
     </div>
   </section>
 
-  <!-- Lightboxes -->
-  <div id="img1" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/Screenshot 2025-10-21 213344.png" alt="Screenshot 1"></div>
-  <div id="img2" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/Screenshot 2025-10-21 213412.png" alt="Screenshot 2"></div>
-  <div id="img3" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/Screenshot 2025-10-21 213439.png" alt="Screenshot 3"></div>
-  <div id="img4" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/Screenshot 2025-10-21 213459.png" alt="Screenshot 4"></div>
-  <div id="img5" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/Screenshot 2025-10-21 213556.png" alt="Screenshot 5"></div>
-  <div id="img6" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/Screenshot 2025-10-21 213614.png" alt="Screenshot 6"></div>
-  <div id="img7" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/Screenshot 2025-10-21 213712.png" alt="Screenshot 7"></div>
-  <div id="img8" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/Screenshot 2025-10-21 213737.png" alt="Screenshot 8"></div>
-  <div id="img9" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/Screenshot 2025-10-21 213754.png" alt="Screenshot 9"></div>
-  <div id="img10" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/Screenshot 2025-10-21 213827.png" alt="Screenshot 10"></div>
-  <div id="img11" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/ss11.png" alt="Screenshot 11"></div>
-  <div id="img12" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/ss12.png" alt="Screenshot 12"></div>
-  <div id="img13" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/ss13.png" alt="Screenshot 13"></div>
-  <div id="img14" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/ss14.png" alt="Screenshot 14"></div>
-  <div id="img15" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/ss15.png" alt="Screenshot 15"></div>
-  <div id="img16" class="lightbox"><a href="#" class="close-btn"><i class="fas fa-times"></i></a><img src="spotadz/ss16.png" alt="Screenshot 16"></div>
+  <!-- Gallery Grid -->
+  <div class="gallery-container">
+    <div class="gallery-grid" id="grid"></div>
+  </div>
 
-  <!-- Footer -->
-  <footer class="footer-themed">
-    <div class="container">
-      <h2>Contact</h2>
-      <p>Email: <a href="mailto:shaikhnoman0652@gmail.com" class="footer-link">shaikhnoman0652@gmail.com</a></p>
-      <p>GitHub: <a href="https://github.com/Nomaan2288" target="_blank" class="footer-link">github.com/Nomaan2288</a></p>
-      <p>LinkedIn: <a href="https://www.linkedin.com/in/shaikh-noman-m2288" target="_blank" class="footer-link">linkedin.com/in/Shaikh-Noman-M2288</a></p>
-      <hr>
-      <p class="small text-white-50">&copy; 2025 Noman. Built using HTML, Bootstrap, and Vanilla JS.</p>
+  <!-- Modal Lightbox -->
+  <div class="lightbox-modal" id="modal" onclick="if(event.target===this) closeModal()">
+    <div class="lightbox-box">
+      <div class="lightbox-header">
+        <h4 id="modal-title" style="font-size: 1.05rem; font-weight: 700;">Screenshot View</h4>
+        <button class="close-icon" onclick="closeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="lightbox-stage">
+        <button class="nav-arrow prev" onclick="navigate(-1)"><i class="fas fa-chevron-left"></i></button>
+        <img id="modal-img" src="" alt="Active View">
+        <button class="nav-arrow next" onclick="navigate(1)"><i class="fas fa-chevron-right"></i></button>
+      </div>
     </div>
+  </div>
+
+  <footer>
+    &copy; 2025–2026 Shaikh Noman. Built with Spring Boot, MySQL, and modern web standards.
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const items = [
+      { src: 'spotadz/Screenshot 2025-10-21 213344.png', title: 'Advertiser Portal — KYC & Signup' },
+      { src: 'spotadz/Screenshot 2025-10-21 213412.png', title: 'Secure Authentication & Redirection' },
+      { src: 'spotadz/Screenshot 2025-10-21 213439.png', title: 'Password Recovery Flow' },
+      { src: 'spotadz/Screenshot 2025-10-21 213459.png', title: 'Admin Live Inventory Overview' },
+      { src: 'spotadz/Screenshot 2025-10-21 213556.png', title: 'Client Booking & Reservation Timeline' },
+      { src: 'spotadz/Screenshot 2025-10-21 213614.png', title: 'Payment Processing & Receipt Ledger' },
+      { src: 'spotadz/Screenshot 2025-10-21 213712.png', title: 'Advertiser Directory & Access Controls' },
+      { src: 'spotadz/Screenshot 2025-10-21 213737.png', title: 'Campaign Creation & Slot Schedule' },
+      { src: 'spotadz/Screenshot 2025-10-21 213754.png', title: 'Master Reservations Pipeline' },
+      { src: 'spotadz/Screenshot 2025-10-21 213827.png', title: 'Executive Analytics & Downloadable Reports' }
+    ];
+
+    let currentIndex = 0;
+    const grid = document.getElementById('grid');
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modal-img');
+    const modalTitle = document.getElementById('modal-title');
+
+    items.forEach((item, index) => {
+      const card = document.createElement('div');
+      card.className = 'gallery-card';
+      card.onclick = () => openModal(index);
+      card.innerHTML = `
+        <div class="card-img-wrap">
+          <img src="${item.src}" alt="${item.title}" loading="lazy">
+        </div>
+        <div class="card-meta">
+          <div class="card-title">${item.title}</div>
+          <div class="card-num">${index + 1} / ${items.length}</div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    function openModal(idx) {
+      currentIndex = idx;
+      renderModal();
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function navigate(delta) {
+      currentIndex = (currentIndex + delta + items.length) % items.length;
+      renderModal();
+    }
+
+    function renderModal() {
+      modalImg.src = items[currentIndex].src;
+      modalTitle.textContent = `${items[currentIndex].title} (${currentIndex + 1} of ${items.length})`;
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (modal.classList.contains('active')) {
+        if (e.key === 'Escape') closeModal();
+        if (e.key === 'ArrowLeft') navigate(-1);
+        if (e.key === 'ArrowRight') navigate(1);
+      }
+    });
+  </script>
 </body>
 </html>
