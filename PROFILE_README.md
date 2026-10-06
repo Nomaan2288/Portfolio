@@ -1,11 +1,8 @@
-<p align="center">
-  <a href="https://nomaan2288.github.io/Portfolio/" target="_blank">
-    <img src="https://raw.githubusercontent.com/Nomaan2288/Portfolio/master/Assets/images/shaikh-noman.png" alt="Shaikh Noman" width="130" height="130" style="border-radius: 50%; border: 3px solid #6366f1; box-shadow: 0 0 25px rgba(99, 102, 241, 0.45); object-fit: cover;" />
-  </a>
-</p>
+# Shaikh Noman
 
-<h1 align="center">Shaikh Noman</h1>
-<p align="center"><b>Software Developer Intern @ LaunchPad Technology • B.Tech CSE (9.32 CGPA)</b></p>
+<p align="center">
+  <b>Software Developer Intern @ LaunchPad Technology • B.Tech CSE (9.32 CGPA)</b>
+</p>
 
 <p align="center">
   <a href="https://nomaan2288.github.io/Portfolio/" target="_blank">
