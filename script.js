@@ -704,6 +704,18 @@ Location: Gujarat, India (UTC +5:30)
         return;
       }
 
+      // DO NOT intercept when modifier keys (Ctrl, Cmd, Alt) are pressed
+      // This ensures native system & browser shortcuts (Ctrl+C to copy selected text, Ctrl+V, Ctrl+T, Ctrl+K, Cmd+C) work natively without interference
+      if (e.ctrlKey || e.metaKey || e.altKey) {
+        return;
+      }
+
+      // DO NOT trigger single-key shortcut if user has active text selected on the page
+      const currentSelection = window.getSelection ? window.getSelection().toString() : '';
+      if (currentSelection && currentSelection.trim().length > 0) {
+        return;
+      }
+
       const key = e.key.toLowerCase();
 
       if (key === 't') {

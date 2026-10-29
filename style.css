@@ -320,7 +320,7 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 50px 24px 25px;
+  padding: 110px 24px 30px;
   position: relative;
   z-index: 2;
   overflow: hidden;
@@ -490,7 +490,8 @@ a, button, input[type="submit"], .btn-primary-magnetic, .btn-secondary-magnetic,
   color: var(--accent-primary);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-top: 10px;
+  margin-bottom: 14px;
   font-weight: 600;
 }
 
