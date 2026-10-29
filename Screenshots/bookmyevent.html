@@ -3,388 +3,1797 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BookMyEvent — Complete Architecture & UI Showcase</title>
+  <title>BookMyEvent — Engineering a High-Concurrency Ticketing Architecture | Shaikh Noman Case Study</title>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <link rel="alternate icon" href="../favicon.svg" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
+    /* ==========================================================================
+       DESIGN SYSTEM & THEME TOKENS (Matching Shaikh Noman Portfolio)
+       ========================================================================== */
     :root {
       --bg-primary: #08090d;
       --bg-secondary: #0f1118;
-      --bg-card: rgba(18, 20, 31, 0.75);
+      --bg-tertiary: #161824;
+      --bg-card: rgba(18, 20, 31, 0.78);
+      --bg-card-hover: rgba(26, 30, 46, 0.9);
+      --bg-glass: rgba(12, 14, 21, 0.85);
+
       --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-light: rgba(255, 255, 255, 0.16);
       --border-accent: rgba(59, 130, 246, 0.35);
+
       --text-primary: #f8fafc;
       --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --text-inverse: #090a0f;
+
       --accent-primary: #3b82f6;
-      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-      --font-main: 'Plus Jakarta Sans', sans-serif;
+      --accent-secondary: #6366f1;
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+      --accent-glow: rgba(59, 130, 246, 0.25);
+      --accent-subtle: rgba(59, 130, 246, 0.12);
+
+      --status-emerald: #10b981;
+      --status-emerald-glow: rgba(16, 185, 129, 0.22);
+      --status-amber: #f59e0b;
+      --status-rose: #f43f5e;
+
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
+
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.55);
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-pill: 9999px;
+
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --bg-card: rgba(255, 255, 255, 0.92);
+      --bg-card-hover: #ffffff;
+      --bg-glass: rgba(255, 255, 255, 0.9);
+
+      --border-subtle: rgba(15, 23, 42, 0.08);
+      --border-light: rgba(15, 23, 42, 0.16);
+      --border-accent: rgba(37, 99, 235, 0.3);
+
+      --text-primary: #090e17;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --text-inverse: #ffffff;
+
+      --accent-primary: #2563eb;
+      --accent-secondary: #4f46e5;
+      --accent-gradient: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+      --accent-glow: rgba(37, 99, 235, 0.15);
+      --accent-subtle: rgba(37, 99, 235, 0.08);
+
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 20px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
     body {
       font-family: var(--font-main);
-      background: var(--bg-primary);
+      background-color: var(--bg-primary);
       color: var(--text-primary);
-      line-height: 1.6;
-      padding-top: 80px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    /* Ambient Grid */
+    /* Ambient Dot Grid */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
+      background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.06) 1px, transparent 0);
       background-size: 32px 32px;
       pointer-events: none;
       z-index: 0;
     }
+    [data-theme="light"] body::before {
+      background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.06) 1px, transparent 0);
+    }
 
-    /* Navbar */
+    /* Top Reading Progress Bar */
+    .reading-progress-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3.5px;
+      background: transparent;
+      z-index: 2000;
+    }
+    .reading-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-gradient);
+      box-shadow: 0 0 12px var(--accent-glow);
+      transition: width 0.1s ease-out;
+    }
+
+    /* Sticky Navbar */
     .top-nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
-      background: rgba(12, 14, 21, 0.85);
-      backdrop-filter: blur(16px);
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border-subtle);
       z-index: 1000;
-      padding: 16px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 0 28px;
+      transition: all 0.3s ease;
     }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
     .back-btn {
       color: var(--text-primary);
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.92rem;
-      display: flex;
+      font-size: 0.88rem;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 14px;
-      border-radius: 9999px;
-      background: rgba(255,255,255,0.05);
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      transition: all 0.2s ease;
+      transition: all 0.25s var(--ease-spring);
     }
     .back-btn:hover {
       background: var(--accent-primary);
       border-color: var(--accent-primary);
+      color: #fff;
       transform: translateX(-3px);
+      box-shadow: 0 4px 16px var(--accent-glow);
     }
 
-    /* Hero */
-    .project-hero {
+    .nav-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+    .nav-breadcrumb .divider {
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+    .nav-breadcrumb .active-crumb {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .control-pill {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.25s var(--ease-spring);
+    }
+    .control-pill:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      transform: translateY(-2px);
+    }
+
+    .cta-github-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      background: var(--accent-gradient);
+      color: #fff;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      box-shadow: 0 4px 16px var(--accent-glow);
+      transition: all 0.25s var(--ease-spring);
+    }
+    .cta-github-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--accent-glow);
+      color: #fff;
+    }
+
+    /* Main Container & Layout */
+    .article-wrapper {
       position: relative;
       z-index: 1;
-      max-width: 1200px;
-      margin: 40px auto 60px;
-      padding: 0 24px;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 110px 24px 80px;
+    }
+
+    /* Article Hero */
+    .article-hero {
+      max-width: 980px;
+      margin: 0 auto 50px;
       text-align: center;
     }
-    .project-pill {
-      display: inline-block;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--accent-primary);
-      background: rgba(59, 130, 246, 0.12);
-      border: 1px solid var(--border-accent);
-      padding: 4px 14px;
-      border-radius: 9999px;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-    .project-hero h1 {
-      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 16px;
-    }
-    .project-hero p {
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-      max-width: 720px;
-      margin: 0 auto 28px;
-    }
-    .tech-row {
+
+    .hero-badge-row {
       display: flex;
+      align-items: center;
       justify-content: center;
       flex-wrap: wrap;
       gap: 10px;
-    }
-    .tech-tag {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      padding: 5px 12px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 6px;
-      color: var(--text-secondary);
+      margin-bottom: 20px;
     }
 
-    /* Gallery Grid */
-    .gallery-container {
-      position: relative;
-      z-index: 1;
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: var(--radius-pill);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
-    .gallery-grid {
+    .pill-badge.primary {
+      background: var(--accent-subtle);
+      color: var(--accent-primary);
+      border: 1px solid var(--border-accent);
+    }
+    .pill-badge.emerald {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--status-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .pill-badge.amber {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--status-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .article-title {
+      font-size: clamp(2.3rem, 5vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+      margin-bottom: 22px;
+      color: var(--text-primary);
+    }
+    .article-title .text-gradient {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .article-subtitle {
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      color: var(--text-secondary);
+      max-width: 820px;
+      margin: 0 auto 30px;
+      line-height: 1.65;
+    }
+
+    .article-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+    .author-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .author-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent-primary);
+      object-fit: cover;
+    }
+
+    /* Executive Metric Bar */
+    .metric-strip {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 28px;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin: 40px auto;
+      max-width: 1040px;
     }
-    .gallery-card {
+    .metric-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: var(--radius-md);
+      padding: 20px 18px;
+      text-align: center;
+      transition: transform 0.3s var(--ease-spring), border-color 0.3s ease;
     }
-    .gallery-card:hover {
-      transform: translateY(-6px);
+    .metric-card:hover {
+      transform: translateY(-4px);
       border-color: var(--border-accent);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 10px 25px var(--accent-glow);
     }
-    .card-img-wrap {
-      width: 100%;
-      height: 220px;
-      background: #000;
+    .metric-num {
+      font-family: var(--font-mono);
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--accent-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .metric-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* Article 2-Column Body */
+    .article-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 56px;
+      align-items: flex-start;
+      margin-top: 40px;
+    }
+
+    /* Sticky Sidebar Table of Contents */
+    .sidebar-toc {
+      position: sticky;
+      top: 100px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 22px 18px;
+      backdrop-filter: blur(16px);
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: var(--border-light);
+      border-radius: 4px;
+    }
+
+    .toc-title {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-primary);
+      margin-bottom: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .toc-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      display: block;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+      border-left: 2px solid transparent;
+    }
+    .toc-link:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+      padding-left: 14px;
+    }
+    .toc-link.active {
+      color: var(--accent-primary);
+      background: var(--accent-subtle);
+      border-left-color: var(--accent-primary);
+      font-weight: 600;
+      padding-left: 14px;
+    }
+
+    /* Content Stream */
+    .article-content {
+      max-width: 900px;
+    }
+
+    .content-section {
+      margin-bottom: 64px;
+      scroll-margin-top: 100px;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-primary);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-heading {
+      font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+
+    .article-text {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .article-text strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Technical Callout Box */
+    .callout-box {
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent-primary);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 22px 24px;
+      margin: 28px 0;
+      border-top: 1px solid var(--border-subtle);
+      border-right: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .callout-box.emerald {
+      border-left-color: var(--status-emerald);
+    }
+    .callout-box.amber {
+      border-left-color: var(--status-amber);
+    }
+    .callout-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .callout-body {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* Architecture Flow Diagram Box */
+    .flow-diagram-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin: 32px 0;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      overflow-x: auto;
+    }
+    .flow-step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .flow-step-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      position: relative;
+    }
+    .flow-step-item .step-num {
+      font-size: 0.72rem;
+      color: var(--accent-primary);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .flow-step-item .step-title {
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 4px;
+    }
+    .flow-step-item .step-detail {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* Annotated Screenshot Figure Showcase */
+    .figure-showcase {
+      margin: 40px 0 50px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
       overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: all 0.35s var(--ease-spring);
     }
-    .card-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top;
-      transition: transform 0.4s ease;
+    .figure-showcase:hover {
+      border-color: var(--border-accent);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 30px var(--accent-glow);
     }
-    .gallery-card:hover .card-img-wrap img {
-      transform: scale(1.04);
-    }
-    .card-meta {
-      padding: 16px 20px;
+
+    .figure-window-bar {
+      background: var(--bg-secondary);
+      padding: 12px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
     }
-    .card-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text-primary);
+    .window-dots {
+      display: flex;
+      align-items: center;
+      gap: 7px;
     }
-    .card-num {
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .dot.red { background: #ef4444; }
+    .dot.yellow { background: #f59e0b; }
+    .dot.green { background: #10b981; }
+
+    .window-address {
       font-family: var(--font-mono);
       font-size: 0.75rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+    }
+    .zoom-hint-btn {
+      background: none;
+      border: none;
       color: var(--accent-primary);
+      font-size: 0.82rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* Modal Lightbox */
+    .figure-stage {
+      position: relative;
+      background: #000;
+      cursor: zoom-in;
+      overflow: hidden;
+    }
+    .figure-stage img {
+      width: 100%;
+      height: auto;
+      max-height: 520px;
+      object-fit: contain;
+      object-position: top center;
+      display: block;
+      transition: transform 0.4s var(--ease-spring);
+    }
+    .figure-showcase:hover .figure-stage img {
+      transform: scale(1.015);
+    }
+
+    .figure-caption-box {
+      padding: 22px 26px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+    }
+    .caption-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .caption-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+    }
+    .caption-tag {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--accent-primary);
+      background: var(--accent-subtle);
+      border: 1px solid var(--border-accent);
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+    }
+    .caption-desc {
+      font-size: 0.94rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    .caption-points {
+      list-style: none;
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .caption-points li {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .caption-points li i {
+      color: var(--status-emerald);
+      font-size: 0.75rem;
+    }
+
+    /* Code Snippet Box */
+    .code-snippet-box {
+      background: #0d1117;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      margin: 26px 0;
+      overflow: hidden;
+      font-family: var(--font-mono);
+    }
+    .code-header {
+      background: #161b22;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      color: #8b949e;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .code-body {
+      padding: 18px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #c9d1d9;
+    }
+    .code-body .kw { color: #ff7b72; font-weight: 600; }
+    .code-body .fn { color: #d2a8ff; }
+    .code-body .str { color: #a5d6ff; }
+    .code-body .cm { color: #8b949e; font-style: italic; }
+    .code-body .num { color: #79c0ff; }
+
+    /* Lightbox Modal */
     .lightbox-modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.92);
-      backdrop-filter: blur(12px);
+      background: rgba(0, 0, 0, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       z-index: 99999;
       align-items: center;
       justify-content: center;
       padding: 24px;
     }
-    .lightbox-modal.active { display: flex; }
+    .lightbox-modal.active {
+      display: flex;
+      animation: modalFade 0.25s var(--ease-spring);
+    }
+    @keyframes modalFade {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
     .lightbox-box {
-      max-width: 1100px;
+      max-width: 1200px;
       width: 100%;
       background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
       overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
     }
     .lightbox-header {
-      padding: 16px 20px;
+      padding: 14px 22px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       border-bottom: 1px solid var(--border-subtle);
+    }
+    .lightbox-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .lightbox-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.3rem;
+      cursor: pointer;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .lightbox-close-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--status-rose);
     }
     .lightbox-stage {
       position: relative;
       background: #000;
-      height: 60vh;
+      height: 65vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
     .lightbox-stage img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
     }
-    .nav-arrow {
+    .lightbox-nav-btn {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(18,20,31,0.8);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff;
-      width: 44px; height: 44px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
+      background: rgba(18, 20, 31, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 1.1rem;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s var(--ease-spring);
     }
-    .nav-arrow:hover { background: var(--accent-primary); }
-    .nav-arrow.prev { left: 16px; }
-    .nav-arrow.next { right: 16px; }
-    .close-icon {
-      background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer;
+    .lightbox-nav-btn:hover {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      transform: translateY(-50%) scale(1.1);
+    }
+    .lightbox-nav-btn.prev { left: 16px; }
+    .lightbox-nav-btn.next { right: 16px; }
+
+    /* Next Article Card & Footer */
+    .article-footer-nav {
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .next-project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s var(--ease-spring);
+    }
+    .next-project-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px var(--accent-glow);
+    }
+    .next-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 4px;
+    }
+    .next-arrow-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
     }
 
-    /* Footer */
     footer {
-      border-top: 1px solid var(--border-subtle);
-      padding: 40px 24px;
+      margin-top: 60px;
       text-align: center;
-      color: var(--text-secondary);
       font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1024px) {
+      .article-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .sidebar-toc {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-nav {
+        padding: 0 16px;
+      }
+      .nav-breadcrumb {
+        display: none;
+      }
+      .article-wrapper {
+        padding: 90px 16px 60px;
+      }
+      .article-title {
+        font-size: 2.1rem;
+      }
+      .metric-strip {
+        grid-template-columns: 1fr 1fr;
+      }
+      .next-project-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .lightbox-stage {
+        height: 50vh;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Nav -->
-  <nav class="top-nav">
-    <a href="../index.html" class="back-btn">
-      <i class="fas fa-arrow-left"></i>
-      <span>Back to Portfolio</span>
-    </a>
-    <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-primary);">
-      14 Verified Architecture Views
-    </div>
-  </nav>
-
-  <!-- Hero Header -->
-  <section class="project-hero">
-    <div class="project-pill">Enterprise Spring Boot Project</div>
-    <h1>BookMyEvent UI & System Views</h1>
-    <p>
-      Comprehensive event & movie reservation ecosystem featuring multi-category filters, real-time seat locks to eliminate race conditions, payment workflows, and admin venue governance.
-    </p>
-    <div class="tech-row">
-      <span class="tech-tag">Spring Boot 3</span>
-      <span class="tech-tag">MySQL Concurrency</span>
-      <span class="tech-tag">JSP / Servlet</span>
-      <span class="tech-tag">OTP Authentication</span>
-      <span class="tech-tag">Dynamic QR Ticket</span>
-    </div>
-  </section>
-
-  <!-- Gallery Grid -->
-  <div class="gallery-container">
-    <div class="gallery-grid" id="grid"></div>
+  <!-- Top Reading Progress Indicator -->
+  <div class="reading-progress-track">
+    <div class="reading-progress-bar" id="reading-progress"></div>
   </div>
 
-  <!-- Modal Lightbox -->
-  <div class="lightbox-modal" id="modal" onclick="if(event.target===this) closeModal()">
+  <!-- Sticky Top Navigation -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <a href="../index.html#projects" class="back-btn" aria-label="Return to Main Portfolio">
+        <i class="fas fa-arrow-left"></i>
+        <span>Portfolio</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="divider">/</span>
+        <span>Case Studies</span>
+        <span class="divider">/</span>
+        <span class="active-crumb">BookMyEvent</span>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <!-- Theme Toggle -->
+      <button class="control-pill" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Color Theme" title="Toggle Dark/Light Mode">
+        <i class="fas fa-sun" id="theme-icon"></i>
+      </button>
+      <!-- Source Code Link -->
+      <a href="https://github.com/Nomaan2288" target="_blank" class="cta-github-pill" title="View Source on GitHub">
+        <i class="fab fa-github"></i>
+        <span>Source Code</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="article-wrapper">
+
+    <!-- Article Header / Hero -->
+    <header class="article-hero">
+      <div class="hero-badge-row">
+        <span class="pill-badge primary"><i class="fas fa-microchip"></i> Backend System Architecture</span>
+        <span class="pill-badge emerald"><i class="fas fa-shield-alt"></i> ACID Concurrency Safe</span>
+        <span class="pill-badge amber"><i class="fas fa-clock"></i> 14 Engineering Views</span>
+      </div>
+
+      <h1 class="article-title">
+        BookMyEvent: Engineering a High-Concurrency <span class="text-gradient">Event Ticketing Ecosystem</span>
+      </h1>
+
+      <p class="article-subtitle">
+        A deep-dive technical architectural breakdown of an enterprise-grade reservation platform engineered in Spring Boot and MySQL—tackling race conditions in seat allocation, OTP-verified session states, and dynamic QR cryptographic tickets.
+      </p>
+
+      <div class="article-meta-row">
+        <div class="author-chip">
+          <img src="../Assets/images/shaikh-noman.png" alt="Shaikh Noman" class="author-avatar">
+          <span>Shaikh Noman</span>
+        </div>
+        <span>•</span>
+        <span>Software Developer Intern @ LaunchPad Technology</span>
+        <span>•</span>
+        <span>9.32 CGPA B.Tech CSE</span>
+        <span>•</span>
+        <span><i class="fas fa-book-open"></i> 10 min read</span>
+      </div>
+    </header>
+
+    <!-- Key Telemetry Strip -->
+    <div class="metric-strip">
+      <div class="metric-card">
+        <div class="metric-num">0%</div>
+        <div class="metric-label">Double-Booking Collision Rate</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">10 Min</div>
+        <div class="metric-label">Transient Seat Lock Hold</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">14 Views</div>
+        <div class="metric-label">Verified Architectural Proofs</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">&lt; 120ms</div>
+        <div class="metric-label">MySQL Indexed Query Response</div>
+      </div>
+    </div>
+
+    <!-- Article 2-Column Grid -->
+    <div class="article-layout">
+
+      <!-- Sticky Table of Contents -->
+      <aside class="sidebar-toc">
+        <div class="toc-title">
+          <i class="fas fa-list-ul"></i>
+          <span>Table of Contents</span>
+        </div>
+        <ul class="toc-list" id="toc-list">
+          <li><a href="#overview" class="toc-link">1. Executive Overview</a></li>
+          <li><a href="#architecture" class="toc-link">2. System Architecture</a></li>
+          <li><a href="#auth-security" class="toc-link">3. Auth, RBAC & OTP Recovery</a></li>
+          <li><a href="#discovery" class="toc-link">4. Discovery & Dynamic Catalog</a></li>
+          <li><a href="#concurrency" class="toc-link">5. Concurrency & Seat Locking</a></li>
+          <li><a href="#payments" class="toc-link">6. Transactional Payments</a></li>
+          <li><a href="#qr-verification" class="toc-link">7. Dynamic QR E-Tickets</a></li>
+          <li><a href="#admin-engine" class="toc-link">8. The Admin Governance Engine</a></li>
+          <li><a href="#lessons" class="toc-link">9. Key Engineering Takeaways</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main Long-form Article Stream -->
+      <article class="article-content">
+
+        <!-- Section 1: Executive Overview -->
+        <section id="overview" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-compass"></i>
+            <span>Section 01</span>
+          </div>
+          <h2 class="section-heading">Executive Overview & The Core Problem</h2>
+          <p class="article-text">
+            Online reservation systems represent one of the classic crucible problems in software engineering. When thousands of concurrent clients attempt to reserve finite physical inventory (such as numbered cinema seats, concert slots, or VIP tables) within seconds of ticket release, traditional naive database queries immediately collapse under <strong>race condition hazards</strong>.
+          </p>
+          <p class="article-text">
+            <strong>BookMyEvent</strong> was conceived and developed from first principles to resolve these exact failure modes. Rather than relying on third-party opaque monoliths, the platform implements a modular, ACID-compliant reservation pipeline with defensive concurrency controls, end-to-end user auditing, dynamic venue grid builders, and real-time administrative oversight.
+          </p>
+
+          <div class="callout-box emerald">
+            <div class="callout-header">
+              <i class="fas fa-check-circle"></i>
+              <span>Architectural North Star</span>
+            </div>
+            <div class="callout-body">
+              Zero double-bookings under peak concurrency, deterministic state recovery upon payment drop-off, sub-150ms indexed search queries across dynamic event catalogs, and cryptographic proof-of-reservation for ground verification.
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Architecture & Tech Stack -->
+        <section id="architecture" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-layer-group"></i>
+            <span>Section 02</span>
+          </div>
+          <h2 class="section-heading">System Architecture & Tech Stack</h2>
+          <p class="article-text">
+            The system employs a battle-tested layered MVC architecture built on top of <strong>Java 17 and Spring Boot 3</strong>. Data access is backed by <strong>MySQL 8.0 InnoDB</strong>, deliberately leveraging row-level locking capabilities, transaction isolation levels, and explicit indexing.
+          </p>
+
+          <div class="flow-diagram-box">
+            <div style="font-weight:700; margin-bottom: 6px; color: var(--accent-primary);">
+              [SYSTEM TRANSACTION TOPOLOGY]
+            </div>
+            <div>User Browser ──▶ Spring Security / Filter Chain ──▶ MVC Controller ──▶ Booking Service ──▶ MySQL (InnoDB Pessimistic Lock)</div>
+            <div class="flow-step-grid">
+              <div class="flow-step-item">
+                <div class="step-num">LAYER 01</div>
+                <div class="step-title">Presentation & UI</div>
+                <div class="step-detail">JSP, JSTL, Responsive CSS3 Grid, Vanilla JS for interactive seat matrix DOM rendering.</div>
+              </div>
+              <div class="flow-step-item">
+                <div class="step-num">LAYER 02</div>
+                <div class="step-title">Security & Session</div>
+                <div class="step-detail">BCrypt password hashing, HTTP-only secure session cookies, Role-Based Access Control filters.</div>
+              </div>
+              <div class="flow-step-item">
+                <div class="step-num">LAYER 03</div>
+                <div class="step-title">Business Logic</div>
+                <div class="step-detail">Seat lock scheduler, transient hold expiry daemon (10 min timeout), ZXing QR payload generator.</div>
+              </div>
+              <div class="flow-step-item">
+                <div class="step-num">LAYER 04</div>
+                <div class="step-title">Persistence & ACID</div>
+                <div class="step-detail">MySQL InnoDB, HikariCP connection pooling, row-level locks, transactional rollback hooks.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 3: Auth, RBAC & OTP Recovery -->
+        <section id="auth-security" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-user-shield"></i>
+            <span>Section 03</span>
+          </div>
+          <h2 class="section-heading">Authentication, Role Separation & OTP Recovery</h2>
+          <p class="article-text">
+            Security begins at user admission. The platform separates client identities into two mutually exclusive domains: <strong>Public Customers</strong> and <strong>Executive Administrators</strong>. Every incoming request passes through an authentication interceptor verifying active session tokens.
+          </p>
+
+          <!-- Figure 1: User Login -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/auth/login</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(0)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(0)">
+              <img src="bookmyevent/Screenshot 2025-10-22 121252.png" alt="BookMyEvent User Login Screen" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 1.1 — Secure User Login & Multi-Role Gateway</span>
+                <span class="caption-tag">Auth / Session Guard</span>
+              </div>
+              <p class="caption-desc">
+                Minimalist, high-contrast authentication interface. Validates credentials against BCrypt-hashed password digests stored in MySQL. Automatically routes authenticated users according to their permission grants: regular users to event discovery, administrators to executive dashboards.
+              </p>
+              <ul class="caption-points">
+                <li><i class="fas fa-check"></i> Prevents credential brute-forcing via rate-limited login attempt trackers.</li>
+                <li><i class="fas fa-check"></i> HTTP-only session tokens safeguard against cross-site scripting (XSS) token theft.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Figure 2: Registration -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/auth/register</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(1)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(1)">
+              <img src="bookmyevent/Screenshot 2025-10-22 121311.png" alt="BookMyEvent Account Registration Screen" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 1.2 — Customer Registration with Dual-Tier Validation</span>
+                <span class="caption-tag">Input Sanitization</span>
+              </div>
+              <p class="caption-desc">
+                Clean customer onboarding form implementing both client-side HTML5/regex validation and strict server-side Spring bean validation (`@Email`, `@NotBlank`, regex phone checks) to guard against dirty data injection.
+              </p>
+            </div>
+          </div>
+
+          <!-- Figure 3: OTP Reset -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/auth/forgot-password</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(2)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(2)">
+              <img src="bookmyevent/Screenshot 2025-10-22 121326.png" alt="BookMyEvent OTP Verification Flow" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 1.3 — Ephemeral OTP Password Recovery Pipeline</span>
+                <span class="caption-tag">Security / JavaMailSender</span>
+              </div>
+              <p class="caption-desc">
+                Time-based one-time password (OTP) verification architecture. Dispatches cryptographically random 6-digit tokens through asynchronous mail threads with an enforced 5-minute time-to-live (TTL). Single-use tokens invalidate immediately upon successful password reset.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4: Discovery & Dynamic Catalog -->
+        <section id="discovery" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-compass"></i>
+            <span>Section 04</span>
+          </div>
+          <h2 class="section-heading">Event Discovery & Multi-Parameter Catalog Engine</h2>
+          <p class="article-text">
+            Once inside the portal, users encounter a high-throughput event discovery engine. Because event catalogs frequently feature hundreds of concurrent listings across movies, concerts, comedy specials, and tech conferences, database queries must remain instantaneous.
+          </p>
+
+          <!-- Figure 4: Landing Page -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/home</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(3)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(3)">
+              <img src="bookmyevent/Screenshot 2025-10-22 121347.png" alt="BookMyEvent Homepage Carousel & Highlights" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 2.1 — Dynamic Hero Portal & Trending Events Showcase</span>
+                <span class="caption-tag">Frontend Architecture</span>
+              </div>
+              <p class="caption-desc">
+                Landing view displaying active carousel banners, quick navigation tabs (Movies, Comedy Shows, Tech Conferences, Sports), and fast-action booking shortcuts.
+              </p>
+            </div>
+          </div>
+
+          <!-- Figure 5: Filter Catalog -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/events?category=all&sort=date</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(4)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(4)">
+              <img src="bookmyevent/Screenshot 2025-10-22 121412.png" alt="BookMyEvent Filterable Catalog View" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 2.2 — Multi-Faceted Query Engine with Live Price & Date Filters</span>
+                <span class="caption-tag">Indexed SQL Engine</span>
+              </div>
+              <p class="caption-desc">
+                Dynamic query catalog allowing users to slice event inventory by genre, city, venue, and date range. Backed by compound B-Tree indexes on `(event_category, event_date, is_active)` ensuring query execution stays under 120ms even as catalog volume scales.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 5: Concurrency & Seat Locking -->
+        <section id="concurrency" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-lock"></i>
+            <span>Section 05</span>
+          </div>
+          <h2 class="section-heading">The Concurrency Challenge: Real-Time Seat Locking</h2>
+          <p class="article-text">
+            Here lies the true technical heart of BookMyEvent. Consider the scenario: User A and User B click on "Seat C-14" at the exact same millisecond. If the system simply checks availability at the moment of payment submission, one user will pay for a ticket that has already been taken.
+          </p>
+          <p class="article-text">
+            To eliminate this, BookMyEvent implements a <strong>Two-Phase Transient Seat Locking Algorithm</strong>:
+          </p>
+
+          <div class="code-snippet-box">
+            <div class="code-header">
+              <span>SeatLockRepository.java — Pessimistic Lock Query</span>
+              <span>MySQL 8.0</span>
+            </div>
+            <div class="code-body">
+              <span class="cm">// Step 1: Acquire exclusive row lock on seat for event slot</span><br>
+              <span class="kw">SELECT</span> * <span class="kw">FROM</span> venue_seats <br>
+              <span class="kw">WHERE</span> seat_id = :seatId <span class="kw">AND</span> event_slot_id = :slotId <br>
+              <span class="kw">FOR UPDATE</span>;<br><br>
+              <span class="cm">// Step 2: Validate state — must be AVAILABLE or expired hold</span><br>
+              <span class="kw">if</span> (seat.getStatus() == SeatStatus.<span class="num">AVAILABLE</span> || seat.isHoldExpired()) {<br>
+              &nbsp;&nbsp;seat.setStatus(SeatStatus.<span class="num">LOCKED</span>);<br>
+              &nbsp;&nbsp;seat.setLockedByUserId(currentUserId);<br>
+              &nbsp;&nbsp;seat.setLockExpiresAt(Instant.<span class="fn">now</span>().<span class="fn">plusMinutes</span>(<span class="num">10</span>));<br>
+              &nbsp;&nbsp;seatRepository.<span class="fn">save</span>(seat);<br>
+              }
+            </div>
+          </div>
+
+          <!-- Figure 6: Seat Matrix -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/booking/seats?slot=1042</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(5)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(5)">
+              <img src="bookmyevent/Screenshot 2025-10-22 121608.png" alt="BookMyEvent Interactive Seat Matrix View" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 3.1 — Interactive Venue Seat Matrix with Real-Time Lock States</span>
+                <span class="caption-tag">Concurrency Algorithm</span>
+              </div>
+              <p class="caption-desc">
+                Color-coded seating matrix visually segmenting seats into <em>Available</em> (Green), <em>Selected by User</em> (Blue), and <em>Locked / Sold</em> (Grey/Disabled). Upon selection, seats enter a 10-minute countdown timer. If checkout is abandoned or expires, a scheduled background cron automatically restores seats to the public pool.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 6: Transactional Payments -->
+        <section id="payments" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-credit-card"></i>
+            <span>Section 06</span>
+          </div>
+          <h2 class="section-heading">Transactional Payment Processing & Ledger Commit</h2>
+          <p class="article-text">
+            Once seats are held, the checkout workflow initiates an atomic transaction. In production e-commerce, money movement and ticket reservation must be strictly bound together: either both succeed, or both roll back cleanly.
+          </p>
+
+          <!-- Figure 7: Payment Screen -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/checkout/payment?order=ORD-88219</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(6)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(6)">
+              <img src="bookmyevent/Screenshot 2025-10-22 121623.png" alt="BookMyEvent Payment Gateway Screen" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 3.2 — Multi-Method Checkout Gateway Simulation</span>
+                <span class="caption-tag">Financial Ledger</span>
+              </div>
+              <p class="caption-desc">
+                Simulated high-availability checkout gateway supporting credit/debit cards, UPI digital payments, and net banking. Submitting payment executes a Spring `@Transactional` service block: validating the active 10-minute lock, generating a financial ledger entry, creating an encrypted ticket payload, and atomically updating seat status to `CONFIRMED`.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 7: Dynamic QR E-Tickets -->
+        <section id="qr-verification" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-qrcode"></i>
+            <span>Section 07</span>
+          </div>
+          <h2 class="section-heading">Cryptographic QR E-Ticket Generation & Verification</h2>
+          <p class="article-text">
+            Issuing a digital ticket requires fraud prevention. Physical event bouncers and scanners cannot rely on plain text ticket IDs that could easily be spoofed or duplicated in Photoshop.
+          </p>
+
+          <!-- Figure 8: QR Ticket -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/ticket/view?ref=BME-99124</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(7)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(7)">
+              <img src="bookmyevent/Screenshot 2025-10-22 121706.png" alt="BookMyEvent Confirmation Ticket with Dynamic QR" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 4.1 — Verified E-Ticket with Embedded Cryptographic QR Code</span>
+                <span class="caption-tag">ZXing QR Engine</span>
+              </div>
+              <p class="caption-desc">
+                Production-ready boarding pass issued post-payment. Contains event metadata, assigned seat coordinates, venue address, and a dynamic 2D barcode encoded via the Google ZXing library. The QR payload contains a SHA-256 hashed signature combining `order_id`, `user_id`, and `salt`, enabling rapid offline scanning at gate turnstiles.
+              </p>
+            </div>
+          </div>
+
+          <!-- Figure 9: Account History -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/account/my-bookings</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(8)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(8)">
+              <img src="bookmyevent/Screenshot 2025-10-22 121735.png" alt="BookMyEvent User Booking History Ledger" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 4.2 — Customer Self-Service Booking Ledger</span>
+                <span class="caption-tag">User Audit Portal</span>
+              </div>
+              <p class="caption-desc">
+                User profile portal listing all active and historical bookings with one-click PDF re-download, invoice printing, and real-time status monitoring (Active, Attended, Cancelled).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 8: The Admin Governance Engine -->
+        <section id="admin-engine" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-cogs"></i>
+            <span>Section 08</span>
+          </div>
+          <h2 class="section-heading">The Back-Office Engine: Executive Admin Governance</h2>
+          <p class="article-text">
+            While consumer-facing interfaces command visual attention, 70% of enterprise ticketing logic lives in the administrative back-office. BookMyEvent provides venue owners and system administrators with a command suite capable of orchestrating schedules, capacity layouts, and user privileges.
+          </p>
+
+          <!-- Figure 10: Admin Dashboard -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/admin/dashboard</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(9)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(9)">
+              <img src="bookmyevent/Screenshot 2025-10-22 122037.png" alt="BookMyEvent Executive Admin Dashboard" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 5.1 — Executive Telemetry Dashboard & Revenue KPIs</span>
+                <span class="caption-tag">Business Intelligence</span>
+              </div>
+              <p class="caption-desc">
+                Administrative cockpit aggregating live system metrics: gross ticket revenues, active registered users, overall venue occupancy percentages, and pending event schedules across regional zones.
+              </p>
+            </div>
+          </div>
+
+          <!-- Figure 11: User Registry -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/admin/users</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(10)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(10)">
+              <img src="bookmyevent/Screenshot 2025-10-22 122111.png" alt="BookMyEvent User Registry & Role Permissions" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 5.2 — RBAC User Directory & Permission Matrix</span>
+                <span class="caption-tag">Role Governance</span>
+              </div>
+              <p class="caption-desc">
+                Centralized user registry allowing master administrators to promote users to venue managers, suspend fraudulent accounts, and audit customer login histories.
+              </p>
+            </div>
+          </div>
+
+          <!-- Figure 12: Event Slot Management -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/admin/events</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(11)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(11)">
+              <img src="bookmyevent/Screenshot 2025-10-22 122147.png" alt="BookMyEvent Manage Events & Showtimes" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 5.3 — Event Scheduling, Venues & Time-Slot Lifecycle</span>
+                <span class="caption-tag">Scheduling Engine</span>
+              </div>
+              <p class="caption-desc">
+                Complete CRUD console for provisioning new movie screenings, musical tours, or theater runs. Automatically validates against venue scheduling collisions to prevent double-booking physical auditoriums.
+              </p>
+            </div>
+          </div>
+
+          <!-- Figure 13: Venue Capacity Builder -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/admin/venues/config</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(12)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(12)">
+              <img src="bookmyevent/Screenshot 2025-10-22 122334.png" alt="BookMyEvent Venue Catalog & Seating Architect" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 5.4 — Venue Seating Plan Architect & Capacity Configurator</span>
+                <span class="caption-tag">Spatial Schema</span>
+              </div>
+              <p class="caption-desc">
+                Venue modeling interface configuring physical floor dimensions (rows, columns, aisle gaps, and tier classes: Platinum, Gold, Silver). Automatically generates seat records upon venue onboarding.
+              </p>
+            </div>
+          </div>
+
+          <!-- Figure 14: Live Update Console -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://bookmyevent.internal/admin/events/live-console</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(13)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(13)">
+              <img src="bookmyevent/Screenshot 2025-10-22 122453.png" alt="BookMyEvent Live Event Console" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 5.5 — Real-Time Event State Console & Schedule Override</span>
+                <span class="caption-tag">Operations Console</span>
+              </div>
+              <p class="caption-desc">
+                Emergency operational console allowing venue managers to pause sales, push schedule adjustments, or broadcast postponement alerts instantly across connected client sessions.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 9: Key Engineering Takeaways -->
+        <section id="lessons" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Section 09</span>
+          </div>
+          <h2 class="section-heading">Key Engineering Takeaways & Architectural Lessons</h2>
+          <p class="article-text">
+            Designing and shipping BookMyEvent yielded foundational insights into building resilient distributed-style applications on top of relational database primitives:
+          </p>
+
+          <div class="callout-box">
+            <div class="callout-header">
+              <i class="fas fa-lightbulb"></i>
+              <span>1. Pessimistic Row Locking Beats Optimistic Locking for Scarce Goods</span>
+            </div>
+            <div class="callout-body">
+              For scarce physical seats under extreme flash-sale concurrency, optimistic locking causes massive retry storms and bad user UX as hundreds of users fail at checkout. Enforcing a transient pessimistic lock row hold (`FOR UPDATE`) for 10 minutes gives users deterministic guarantees.
+            </div>
+          </div>
+
+          <div class="callout-box">
+            <div class="callout-header">
+              <i class="fas fa-lightbulb"></i>
+              <span>2. Database Indexes Must Mirror Business Query Vectors</span>
+            </div>
+            <div class="callout-body">
+              Event filtering by genre and date requires composite multi-column indexing. A single poorly designed index can turn a 20ms query into a 4-second full table scan when sorting by release dates.
+            </div>
+          </div>
+
+          <div class="callout-box">
+            <div class="callout-header">
+              <i class="fas fa-lightbulb"></i>
+              <span>3. Defensive Ground Verification is Mandatory</span>
+            </div>
+            <div class="callout-body">
+              Digital confirmation screens are trivial to forge with client-side DOM tampering. Generating cryptographic SHA-256 signatures embedded directly into high-density QR codes ensures bulletproof validation on venue turnstiles.
+            </div>
+          </div>
+        </section>
+
+        <!-- Next Article Navigation -->
+        <div class="article-footer-nav">
+          <a href="spotadz.html" class="next-project-card">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-primary); text-transform: uppercase;">
+                Next Technical Case Study &rarr;
+              </div>
+              <div class="next-title">SpotAdz: Commercial Billboard Marketplace & Multi-Tenant Scheduling</div>
+              <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 6px;">
+                Learn how programmatic OOH advertising schedules and invoicing ledgers were engineered.
+              </div>
+            </div>
+            <div class="next-arrow-circle">
+              <i class="fas fa-arrow-right"></i>
+            </div>
+          </a>
+        </div>
+
+      </article>
+
+    </div>
+
+    <!-- Page Footer -->
+    <footer>
+      &copy; 2025–2026 Shaikh Noman. Built with Spring Boot, MySQL, and modern engineering standards.
+    </footer>
+
+  </main>
+
+  <!-- Interactive Lightbox Modal -->
+  <div class="lightbox-modal" id="modal" onclick="if(event.target===this) closeLightbox()">
     <div class="lightbox-box">
       <div class="lightbox-header">
-        <h4 id="modal-title" style="font-size: 1.05rem; font-weight: 700;">Screenshot View</h4>
-        <button class="close-icon" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        <h4 class="lightbox-title" id="modal-title">System Architecture View</h4>
+        <button class="lightbox-close-btn" onclick="closeLightbox()" aria-label="Close Lightbox">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
       <div class="lightbox-stage">
-        <button class="nav-arrow prev" onclick="navigate(-1)"><i class="fas fa-chevron-left"></i></button>
-        <img id="modal-img" src="" alt="Active View">
-        <button class="nav-arrow next" onclick="navigate(1)"><i class="fas fa-chevron-right"></i></button>
+        <button class="lightbox-nav-btn prev" onclick="navigateLightbox(-1)" aria-label="Previous Screenshot">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <img id="modal-img" src="" alt="Active Screenshot Architecture View">
+        <button class="lightbox-nav-btn next" onclick="navigateLightbox(1)" aria-label="Next Screenshot">
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
     </div>
   </div>
 
-  <footer>
-    &copy; 2025–2026 Shaikh Noman. Built with Spring Boot, MySQL, and modern web standards.
-  </footer>
-
   <script>
-    const items = [
-      { src: 'bookmyevent/Screenshot 2025-10-22 121252.png', title: 'User Login & Auth Security' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 121311.png', title: 'Account Registration' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 121326.png', title: 'Password Reset with OTP Verification' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 121347.png', title: 'Home Page — Dynamic Hero & Carousel' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 121412.png', title: 'Events Catalog with Active Filters' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 121608.png', title: 'Seat Layout & Real-Time Booking Lock' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 121623.png', title: 'Payment Processing & Simulation' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 121706.png', title: 'Confirmation Ticket with Unique QR' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 121735.png', title: 'Client Account & Booking Ledger' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 122037.png', title: 'Executive Admin Dashboard' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 122111.png', title: 'User Registry & Role Permissions' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 122147.png', title: 'Manage Events, Venues & Slots' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 122334.png', title: 'Venue Catalog & Capacity Config' },
-      { src: 'bookmyevent/Screenshot 2025-10-22 122453.png', title: 'Live Update Console for Events' }
+    // --- 1. Gallery Data Array ---
+    const galleryItems = [
+      { src: 'bookmyevent/Screenshot 2025-10-22 121252.png', title: 'Figure 1.1 — Secure User Login & Multi-Role Gateway' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 121311.png', title: 'Figure 1.2 — Customer Registration with Dual-Tier Validation' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 121326.png', title: 'Figure 1.3 — Ephemeral OTP Password Recovery Pipeline' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 121347.png', title: 'Figure 2.1 — Dynamic Hero Portal & Trending Events Showcase' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 121412.png', title: 'Figure 2.2 — Multi-Faceted Query Engine with Live Price & Date Filters' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 121608.png', title: 'Figure 3.1 — Interactive Venue Seat Matrix with Real-Time Lock States' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 121623.png', title: 'Figure 3.2 — Multi-Method Checkout Gateway Simulation' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 121706.png', title: 'Figure 4.1 — Verified E-Ticket with Embedded Cryptographic QR Code' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 121735.png', title: 'Figure 4.2 — Customer Self-Service Booking Ledger' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 122037.png', title: 'Figure 5.1 — Executive Telemetry Dashboard & Revenue KPIs' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 122111.png', title: 'Figure 5.2 — RBAC User Directory & Permission Matrix' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 122147.png', title: 'Figure 5.3 — Event Scheduling, Venues & Time-Slot Lifecycle' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 122334.png', title: 'Figure 5.4 — Venue Seating Plan Architect & Capacity Configurator' },
+      { src: 'bookmyevent/Screenshot 2025-10-22 122453.png', title: 'Figure 5.5 — Real-Time Event State Console & Schedule Override' }
     ];
 
-    let currentIndex = 0;
-    const grid = document.getElementById('grid');
+    let currentIdx = 0;
     const modal = document.getElementById('modal');
     const modalImg = document.getElementById('modal-img');
     const modalTitle = document.getElementById('modal-title');
+    const progressBar = document.getElementById('reading-progress');
 
-    items.forEach((item, index) => {
-      const card = document.createElement('div');
-      card.className = 'gallery-card';
-      card.onclick = () => openModal(index);
-      card.innerHTML = `
-        <div class="card-img-wrap">
-          <img src="${item.src}" alt="${item.title}" loading="lazy">
-        </div>
-        <div class="card-meta">
-          <div class="card-title">${item.title}</div>
-          <div class="card-num">${index + 1} / ${items.length}</div>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-
-    function openModal(idx) {
-      currentIndex = idx;
-      renderModal();
+    // --- 2. Lightbox Functions ---
+    function openLightbox(idx) {
+      currentIdx = idx;
+      renderLightbox();
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
-    function closeModal() {
+    function closeLightbox() {
       modal.classList.remove('active');
       document.body.style.overflow = '';
     }
 
-    function navigate(delta) {
-      currentIndex = (currentIndex + delta + items.length) % items.length;
-      renderModal();
+    function navigateLightbox(delta) {
+      currentIdx = (currentIdx + delta + galleryItems.length) % galleryItems.length;
+      renderLightbox();
     }
 
-    function renderModal() {
-      modalImg.src = items[currentIndex].src;
-      modalTitle.textContent = `${items[currentIndex].title} (${currentIndex + 1} of ${items.length})`;
+    function renderLightbox() {
+      modalImg.src = galleryItems[currentIdx].src;
+      modalTitle.textContent = `${galleryItems[currentIdx].title} (${currentIdx + 1} of ${galleryItems.length})`;
     }
 
     window.addEventListener('keydown', (e) => {
       if (modal.classList.contains('active')) {
-        if (e.key === 'Escape') closeModal();
-        if (e.key === 'ArrowLeft') navigate(-1);
-        if (e.key === 'ArrowRight') navigate(1);
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') navigateLightbox(-1);
+        if (e.key === 'ArrowRight') navigateLightbox(1);
       }
     });
+
+    // --- 3. Scroll Reading Progress Bar ---
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      if (progressBar) {
+        progressBar.style.width = scrolled + '%';
+      }
+    });
+
+    // --- 4. Sticky TOC Active Section Highlight (ScrollSpy) ---
+    const sections = document.querySelectorAll('.content-section');
+    const tocLinks = document.querySelectorAll('.toc-link');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          tocLinks.forEach(link => {
+            if (link.getAttribute('href') === `#${id}`) {
+              link.classList.add('active');
+            } else {
+              link.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, {
+      rootMargin: '-20% 0px -70% 0px'
+    });
+
+    sections.forEach(sec => observer.observe(sec));
+
+    // --- 5. Theme Synchronization with Main Portfolio ---
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon(next);
+    }
+
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('theme-icon');
+      if (icon) {
+        icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+
+    initTheme();
   </script>
 </body>
 </html>

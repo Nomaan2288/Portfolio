@@ -61,7 +61,7 @@ Software Developer Intern at **LaunchPad Technology** (August 2026 – Present) 
 * **Interactive Seat Selection Engine**: Real-time locking algorithm preventing concurrency conflicts during simultaneous ticket checkouts.
 * **Security & Auth**: Dual-factor OTP password recovery, BCrypt hashed credentials, and role-based access for organizers and attendees.
 * **Admin Command Center**: Visual venue seating maps, ticket sales telemetry, and exportable financial settlement reports.
-* 🔗 **[Explore Interactive Screenshots & Gallery Breakdown →](https://github.com/Nomaan2288/Portfolio/blob/master/Screenshots/bookmyevent.html)**
+* 🔗 **[Read Architectural Case Study & Technical Breakdown →](https://nomaan2288.github.io/Portfolio/Screenshots/bookmyevent.html)**
 
 ---
 
@@ -71,7 +71,7 @@ Software Developer Intern at **LaunchPad Technology** (August 2026 – Present) 
 * **Real-Time Billboard Inventory**: Live scheduling calendar tracking outdoor hoarding availability and reservation windows.
 * **Multi-Tier RBAC**: Distinct portal dashboards for outdoor advertisers, property billboard owners, and platform administrators.
 * **Financial Ledger Engine**: Automated invoice calculation, booking status tracking, and exportable advertising analytics.
-* 🔗 **[Explore Interactive Screenshots & Workflow Breakdown →](https://github.com/Nomaan2288/Portfolio/blob/master/Screenshots/spotadz.html)**
+* 🔗 **[Read Architectural Case Study & Technical Breakdown →](https://nomaan2288.github.io/Portfolio/Screenshots/spotadz.html)**
 
 ---
 

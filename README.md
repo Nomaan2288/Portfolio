@@ -34,8 +34,8 @@ A bespoke, production-grade personal developer portfolio engineered with **zero 
 
 | Project | Domain | Key Architecture & Capabilities | Gallery / Links |
 | :--- | :--- | :--- | :--- |
-| **BookMyEvent** | Enterprise Backend | Spring Boot, MySQL ACID transactions, real-time seat lock algorithm, OTP password recovery, admin analytics. | [Interactive Showcase](Screenshots/bookmyevent.html) |
-| **SpotAdz** | Commercial Marketplace | Spring Boot, role-based access control (RBAC), outdoor billboard availability calendar, invoice ledgers. | [Interactive Showcase](Screenshots/spotadz.html) |
+| **BookMyEvent** | Enterprise Backend | Spring Boot, MySQL ACID transactions, real-time seat lock algorithm, OTP password recovery, admin analytics. | [Architecture Deep Dive](Screenshots/bookmyevent.html) |
+| **SpotAdz** | Commercial Marketplace | Spring Boot, role-based access control (RBAC), outdoor billboard availability calendar, invoice ledgers. | [Architecture Deep Dive](Screenshots/spotadz.html) |
 | **Coding Craft** | Frontend & Education | Interactive web coding portal and playground with curated developer tracks. | [Live Portal](https://nomaan2288.github.io/Coding-Craft/) |
 | **Smart Home Safety** | IoT & Embedded | ESP8266 (NodeMCU), Arduino, MQ2 gas telemetry, flame sensor hardware interrupts, buzzer safety triggers. | [Project Specs](IoT/Smart%20Home%20Safety%20&%20Awareness%20System%20.pdf) |
 

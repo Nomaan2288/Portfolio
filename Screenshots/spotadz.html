@@ -3,384 +3,1667 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SpotAdz — Marketplace System Architecture & UI Views</title>
+  <title>SpotAdz — Programmatic OOH Advertising Marketplace & Reservation Engine | Shaikh Noman Case Study</title>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <link rel="alternate icon" href="../favicon.svg" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
+    /* ==========================================================================
+       DESIGN SYSTEM & THEME TOKENS (Matching Shaikh Noman Portfolio)
+       ========================================================================== */
     :root {
       --bg-primary: #08090d;
       --bg-secondary: #0f1118;
-      --bg-card: rgba(18, 20, 31, 0.75);
+      --bg-tertiary: #161824;
+      --bg-card: rgba(18, 20, 31, 0.78);
+      --bg-card-hover: rgba(26, 30, 46, 0.9);
+      --bg-glass: rgba(12, 14, 21, 0.85);
+
       --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-light: rgba(255, 255, 255, 0.16);
       --border-accent: rgba(59, 130, 246, 0.35);
+
       --text-primary: #f8fafc;
       --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --text-inverse: #090a0f;
+
       --accent-primary: #3b82f6;
-      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-      --font-main: 'Plus Jakarta Sans', sans-serif;
+      --accent-secondary: #6366f1;
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+      --accent-glow: rgba(59, 130, 246, 0.25);
+      --accent-subtle: rgba(59, 130, 246, 0.12);
+
+      --status-emerald: #10b981;
+      --status-emerald-glow: rgba(16, 185, 129, 0.22);
+      --status-amber: #f59e0b;
+      --status-rose: #f43f5e;
+
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
+
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.55);
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-pill: 9999px;
+
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --bg-card: rgba(255, 255, 255, 0.92);
+      --bg-card-hover: #ffffff;
+      --bg-glass: rgba(255, 255, 255, 0.9);
+
+      --border-subtle: rgba(15, 23, 42, 0.08);
+      --border-light: rgba(15, 23, 42, 0.16);
+      --border-accent: rgba(37, 99, 235, 0.3);
+
+      --text-primary: #090e17;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --text-inverse: #ffffff;
+
+      --accent-primary: #2563eb;
+      --accent-secondary: #4f46e5;
+      --accent-gradient: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+      --accent-glow: rgba(37, 99, 235, 0.15);
+      --accent-subtle: rgba(37, 99, 235, 0.08);
+
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 20px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
     body {
       font-family: var(--font-main);
-      background: var(--bg-primary);
+      background-color: var(--bg-primary);
       color: var(--text-primary);
-      line-height: 1.6;
-      padding-top: 80px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    /* Ambient Grid */
+    /* Ambient Dot Grid */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
+      background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.06) 1px, transparent 0);
       background-size: 32px 32px;
       pointer-events: none;
       z-index: 0;
     }
+    [data-theme="light"] body::before {
+      background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.06) 1px, transparent 0);
+    }
 
-    /* Navbar */
+    /* Reading Progress Track */
+    .reading-progress-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3.5px;
+      background: transparent;
+      z-index: 2000;
+    }
+    .reading-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-gradient);
+      box-shadow: 0 0 12px var(--accent-glow);
+      transition: width 0.1s ease-out;
+    }
+
+    /* Sticky Navbar */
     .top-nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
-      background: rgba(12, 14, 21, 0.85);
-      backdrop-filter: blur(16px);
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border-subtle);
       z-index: 1000;
-      padding: 16px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 0 28px;
+      transition: all 0.3s ease;
     }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
     .back-btn {
       color: var(--text-primary);
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.92rem;
-      display: flex;
+      font-size: 0.88rem;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 14px;
-      border-radius: 9999px;
-      background: rgba(255,255,255,0.05);
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      transition: all 0.2s ease;
+      transition: all 0.25s var(--ease-spring);
     }
     .back-btn:hover {
       background: var(--accent-primary);
       border-color: var(--accent-primary);
+      color: #fff;
       transform: translateX(-3px);
+      box-shadow: 0 4px 16px var(--accent-glow);
     }
 
-    /* Hero */
-    .project-hero {
+    .nav-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+    .nav-breadcrumb .divider {
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+    .nav-breadcrumb .active-crumb {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .control-pill {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.25s var(--ease-spring);
+    }
+    .control-pill:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      transform: translateY(-2px);
+    }
+
+    .cta-github-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      background: var(--accent-gradient);
+      color: #fff;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      box-shadow: 0 4px 16px var(--accent-glow);
+      transition: all 0.25s var(--ease-spring);
+    }
+    .cta-github-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--accent-glow);
+      color: #fff;
+    }
+
+    /* Main Container */
+    .article-wrapper {
       position: relative;
       z-index: 1;
-      max-width: 1200px;
-      margin: 40px auto 60px;
-      padding: 0 24px;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 110px 24px 80px;
+    }
+
+    /* Article Hero */
+    .article-hero {
+      max-width: 980px;
+      margin: 0 auto 50px;
       text-align: center;
     }
-    .project-pill {
-      display: inline-block;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--accent-primary);
-      background: rgba(59, 130, 246, 0.12);
-      border: 1px solid var(--border-accent);
-      padding: 4px 14px;
-      border-radius: 9999px;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-    .project-hero h1 {
-      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 16px;
-    }
-    .project-hero p {
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-      max-width: 720px;
-      margin: 0 auto 28px;
-    }
-    .tech-row {
+
+    .hero-badge-row {
       display: flex;
+      align-items: center;
       justify-content: center;
       flex-wrap: wrap;
       gap: 10px;
-    }
-    .tech-tag {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      padding: 5px 12px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 6px;
-      color: var(--text-secondary);
+      margin-bottom: 20px;
     }
 
-    /* Gallery Grid */
-    .gallery-container {
-      position: relative;
-      z-index: 1;
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: var(--radius-pill);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
-    .gallery-grid {
+    .pill-badge.primary {
+      background: var(--accent-subtle);
+      color: var(--accent-primary);
+      border: 1px solid var(--border-accent);
+    }
+    .pill-badge.emerald {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--status-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .pill-badge.amber {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--status-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .article-title {
+      font-size: clamp(2.3rem, 5vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+      margin-bottom: 22px;
+      color: var(--text-primary);
+    }
+    .article-title .text-gradient {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .article-subtitle {
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      color: var(--text-secondary);
+      max-width: 820px;
+      margin: 0 auto 30px;
+      line-height: 1.65;
+    }
+
+    .article-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+    .author-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .author-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent-primary);
+      object-fit: cover;
+    }
+
+    /* Metric Bar */
+    .metric-strip {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 28px;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin: 40px auto;
+      max-width: 1040px;
     }
-    .gallery-card {
+    .metric-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: var(--radius-md);
+      padding: 20px 18px;
+      text-align: center;
+      transition: transform 0.3s var(--ease-spring), border-color 0.3s ease;
     }
-    .gallery-card:hover {
-      transform: translateY(-6px);
+    .metric-card:hover {
+      transform: translateY(-4px);
       border-color: var(--border-accent);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 10px 25px var(--accent-glow);
     }
-    .card-img-wrap {
-      width: 100%;
-      height: 220px;
-      background: #000;
+    .metric-num {
+      font-family: var(--font-mono);
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--accent-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .metric-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* Article 2-Column Body */
+    .article-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 56px;
+      align-items: flex-start;
+      margin-top: 40px;
+    }
+
+    /* Sticky Sidebar TOC */
+    .sidebar-toc {
+      position: sticky;
+      top: 100px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 22px 18px;
+      backdrop-filter: blur(16px);
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: var(--border-light);
+      border-radius: 4px;
+    }
+
+    .toc-title {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-primary);
+      margin-bottom: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .toc-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      display: block;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+      border-left: 2px solid transparent;
+    }
+    .toc-link:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+      padding-left: 14px;
+    }
+    .toc-link.active {
+      color: var(--accent-primary);
+      background: var(--accent-subtle);
+      border-left-color: var(--accent-primary);
+      font-weight: 600;
+      padding-left: 14px;
+    }
+
+    /* Main Content */
+    .article-content {
+      max-width: 900px;
+    }
+
+    .content-section {
+      margin-bottom: 64px;
+      scroll-margin-top: 100px;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--accent-primary);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-heading {
+      font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+
+    .article-text {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    .article-text strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Callouts */
+    .callout-box {
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent-primary);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 22px 24px;
+      margin: 28px 0;
+      border-top: 1px solid var(--border-subtle);
+      border-right: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .callout-box.emerald { border-left-color: var(--status-emerald); }
+    .callout-box.amber { border-left-color: var(--status-amber); }
+    .callout-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .callout-body {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* Flow Topology */
+    .flow-diagram-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin: 32px 0;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      overflow-x: auto;
+    }
+    .flow-step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .flow-step-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+    .flow-step-item .step-num {
+      font-size: 0.72rem;
+      color: var(--accent-primary);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .flow-step-item .step-title {
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 4px;
+    }
+    .flow-step-item .step-detail {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* Figure Showcase */
+    .figure-showcase {
+      margin: 40px 0 50px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
       overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: all 0.35s var(--ease-spring);
     }
-    .card-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top;
-      transition: transform 0.4s ease;
+    .figure-showcase:hover {
+      border-color: var(--border-accent);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 30px var(--accent-glow);
     }
-    .gallery-card:hover .card-img-wrap img {
-      transform: scale(1.04);
-    }
-    .card-meta {
-      padding: 16px 20px;
+
+    .figure-window-bar {
+      background: var(--bg-secondary);
+      padding: 12px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
     }
-    .card-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text-primary);
+    .window-dots {
+      display: flex;
+      align-items: center;
+      gap: 7px;
     }
-    .card-num {
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .dot.red { background: #ef4444; }
+    .dot.yellow { background: #f59e0b; }
+    .dot.green { background: #10b981; }
+
+    .window-address {
       font-family: var(--font-mono);
       font-size: 0.75rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+    }
+    .zoom-hint-btn {
+      background: none;
+      border: none;
       color: var(--accent-primary);
+      font-size: 0.82rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* Modal Lightbox */
+    .figure-stage {
+      position: relative;
+      background: #000;
+      cursor: zoom-in;
+      overflow: hidden;
+    }
+    .figure-stage img {
+      width: 100%;
+      height: auto;
+      max-height: 520px;
+      object-fit: contain;
+      object-position: top center;
+      display: block;
+      transition: transform 0.4s var(--ease-spring);
+    }
+    .figure-showcase:hover .figure-stage img {
+      transform: scale(1.015);
+    }
+
+    .figure-caption-box {
+      padding: 22px 26px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+    }
+    .caption-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .caption-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+    }
+    .caption-tag {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--accent-primary);
+      background: var(--accent-subtle);
+      border: 1px solid var(--border-accent);
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+    }
+    .caption-desc {
+      font-size: 0.94rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    .caption-points {
+      list-style: none;
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .caption-points li {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .caption-points li i {
+      color: var(--status-emerald);
+      font-size: 0.75rem;
+    }
+
+    /* Code Snippet */
+    .code-snippet-box {
+      background: #0d1117;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      margin: 26px 0;
+      overflow: hidden;
+      font-family: var(--font-mono);
+    }
+    .code-header {
+      background: #161b22;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      color: #8b949e;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .code-body {
+      padding: 18px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #c9d1d9;
+    }
+    .code-body .kw { color: #ff7b72; font-weight: 600; }
+    .code-body .fn { color: #d2a8ff; }
+    .code-body .str { color: #a5d6ff; }
+    .code-body .cm { color: #8b949e; font-style: italic; }
+    .code-body .num { color: #79c0ff; }
+
+    /* Lightbox Modal */
     .lightbox-modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.92);
-      backdrop-filter: blur(12px);
+      background: rgba(0, 0, 0, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       z-index: 99999;
       align-items: center;
       justify-content: center;
       padding: 24px;
     }
-    .lightbox-modal.active { display: flex; }
+    .lightbox-modal.active {
+      display: flex;
+      animation: modalFade 0.25s var(--ease-spring);
+    }
+    @keyframes modalFade {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
     .lightbox-box {
-      max-width: 1100px;
+      max-width: 1200px;
       width: 100%;
       background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
       overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
     }
     .lightbox-header {
-      padding: 16px 20px;
+      padding: 14px 22px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       border-bottom: 1px solid var(--border-subtle);
+    }
+    .lightbox-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .lightbox-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.3rem;
+      cursor: pointer;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .lightbox-close-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--status-rose);
     }
     .lightbox-stage {
       position: relative;
       background: #000;
-      height: 60vh;
+      height: 65vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
     .lightbox-stage img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
     }
-    .nav-arrow {
+    .lightbox-nav-btn {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(18,20,31,0.8);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff;
-      width: 44px; height: 44px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
+      background: rgba(18, 20, 31, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 1.1rem;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s var(--ease-spring);
     }
-    .nav-arrow:hover { background: var(--accent-primary); }
-    .nav-arrow.prev { left: 16px; }
-    .nav-arrow.next { right: 16px; }
-    .close-icon {
-      background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer;
+    .lightbox-nav-btn:hover {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      transform: translateY(-50%) scale(1.1);
+    }
+    .lightbox-nav-btn.prev { left: 16px; }
+    .lightbox-nav-btn.next { right: 16px; }
+
+    /* Footer Nav */
+    .article-footer-nav {
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .next-project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s var(--ease-spring);
+    }
+    .next-project-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px var(--accent-glow);
+    }
+    .next-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 4px;
+    }
+    .next-arrow-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
     }
 
-    /* Footer */
     footer {
-      border-top: 1px solid var(--border-subtle);
-      padding: 40px 24px;
+      margin-top: 60px;
       text-align: center;
-      color: var(--text-secondary);
       font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .article-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .sidebar-toc {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-nav { padding: 0 16px; }
+      .nav-breadcrumb { display: none; }
+      .article-wrapper { padding: 90px 16px 60px; }
+      .article-title { font-size: 2.1rem; }
+      .metric-strip { grid-template-columns: 1fr 1fr; }
+      .next-project-card { flex-direction: column; align-items: flex-start; }
+      .lightbox-stage { height: 50vh; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Nav -->
-  <nav class="top-nav">
-    <a href="../index.html" class="back-btn">
-      <i class="fas fa-arrow-left"></i>
-      <span>Back to Portfolio</span>
-    </a>
-    <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-primary);">
-      10 Verified Architecture Views
-    </div>
-  </nav>
-
-  <!-- Hero Header -->
-  <section class="project-hero">
-    <div class="project-pill">Commercial Web Platform</div>
-    <h1>SpotAdz Marketplace System Views</h1>
-    <p>
-      Scalable billboard & hoarding advertisement booking ecosystem. Built with strict role segregation, live availability tracking, payment reconciliation ledgers, and downloadable analytics.
-    </p>
-    <div class="tech-row">
-      <span class="tech-tag">Spring Boot 3</span>
-      <span class="tech-tag">MySQL Relational DB</span>
-      <span class="tech-tag">Role-Based Access Control</span>
-      <span class="tech-tag">Invoice Engine</span>
-      <span class="tech-tag">Exportable Reports</span>
-    </div>
-  </section>
-
-  <!-- Gallery Grid -->
-  <div class="gallery-container">
-    <div class="gallery-grid" id="grid"></div>
+  <!-- Top Reading Progress Bar -->
+  <div class="reading-progress-track">
+    <div class="reading-progress-bar" id="reading-progress"></div>
   </div>
 
-  <!-- Modal Lightbox -->
-  <div class="lightbox-modal" id="modal" onclick="if(event.target===this) closeModal()">
+  <!-- Sticky Navbar -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <a href="../index.html#projects" class="back-btn" aria-label="Return to Main Portfolio">
+        <i class="fas fa-arrow-left"></i>
+        <span>Portfolio</span>
+      </a>
+      <div class="nav-breadcrumb">
+        <span class="divider">/</span>
+        <span>Case Studies</span>
+        <span class="divider">/</span>
+        <span class="active-crumb">SpotAdz</span>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <!-- Theme Toggle -->
+      <button class="control-pill" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Color Theme" title="Toggle Dark/Light Mode">
+        <i class="fas fa-sun" id="theme-icon"></i>
+      </button>
+      <!-- Source Code Link -->
+      <a href="https://github.com/Nomaan2288" target="_blank" class="cta-github-pill" title="View Source on GitHub">
+        <i class="fab fa-github"></i>
+        <span>Source Code</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="article-wrapper">
+
+    <!-- Article Hero -->
+    <header class="article-hero">
+      <div class="hero-badge-row">
+        <span class="pill-badge primary"><i class="fas fa-cubes"></i> B2B Marketplace Architecture</span>
+        <span class="pill-badge emerald"><i class="fas fa-calendar-check"></i> Non-Overlapping Slot Scheduler</span>
+        <span class="pill-badge amber"><i class="fas fa-file-invoice-dollar"></i> Automated Ledger Engine</span>
+      </div>
+
+      <h1 class="article-title">
+        SpotAdz: Architecting an Automated <span class="text-gradient">OOH Billboard Advertising</span> Marketplace
+      </h1>
+
+      <p class="article-subtitle">
+        A senior engineering case study on digitizing fragmented physical outdoor media inventory—implementing date-collision detection algorithms, multi-tenant RBAC session routing, and commercial financial invoicing in Spring Boot and MySQL.
+      </p>
+
+      <div class="article-meta-row">
+        <div class="author-chip">
+          <img src="../Assets/images/shaikh-noman.png" alt="Shaikh Noman" class="author-avatar">
+          <span>Shaikh Noman</span>
+        </div>
+        <span>•</span>
+        <span>Software Developer Intern @ LaunchPad Technology</span>
+        <span>•</span>
+        <span>9.32 CGPA B.Tech CSE</span>
+        <span>•</span>
+        <span><i class="fas fa-book-open"></i> 8 min read</span>
+      </div>
+    </header>
+
+    <!-- Metrics Strip -->
+    <div class="metric-strip">
+      <div class="metric-card">
+        <div class="metric-num">100%</div>
+        <div class="metric-label">Date-Range Overlap Prevention</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">3 Tiers</div>
+        <div class="metric-label">RBAC Security Domains</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">10 Views</div>
+        <div class="metric-label">Verified Architectural Proofs</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">Automated</div>
+        <div class="metric-label">B2B GST Invoicing & Receipts</div>
+      </div>
+    </div>
+
+    <!-- 2-Column Article Grid -->
+    <div class="article-layout">
+
+      <!-- Sticky Table of Contents -->
+      <aside class="sidebar-toc">
+        <div class="toc-title">
+          <i class="fas fa-list-ul"></i>
+          <span>Table of Contents</span>
+        </div>
+        <ul class="toc-list" id="toc-list">
+          <li><a href="#overview" class="toc-link">1. Industry Problem & Scope</a></li>
+          <li><a href="#architecture" class="toc-link">2. System Architecture</a></li>
+          <li><a href="#onboarding" class="toc-link">3. Advertiser KYC & Multi-Tenant Auth</a></li>
+          <li><a href="#inventory" class="toc-link">4. Billboard Inventory Marketplace</a></li>
+          <li><a href="#scheduler" class="toc-link">5. Collision-Free Date Scheduling</a></li>
+          <li><a href="#invoicing" class="toc-link">6. Commercial Invoicing & Ledgers</a></li>
+          <li><a href="#operations" class="toc-link">7. Master Reservations & Operations</a></li>
+          <li><a href="#analytics" class="toc-link">8. Business Intelligence & Reporting</a></li>
+          <li><a href="#takeaways" class="toc-link">9. Key Engineering Lessons</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main Long-form Article Stream -->
+      <article class="article-content">
+
+        <!-- Section 1: Overview -->
+        <section id="overview" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-compass"></i>
+            <span>Section 01</span>
+          </div>
+          <h2 class="section-heading">Industry Problem & Architectural Scope</h2>
+          <p class="article-text">
+            Out-of-Home (OOH) advertising—specifically roadside billboards, digital hoarding screens, and transit displays—remains a multi-billion dollar sector plagued by archaic offline workflows. Historically, brands and marketing agencies negotiate billboard leases through endless phone calls, physical paper agreements, and manual spreadsheets.
+          </p>
+          <p class="article-text">
+            This traditional process suffers from three catastrophic vulnerabilities: <strong>double-booked calendar slots</strong>, lack of transparent geospatial pricing, and untracked reconciliation between campaigns and invoice ledgers.
+          </p>
+          <p class="article-text">
+            <strong>SpotAdz</strong> was architected as a programmatic, centralized B2B media marketplace that bridges outdoor billboard property owners with corporate advertisers. Built from the ground up on <strong>Java Spring Boot and MySQL</strong>, the platform enforces programmatic availability verification, automated B2B invoicing, and multi-tenant operational pipelines.
+          </p>
+
+          <div class="callout-box emerald">
+            <div class="callout-header">
+              <i class="fas fa-bullseye"></i>
+              <span>Core Engineering Objective</span>
+            </div>
+            <div class="callout-body">
+              Eliminate calendar reservation collisions across multi-week commercial billboard bookings, automate commercial tax/GST invoice generation, and partition advertiser assets from media owner operations via strict role-based access boundaries.
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Architecture -->
+        <section id="architecture" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-sitemap"></i>
+            <span>Section 02</span>
+          </div>
+          <h2 class="section-heading">System Topology & Multi-Tenant Data Modeling</h2>
+          <p class="article-text">
+            To ensure zero cross-talk between competing advertisers and billboard property owners, SpotAdz employs a robust multi-tenant domain model in MySQL with explicit foreign key integrity and audit logs.
+          </p>
+
+          <div class="flow-diagram-box">
+            <div style="font-weight:700; margin-bottom: 6px; color: var(--accent-primary);">
+              [SPOTADZ MARKETPLACE TOPOLOGY]
+            </div>
+            <div>Advertiser / Admin ──▶ Spring Security Filter ──▶ Campaign Orchestrator ──▶ Collision Engine ──▶ MySQL InnoDB</div>
+            <div class="flow-step-grid">
+              <div class="flow-step-item">
+                <div class="step-num">MODULE 01</div>
+                <div class="step-title">Advertiser Onboarding</div>
+                <div class="step-detail">KYC document intake, tax/GST registration, and business entity validation.</div>
+              </div>
+              <div class="flow-step-item">
+                <div class="step-num">MODULE 02</div>
+                <div class="step-title">Billboard Inventory</div>
+                <div class="step-detail">Geospatial location tags, physical dimensions (feet), illumination types, daily impressions.</div>
+              </div>
+              <div class="flow-step-item">
+                <div class="step-num">MODULE 03</div>
+                <div class="step-title">Collision Engine</div>
+                <div class="step-detail">Date-interval overlap verification preventing simultaneous multi-week bookings on identical hoards.</div>
+              </div>
+              <div class="flow-step-item">
+                <div class="step-num">MODULE 04</div>
+                <div class="step-title">Ledger & Invoicing</div>
+                <div class="step-detail">Automated B2B financial accounting, tax schedules, and exportable PDF audit trails.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 3: Advertiser KYC & Auth -->
+        <section id="onboarding" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-id-card"></i>
+            <span>Section 03</span>
+          </div>
+          <h2 class="section-heading">Advertiser KYC Onboarding & Multi-Tenant Authentication</h2>
+          <p class="article-text">
+            Unlike retail consumer apps where anonymous registration is acceptable, commercial B2B advertising marketplaces require verified corporate identities. SpotAdz integrates a comprehensive onboarding gate.
+          </p>
+
+          <!-- Figure 1: Advertiser Signup -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://spotadz.marketplace/auth/register-advertiser</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(0)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(0)">
+              <img src="spotadz/Screenshot 2025-10-21 213344.png" alt="SpotAdz Advertiser Registration & KYC Screen" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 1.1 — Advertiser Enterprise Registration & KYC Verification</span>
+                <span class="caption-tag">B2B Onboarding</span>
+              </div>
+              <p class="caption-desc">
+                Dedicated onboarding portal capturing corporate identifiers, verified business contacts, billing addresses, and operational domains. Every registration triggers server-side sanitization to prevent duplicate business registrations.
+              </p>
+              <ul class="caption-points">
+                <li><i class="fas fa-check"></i> Captures billing address and corporate entity details for automated invoice generation.</li>
+                <li><i class="fas fa-check"></i> Strong password hashing via BCrypt salt rounds protects enterprise accounts.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Figure 2: Auth Screen -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://spotadz.marketplace/auth/login</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(1)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(1)">
+              <img src="spotadz/Screenshot 2025-10-21 213412.png" alt="SpotAdz Multi-Tenant Login Screen" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 1.2 — Multi-Tenant Session Gateway & Role Separation</span>
+                <span class="caption-tag">Session Governance</span>
+              </div>
+              <p class="caption-desc">
+                Single sign-on entry point verifying advertiser and administrative roles. Successful authentication populates an isolated session context, routing business users directly to media catalogs while administrators enter executive oversight views.
+              </p>
+            </div>
+          </div>
+
+          <!-- Figure 3: Password Recovery -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://spotadz.marketplace/auth/reset-password</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(2)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(2)">
+              <img src="spotadz/Screenshot 2025-10-21 213439.png" alt="SpotAdz Password Recovery Flow" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 1.3 — Enterprise Credential Recovery Architecture</span>
+                <span class="caption-tag">Security / Token Expiry</span>
+              </div>
+              <p class="caption-desc">
+                Cryptographically secure password recovery channel. Generates ephemeral reset tokens with strict 10-minute expiration windows, mitigating account takeover vectors for high-value corporate advertising accounts.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4: Billboard Inventory Marketplace -->
+        <section id="inventory" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-billboard"></i>
+            <span>Section 04</span>
+          </div>
+          <h2 class="section-heading">Live Billboard Inventory & Geospatial Marketplace</h2>
+          <p class="article-text">
+            Physical billboards are high-capital assets. An outdoor hoarding on a major expressway can command thousands of dollars per month depending on physical dimensions, daily commuter impressions, and illumination status (Front-Lit, Back-Lit, Digital LED).
+          </p>
+
+          <!-- Figure 4: Live Inventory -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://spotadz.marketplace/admin/inventory</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(3)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(3)">
+              <img src="spotadz/Screenshot 2025-10-21 213459.png" alt="SpotAdz Live Inventory & Billboard Catalog" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 2.1 — Centralized Billboard Media Inventory & Pricing Catalog</span>
+                <span class="caption-tag">Inventory Master</span>
+              </div>
+              <p class="caption-desc">
+                Master inventory dashboard tracking physical billboard assets across urban zones. Each billboard entry encapsulates width &times; height specs, daily estimated impressions, monthly base rates, and active operational status.
+              </p>
+              <ul class="caption-points">
+                <li><i class="fas fa-check"></i> Eliminates stale inventory lists with real-time database state synchronization.</li>
+                <li><i class="fas fa-check"></i> Supports categorical filtering by city, format (Unipole, Gantry, Kiosk), and visibility score.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 5: Collision-Free Scheduling -->
+        <section id="scheduler" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Section 05</span>
+          </div>
+          <h2 class="section-heading">Collision-Free Date-Range Scheduling Algorithm</h2>
+          <p class="article-text">
+            Unlike movie tickets that represent a point-in-time slot (e.g. 7:00 PM on Friday), billboard campaigns span <strong>date intervals</strong> (e.g. October 1st to November 15th). The core algorithmic challenge is preventing any overlapping reservation for the same physical billboard board during any single intersecting day.
+          </p>
+          <p class="article-text">
+            To prevent calendar overlap, SpotAdz executes an interval collision query at the persistence boundary:
+          </p>
+
+          <div class="code-snippet-box">
+            <div class="code-header">
+              <span>ReservationService.java — Overlap Detection Query</span>
+              <span>MySQL 8.0</span>
+            </div>
+            <div class="code-body">
+              <span class="cm">// Mathematical condition for two date ranges [A, B] and [X, Y] colliding:</span><br>
+              <span class="cm">// (StartA &lt;= EndB) AND (EndA &gt;= StartB)</span><br><br>
+              <span class="kw">SELECT COUNT</span>(*) <span class="kw">FROM</span> billboard_bookings <br>
+              <span class="kw">WHERE</span> billboard_id = :boardId <br>
+              &nbsp;&nbsp;<span class="kw">AND</span> booking_status <span class="kw">IN</span> (<span class="str">'CONFIRMED'</span>, <span class="str">'ACTIVE'</span>, <span class="str">'HOLD'</span>)<br>
+              &nbsp;&nbsp;<span class="kw">AND</span> start_date &lt;= :requestedEndDate <br>
+              &nbsp;&nbsp;<span class="kw">AND</span> end_date &gt;= :requestedStartDate;
+            </div>
+          </div>
+
+          <!-- Figure 5: Booking Screen -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://spotadz.marketplace/campaigns/reserve?board=BB-409</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(4)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(4)">
+              <img src="spotadz/Screenshot 2025-10-21 213556.png" alt="SpotAdz Client Reservation & Date Selection" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 3.1 — Interactive Billboard Campaign Booking & Date Picker</span>
+                <span class="caption-tag">Interval Validation</span>
+              </div>
+              <p class="caption-desc">
+                Campaign reservation pipeline where advertisers select target flight dates. Upon submission, the interval collision engine verifies availability across milliseconds. If even a single requested day is blocked by an active campaign, the system gracefully alerts the user with next available window recommendations.
+              </p>
+            </div>
+          </div>
+
+          <!-- Figure 8: Campaign Scheduler -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://spotadz.marketplace/admin/schedule</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(7)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(7)">
+              <img src="spotadz/Screenshot 2025-10-21 213737.png" alt="SpotAdz Campaign Creation & Slot Scheduling" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 3.2 — Multi-Slot Scheduling Console & Flight Duration Config</span>
+                <span class="caption-tag">Campaign Scheduler</span>
+              </div>
+              <p class="caption-desc">
+                Administrative scheduling console allowing media planners to adjust campaign duration multipliers, assign creative banner delivery deadlines, and approve campaign flights.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 6: Commercial Invoicing & Ledgers -->
+        <section id="invoicing" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Section 06</span>
+          </div>
+          <h2 class="section-heading">Commercial Invoicing, Tax Breakdown & Payment Ledgers</h2>
+          <p class="article-text">
+            B2B transactions require strict fiscal accountability. While B2C systems simply process a credit card swipe, corporate marketing departments demand compliant tax invoices, line-item cost breakdowns (base rent, lighting surcharge, GST/taxes), and downloadable receipts.
+          </p>
+
+          <!-- Figure 6: Invoicing Screen -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://spotadz.marketplace/billing/invoice?inv=INV-2025-1088</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(5)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(5)">
+              <img src="spotadz/Screenshot 2025-10-21 213614.png" alt="SpotAdz Payment Processing & Invoicing Ledger" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 4.1 — Commercial Invoicing, Tax Calculations & Payment Receipts</span>
+                <span class="caption-tag">Financial Ledger</span>
+              </div>
+              <p class="caption-desc">
+                Automated accounting engine that generates itemized commercial invoices upon booking confirmation. Automatically computes total rental duration days, applies statutory tax rates, produces unique sequential invoice numbers, and logs transaction proofs.
+              </p>
+            </div>
+          </div>
+
+          <!-- Figure 7: Advertiser Directory -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://spotadz.marketplace/admin/advertisers</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(6)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(6)">
+              <img src="spotadz/Screenshot 2025-10-21 213712.png" alt="SpotAdz Advertiser Account Directory" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 4.2 — Enterprise Advertiser Directory & Account Governance</span>
+                <span class="caption-tag">Client Directory</span>
+              </div>
+              <p class="caption-desc">
+                Master customer relations directory tracking verified corporate accounts, aggregate campaign spend, credit payment terms, and account activation status.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 7: Operations & Pipeline -->
+        <section id="operations" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-tasks"></i>
+            <span>Section 07</span>
+          </div>
+          <h2 class="section-heading">Master Reservation Pipeline & Finite State Machine</h2>
+          <p class="article-text">
+            A billboard reservation undergoes a multi-stage operational lifecycle before a commercial banner is physically mounted on a steel gantry. SpotAdz models this progression through an explicit <strong>Finite State Machine (FSM)</strong>:
+          </p>
+
+          <div class="callout-box">
+            <div class="callout-header">
+              <i class="fas fa-random"></i>
+              <span>Campaign Lifecycle State Transitions</span>
+            </div>
+            <div class="callout-body">
+              <strong>DRAFT</strong> &rarr; <strong>SUBMITTED</strong> (Date range reserved on hold) &rarr; <strong>PAYMENT_VERIFIED</strong> &rarr; <strong>CREATIVE_APPROVED</strong> (Design specs verified for print) &rarr; <strong>LIVE_ON_BOARD</strong> &rarr; <strong>COMPLETED</strong> (Archived to audit ledger).
+            </div>
+          </div>
+
+          <!-- Figure 9: Master Pipeline -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://spotadz.marketplace/admin/reservations</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(8)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(8)">
+              <img src="spotadz/Screenshot 2025-10-21 213754.png" alt="SpotAdz Master Reservations Pipeline" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 5.1 — Master Reservations Pipeline & Campaign State Tracking</span>
+                <span class="caption-tag">Operations Pipeline</span>
+              </div>
+              <p class="caption-desc">
+                Centralized operational dispatch board for operations crews. Tracks active campaigns, upcoming expiration dates, and physical installation milestones across metropolitan zones.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 8: Analytics & BI -->
+        <section id="analytics" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-chart-line"></i>
+            <span>Section 08</span>
+          </div>
+          <h2 class="section-heading">Business Intelligence & Executive Analytics</h2>
+          <p class="article-text">
+            For billboard property owners, maximizing inventory yield (occupancy rate per billboard asset per calendar quarter) is the primary determinant of business profitability. SpotAdz synthesizes raw transaction rows into actionable analytics.
+          </p>
+
+          <!-- Figure 10: Analytics Screen -->
+          <div class="figure-showcase">
+            <div class="figure-window-bar">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-address">https://spotadz.marketplace/admin/reports</div>
+              <button class="zoom-hint-btn" onclick="openLightbox(9)">
+                <i class="fas fa-search-plus"></i> Inspect
+              </button>
+            </div>
+            <div class="figure-stage" onclick="openLightbox(9)">
+              <img src="spotadz/Screenshot 2025-10-21 213827.png" alt="SpotAdz Executive Analytics & BI Dashboard" loading="lazy">
+            </div>
+            <div class="figure-caption-box">
+              <div class="caption-meta">
+                <span class="caption-title">Figure 5.2 — Executive Revenue Analytics & Occupancy Telemetry</span>
+                <span class="caption-tag">Business Intelligence</span>
+              </div>
+              <p class="caption-desc">
+                Executive analytics module aggregating revenue trends across commercial quarters, identifying top-performing geographic corridors, calculating billboard asset idle rates, and exporting structured CSV/PDF reports for corporate accounting.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 9: Key Engineering Lessons -->
+        <section id="takeaways" class="content-section">
+          <div class="section-eyebrow">
+            <i class="fas fa-lightbulb"></i>
+            <span>Section 09</span>
+          </div>
+          <h2 class="section-heading">Key Architectural Lessons & Future Horizons</h2>
+          <p class="article-text">
+            Developing SpotAdz reinforced key distributed engineering patterns for commercial marketplaces:
+          </p>
+
+          <div class="callout-box">
+            <div class="callout-header">
+              <i class="fas fa-check-double"></i>
+              <span>1. Interval Queries Demand Compound Date Indexing</span>
+            </div>
+            <div class="callout-body">
+              Filtering by `(billboard_id, start_date, end_date)` with status predicates requires careful multi-column composite indexing in MySQL InnoDB. Without an index on `(billboard_id, booking_status, start_date, end_date)`, checking availability during high-traffic booking surges degrades into full table scans.
+            </div>
+          </div>
+
+          <div class="callout-box">
+            <div class="callout-header">
+              <i class="fas fa-check-double"></i>
+              <span>2. Explicit State Machines Prevent Invalid Business Transitions</span>
+            </div>
+            <div class="callout-body">
+              Using a strict state machine ensures no campaign can leap directly from 'Draft' to 'Live' without passing through payment verification and creative asset compliance, protecting both media owners and advertisers.
+            </div>
+          </div>
+        </section>
+
+        <!-- Next Article Navigation -->
+        <div class="article-footer-nav">
+          <a href="bookmyevent.html" class="next-project-card">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-primary); text-transform: uppercase;">
+                Previous Technical Case Study &rarr;
+              </div>
+              <div class="next-title">BookMyEvent: High-Concurrency Event Ticketing Architecture</div>
+              <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 6px;">
+                Explore how real-time seat locking and dynamic QR tickets were engineered in Spring Boot.
+              </div>
+            </div>
+            <div class="next-arrow-circle">
+              <i class="fas fa-arrow-right"></i>
+            </div>
+          </a>
+        </div>
+
+      </article>
+
+    </div>
+
+    <!-- Page Footer -->
+    <footer>
+      &copy; 2025–2026 Shaikh Noman. Built with Spring Boot, MySQL, and modern engineering standards.
+    </footer>
+
+  </main>
+
+  <!-- Interactive Lightbox Modal -->
+  <div class="lightbox-modal" id="modal" onclick="if(event.target===this) closeLightbox()">
     <div class="lightbox-box">
       <div class="lightbox-header">
-        <h4 id="modal-title" style="font-size: 1.05rem; font-weight: 700;">Screenshot View</h4>
-        <button class="close-icon" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        <h4 class="lightbox-title" id="modal-title">System Architecture View</h4>
+        <button class="lightbox-close-btn" onclick="closeLightbox()" aria-label="Close Lightbox">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
       <div class="lightbox-stage">
-        <button class="nav-arrow prev" onclick="navigate(-1)"><i class="fas fa-chevron-left"></i></button>
-        <img id="modal-img" src="" alt="Active View">
-        <button class="nav-arrow next" onclick="navigate(1)"><i class="fas fa-chevron-right"></i></button>
+        <button class="lightbox-nav-btn prev" onclick="navigateLightbox(-1)" aria-label="Previous Screenshot">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <img id="modal-img" src="" alt="Active Screenshot Architecture View">
+        <button class="lightbox-nav-btn next" onclick="navigateLightbox(1)" aria-label="Next Screenshot">
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
     </div>
   </div>
 
-  <footer>
-    &copy; 2025–2026 Shaikh Noman. Built with Spring Boot, MySQL, and modern web standards.
-  </footer>
-
   <script>
-    const items = [
-      { src: 'spotadz/Screenshot 2025-10-21 213344.png', title: 'Advertiser Portal — KYC & Signup' },
-      { src: 'spotadz/Screenshot 2025-10-21 213412.png', title: 'Secure Authentication & Redirection' },
-      { src: 'spotadz/Screenshot 2025-10-21 213439.png', title: 'Password Recovery Flow' },
-      { src: 'spotadz/Screenshot 2025-10-21 213459.png', title: 'Admin Live Inventory Overview' },
-      { src: 'spotadz/Screenshot 2025-10-21 213556.png', title: 'Client Booking & Reservation Timeline' },
-      { src: 'spotadz/Screenshot 2025-10-21 213614.png', title: 'Payment Processing & Receipt Ledger' },
-      { src: 'spotadz/Screenshot 2025-10-21 213712.png', title: 'Advertiser Directory & Access Controls' },
-      { src: 'spotadz/Screenshot 2025-10-21 213737.png', title: 'Campaign Creation & Slot Schedule' },
-      { src: 'spotadz/Screenshot 2025-10-21 213754.png', title: 'Master Reservations Pipeline' },
-      { src: 'spotadz/Screenshot 2025-10-21 213827.png', title: 'Executive Analytics & Downloadable Reports' }
+    // --- 1. Gallery Data Array ---
+    const galleryItems = [
+      { src: 'spotadz/Screenshot 2025-10-21 213344.png', title: 'Figure 1.1 — Advertiser Enterprise Registration & KYC Verification' },
+      { src: 'spotadz/Screenshot 2025-10-21 213412.png', title: 'Figure 1.2 — Multi-Tenant Session Gateway & Role Separation' },
+      { src: 'spotadz/Screenshot 2025-10-21 213439.png', title: 'Figure 1.3 — Enterprise Credential Recovery Architecture' },
+      { src: 'spotadz/Screenshot 2025-10-21 213459.png', title: 'Figure 2.1 — Centralized Billboard Media Inventory & Pricing Catalog' },
+      { src: 'spotadz/Screenshot 2025-10-21 213556.png', title: 'Figure 3.1 — Interactive Billboard Campaign Booking & Date Picker' },
+      { src: 'spotadz/Screenshot 2025-10-21 213614.png', title: 'Figure 4.1 — Commercial Invoicing, Tax Calculations & Payment Receipts' },
+      { src: 'spotadz/Screenshot 2025-10-21 213712.png', title: 'Figure 4.2 — Enterprise Advertiser Directory & Account Governance' },
+      { src: 'spotadz/Screenshot 2025-10-21 213737.png', title: 'Figure 3.2 — Multi-Slot Scheduling Console & Flight Duration Config' },
+      { src: 'spotadz/Screenshot 2025-10-21 213754.png', title: 'Figure 5.1 — Master Reservations Pipeline & Campaign State Tracking' },
+      { src: 'spotadz/Screenshot 2025-10-21 213827.png', title: 'Figure 5.2 — Executive Revenue Analytics & Occupancy Telemetry' }
     ];
 
-    let currentIndex = 0;
-    const grid = document.getElementById('grid');
+    let currentIdx = 0;
     const modal = document.getElementById('modal');
     const modalImg = document.getElementById('modal-img');
     const modalTitle = document.getElementById('modal-title');
+    const progressBar = document.getElementById('reading-progress');
 
-    items.forEach((item, index) => {
-      const card = document.createElement('div');
-      card.className = 'gallery-card';
-      card.onclick = () => openModal(index);
-      card.innerHTML = `
-        <div class="card-img-wrap">
-          <img src="${item.src}" alt="${item.title}" loading="lazy">
-        </div>
-        <div class="card-meta">
-          <div class="card-title">${item.title}</div>
-          <div class="card-num">${index + 1} / ${items.length}</div>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-
-    function openModal(idx) {
-      currentIndex = idx;
-      renderModal();
+    // --- 2. Lightbox Functions ---
+    function openLightbox(idx) {
+      currentIdx = idx;
+      renderLightbox();
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
-    function closeModal() {
+    function closeLightbox() {
       modal.classList.remove('active');
       document.body.style.overflow = '';
     }
 
-    function navigate(delta) {
-      currentIndex = (currentIndex + delta + items.length) % items.length;
-      renderModal();
+    function navigateLightbox(delta) {
+      currentIdx = (currentIdx + delta + galleryItems.length) % galleryItems.length;
+      renderLightbox();
     }
 
-    function renderModal() {
-      modalImg.src = items[currentIndex].src;
-      modalTitle.textContent = `${items[currentIndex].title} (${currentIndex + 1} of ${items.length})`;
+    function renderLightbox() {
+      modalImg.src = galleryItems[currentIdx].src;
+      modalTitle.textContent = `${galleryItems[currentIdx].title} (${currentIdx + 1} of ${galleryItems.length})`;
     }
 
     window.addEventListener('keydown', (e) => {
       if (modal.classList.contains('active')) {
-        if (e.key === 'Escape') closeModal();
-        if (e.key === 'ArrowLeft') navigate(-1);
-        if (e.key === 'ArrowRight') navigate(1);
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') navigateLightbox(-1);
+        if (e.key === 'ArrowRight') navigateLightbox(1);
       }
     });
+
+    // --- 3. Scroll Reading Progress Bar ---
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      if (progressBar) {
+        progressBar.style.width = scrolled + '%';
+      }
+    });
+
+    // --- 4. Sticky TOC Active Section Highlight (ScrollSpy) ---
+    const sections = document.querySelectorAll('.content-section');
+    const tocLinks = document.querySelectorAll('.toc-link');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          tocLinks.forEach(link => {
+            if (link.getAttribute('href') === `#${id}`) {
+              link.classList.add('active');
+            } else {
+              link.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, {
+      rootMargin: '-20% 0px -70% 0px'
+    });
+
+    sections.forEach(sec => observer.observe(sec));
+
+    // --- 5. Theme Synchronization with Main Portfolio ---
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon(next);
+    }
+
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('theme-icon');
+      if (icon) {
+        icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+
+    initTheme();
   </script>
 </body>
 </html>
