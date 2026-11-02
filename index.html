@@ -8,6 +8,30 @@
     <meta name="description" content="Shaikh Noman — Software Developer & Backend Systems Architect, B.Tech CSE (9.32 CGPA, Silver Oak University). Specializing in Java, Spring Boot 3, MySQL concurrency, and high-availability distributed systems in Ahmedabad, Gujarat, India." />
     <link rel="icon" type="image/png" href="./images/mypicnbg.png" />
     <script>
+      // Protect React 18 reconciliation from DOM changes made by GSAP SplitText & Three.js canvas injection
+      (function() {
+        var origRemoveChild = Node.prototype.removeChild;
+        Node.prototype.removeChild = function(child) {
+          if (!child) return child;
+          if (child.parentNode !== this) {
+            if (child.parentNode) {
+              return child.parentNode.removeChild(child);
+            }
+            return child;
+          }
+          return origRemoveChild.call(this, child);
+        };
+        var origInsertBefore = Node.prototype.insertBefore;
+        Node.prototype.insertBefore = function(newNode, referenceNode) {
+          if (referenceNode && referenceNode.parentNode !== this) {
+            if (referenceNode.parentNode) {
+              return referenceNode.parentNode.insertBefore(newNode, referenceNode);
+            }
+            return this.appendChild(newNode);
+          }
+          return origInsertBefore.call(this, newNode, referenceNode);
+        };
+      })();
       if (window.location.protocol === 'file:') {
         window.addEventListener('DOMContentLoaded', function() {
           var root = document.getElementById('root');
@@ -31,10 +55,10 @@
         });
       }
     </script>
-    <script type="module" crossorigin src="./assets/index-DOsxpt_m.js?v=3"></script>
-    <link rel="modulepreload" crossorigin href="./assets/react-three-BdgxNMf0.js?v=3">
-    <link rel="modulepreload" crossorigin href="./assets/vendor-DgkQOziQ.js?v=3">
-    <link rel="stylesheet" crossorigin href="./assets/index-Dy5XKj18.css?v=3">
+    <script type="module" crossorigin src="./assets/index-DOsxpt_m.js?v=4"></script>
+    <link rel="modulepreload" crossorigin href="./assets/react-three-BdgxNMf0.js?v=4">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-DgkQOziQ.js?v=4">
+    <link rel="stylesheet" crossorigin href="./assets/index-Dy5XKj18.css?v=4">
   </head>
   <body>
     <div id="root"></div>
