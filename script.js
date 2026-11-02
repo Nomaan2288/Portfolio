@@ -1,330 +1,484 @@
 /**
- * SHAIKH NOMAN | SENIOR FULL STACK & BACKEND ENGINEER
- * Motion Design Architecture & Interaction Engine
+ * ============================================================================
+ * SHAIKH NOMAN — CELESTIAL EDITORIAL ENGINE
+ * Interactive Cosmic Canvas, Precision Reticle Cursor, Live Telemetry,
+ * ScrollSpy, Systems Terminal & Audio Synthesis.
+ * ============================================================================
  */
 
 (function () {
   'use strict';
 
+  // --- State Configuration ---
+  const CONFIG = {
+    email: 'shaikhnoman0652@gmail.com',
+    starCountDesktop: 320,
+    starCountMobile: 120,
+    dustCountDesktop: 45,
+    dustCountMobile: 20
+  };
+
+  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
   // --- 1. Sound Synthesis Engine (Web Audio API) ---
   class SoundEngine {
     constructor() {
-      this.enabled = localStorage.getItem('sound_enabled') === 'true';
+      this.enabled = localStorage.getItem('sn_sound_enabled') === 'true';
       this.ctx = null;
       this.updateUI();
     }
 
     init() {
-      if (!this.ctx && (window.AudioContext || window.webkitAudioContext)) {
+      if (!this.ctx && typeof window.AudioContext !== 'undefined') {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         this.ctx = new AudioCtx();
-      }
-      if (this.ctx && this.ctx.state === 'suspended') {
-        this.ctx.resume();
       }
     }
 
     toggle() {
       this.enabled = !this.enabled;
-      localStorage.setItem('sound_enabled', this.enabled ? 'true' : 'false');
+      localStorage.setItem('sn_sound_enabled', this.enabled);
       this.updateUI();
       if (this.enabled) {
         this.init();
-        this.playChirp(600, 0.05);
+        this.playTone(880, 'sine', 0.12, 0.08);
+        showToast('Interface audio ambience activated 🔊');
+      } else {
+        showToast('Interface audio muted 🔇');
       }
     }
 
     updateUI() {
-      const btn = document.getElementById('sound-toggle-btn');
-      if (btn) {
-        btn.innerHTML = this.enabled ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>';
-        btn.setAttribute('title', this.enabled ? 'Mute Interface Sounds [M]' : 'Enable Tactile Interface Sounds [M]');
+      const icon = document.getElementById('sound-icon');
+      if (icon) {
+        icon.className = this.enabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+      }
+    }
+
+    playTone(freq, type = 'sine', duration = 0.08, gainVal = 0.04) {
+      if (!this.enabled) return;
+      this.init();
+      if (!this.ctx) return;
+      if (this.ctx.state === 'suspended') {
+        this.ctx.resume();
+      }
+
+      try {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+        gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start();
+        osc.stop(this.ctx.currentTime + duration);
+      } catch (err) {
+        console.warn('Audio playback error', err);
       }
     }
 
     playClick() {
-      if (!this.enabled) return;
-      this.init();
-      if (!this.ctx) return;
-      try {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(300, this.ctx.currentTime + 0.04);
-        gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.04);
-      } catch (e) {
-        // Audio policy ignore
-      }
+      this.playTone(1200, 'sine', 0.04, 0.03);
     }
 
-    playChirp(freq = 550, duration = 0.08) {
-      if (!this.enabled) return;
-      this.init();
-      if (!this.ctx) return;
-      try {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, this.ctx.currentTime + duration);
-        gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + duration);
-      } catch (e) {
-        // Audio policy ignore
-      }
+    playChime() {
+      this.playTone(523.25, 'triangle', 0.18, 0.04);
+      setTimeout(() => this.playTone(659.25, 'triangle', 0.22, 0.04), 60);
     }
   }
 
   const sound = new SoundEngine();
 
-  // --- 2. Theme System ---
-  function initTheme() {
-    const saved = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', saved);
-    updateThemeBtn(saved);
-  }
+  // --- 2. Interactive Celestial Starfield Canvas ---
+  function initStarfield() {
+    const canvas = document.getElementById('starfield-canvas');
+    if (!canvas) return;
 
-  function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme') || 'dark';
-    const next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-    updateThemeBtn(next);
-    sound.playChirp(next === 'dark' ? 440 : 880, 0.06);
-    showToast(`Switched to ${next.toUpperCase()} theme`);
-  }
+    const ctx = canvas.getContext('2d');
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
-  function updateThemeBtn(theme) {
-    const btn = document.getElementById('theme-toggle-btn');
-    if (btn) {
-      btn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-      btn.setAttribute('title', theme === 'dark' ? 'Switch to Light Mode [T]' : 'Switch to Dark Mode [T]');
-    }
-  }
+    let mouseX = width / 2;
+    let mouseY = height / 2;
+    let targetMouseX = mouseX;
+    let targetMouseY = mouseY;
 
-  // --- 3. Subtle Button Micro-Interactions (Native Professional Cursor) ---
-  function initButtonInteractions() {
-    // Gentle spring pull on CTA buttons (respecting native mouse cursor)
-    document.querySelectorAll('.btn-primary-magnetic, .btn-secondary-magnetic, .control-btn').forEach((elem) => {
-      elem.addEventListener('mousemove', (e) => {
-        const rect = elem.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const deltaX = (e.clientX - centerX) * 0.15;
-        const deltaY = (e.clientY - centerY) * 0.15;
-        elem.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
-      });
+    const isMobile = window.innerWidth < 768;
+    const starTotal = isMobile ? CONFIG.starCountMobile : CONFIG.starCountDesktop;
+    const dustTotal = isMobile ? CONFIG.dustCountMobile : CONFIG.dustCountDesktop;
 
-      elem.addEventListener('mouseleave', () => {
-        elem.style.transform = '';
-      });
-    });
-  }
+    // Star Class
+    class Star {
+      constructor() {
+        this.reset(true);
+      }
 
-  // --- 4. Live IST Telemetry Clock ---
-  function initTimeClock() {
-    function updateClock() {
-      const now = new Date();
-      // IST is UTC+5:30
-      const options = {
-        timeZone: 'Asia/Kolkata',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      };
-      const timeStr = now.toLocaleTimeString('en-US', options);
-      const clockElem = document.getElementById('live-ist-time');
-      if (clockElem) {
-        clockElem.textContent = `${timeStr} IST (UTC+5:30)`;
+      reset(init = false) {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 1.5 + 0.3;
+        this.alpha = Math.random() * 0.7 + 0.2;
+        this.baseAlpha = this.alpha;
+        this.twinkleSpeed = Math.random() * 0.02 + 0.005;
+        this.twinkleDir = Math.random() > 0.5 ? 1 : -1;
+        this.parallaxFactor = (this.size / 1.8) * 0.025;
+
+        // Slight blue or violet tint on selected stars
+        const roll = Math.random();
+        if (roll > 0.75) this.color = '143, 202, 255'; // sky blue
+        else if (roll > 0.55) this.color = '194, 164, 255'; // violet
+        else this.color = '255, 255, 255'; // neutral white
+      }
+
+      update() {
+        this.alpha += this.twinkleSpeed * this.twinkleDir;
+        if (this.alpha > this.baseAlpha + 0.35 || this.alpha > 0.95) {
+          this.twinkleDir = -1;
+        } else if (this.alpha < this.baseAlpha - 0.25 || this.alpha < 0.1) {
+          this.twinkleDir = 1;
+        }
+      }
+
+      draw(offsetX, offsetY) {
+        ctx.fillStyle = `rgba(${this.color}, ${Math.max(0.05, Math.min(1, this.alpha))})`;
+        ctx.beginPath();
+        const px = this.x + offsetX * this.parallaxFactor;
+        const py = this.y + offsetY * this.parallaxFactor;
+        ctx.arc(px, py, this.size, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
-    updateClock();
-    setInterval(updateClock, 1000);
+
+    // Drifting Dust Particle
+    class Dust {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2.2 + 0.8;
+        this.vx = (Math.random() - 0.5) * 0.25;
+        this.vy = -Math.random() * 0.35 - 0.1;
+        this.alpha = Math.random() * 0.25 + 0.05;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.y < 0) this.y = height;
+        if (this.x < 0) this.x = width;
+        if (this.x > width) this.x = 0;
+      }
+
+      draw() {
+        ctx.fillStyle = `rgba(143, 202, 255, ${this.alpha})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const stars = Array.from({ length: starTotal }, () => new Star());
+    const dusts = Array.from({ length: dustTotal }, () => new Dust());
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      stars.forEach((s) => s.reset(true));
+      dusts.forEach((d) => d.reset());
+    }, { passive: true });
+
+    if (isFinePointer) {
+      window.addEventListener('mousemove', (e) => {
+        targetMouseX = e.clientX;
+        targetMouseY = e.clientY;
+      }, { passive: true });
+    }
+
+    let currentOffsetX = 0;
+    let currentOffsetY = 0;
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Smooth inertia parallax calculation
+      if (!isReducedMotion) {
+        currentOffsetX += (targetMouseX - width / 2 - currentOffsetX) * 0.04;
+        currentOffsetY += (targetMouseY - height / 2 - currentOffsetY) * 0.04;
+      }
+
+      stars.forEach((s) => {
+        s.update();
+        s.draw(currentOffsetX, currentOffsetY);
+      });
+
+      if (!isReducedMotion) {
+        dusts.forEach((d) => {
+          d.update();
+          d.draw();
+        });
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
   }
 
-  // --- 5. Project Screenshot Gallery Modal ---
-  const projectGalleries = {
-    bookmyevent: {
-      title: 'BookMyEvent — Full Stack Event & Ticket Platform',
-      images: [
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 121347.png', caption: 'Home Page — Dynamic Hero with Featured Carousel' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 121412.png', caption: 'Events & Movies Listing — Multi-category Filtering' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 121608.png', caption: 'Interactive Seat Selection — Real-Time Concurrency Lock' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 121623.png', caption: 'Payment Simulation & Order Summary' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 121706.png', caption: 'Ticket Confirmation with Unique Booking QR' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 121252.png', caption: 'User Authentication & Session Management' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 121311.png', caption: 'Sign Up with Input Sanitization' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 121326.png', caption: 'Password Recovery with OTP Verification' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 121735.png', caption: 'User Dashboard & Booking History' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 122037.png', caption: 'Admin Control Center & Event Operations' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 122111.png', caption: 'Admin User Management & Role Permissions' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 122147.png', caption: 'Venue & Schedule Slot Manager' },
-        { src: 'Screenshots/bookmyevent/Screenshot 2025-10-22 122334.png', caption: 'Event Publishing & Pricing Tiers' }
-      ]
-    },
-    spotadz: {
-      title: 'SpotAdz — Billboard & Hoarding Booking Marketplace',
-      images: [
-        { src: 'Screenshots/spotadz/Screenshot 2025-10-21 213344.png', caption: 'Advertiser Portal — Registration & KYC Onboarding' },
-        { src: 'Screenshots/spotadz/Screenshot 2025-10-21 213412.png', caption: 'Secure Login & Role-Based Redirection' },
-        { src: 'Screenshots/spotadz/Screenshot 2025-10-21 213439.png', caption: 'Password Recovery Flow' },
-        { src: 'Screenshots/spotadz/Screenshot 2025-10-21 213459.png', caption: 'Admin Inventory & Live Billboard Status' },
-        { src: 'Screenshots/spotadz/Screenshot 2025-10-21 213556.png', caption: 'Advertiser Booking Dashboard & Slot Calendar' },
-        { src: 'Screenshots/spotadz/Screenshot 2025-10-21 213614.png', caption: 'Invoice & Payment Ledger' },
-        { src: 'Screenshots/spotadz/Screenshot 2025-10-21 213712.png', caption: 'Client Directory & Access Governance' },
-        { src: 'Screenshots/spotadz/Screenshot 2025-10-21 213737.png', caption: 'Create Billboard Campaign & Schedule Slot' },
-        { src: 'Screenshots/spotadz/Screenshot 2025-10-21 213754.png', caption: 'Central Reservation Pipeline' },
-        { src: 'Screenshots/spotadz/Screenshot 2025-10-21 213827.png', caption: 'Analytics & Downloadable Executive Reports' }
-      ]
+  // --- 3. Precision Reticle Cursor (Snapping on Interactive Elements) ---
+  function initCursor() {
+    if (!isFinePointer) return;
+
+    const dot = document.getElementById('cursor-dot');
+    const reticle = document.getElementById('cursor-reticle');
+    if (!dot || !reticle) return;
+
+    let mouseX = -100;
+    let mouseY = -100;
+    let reticleX = -100;
+    let reticleY = -100;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+    }, { passive: true });
+
+    // Smooth reticle follow loop
+    function reticleLoop() {
+      const dx = mouseX - reticleX;
+      const dy = mouseY - reticleY;
+      reticleX += dx * 0.16;
+      reticleY += dy * 0.16;
+      reticle.style.transform = `translate(${reticleX}px, ${reticleY}px)`;
+      requestAnimationFrame(reticleLoop);
     }
-  };
+    requestAnimationFrame(reticleLoop);
 
-  let currentGalleryKey = null;
-  let currentGalleryIndex = 0;
+    // Hover Expansion on Interactive Elements
+    const hoverTargets = document.querySelectorAll(
+      'a, button, input, .email-chip, .bento-metric-card, .project-showcase, .timeline-card, .arsenal-card, .term-chip'
+    );
 
-  function openGallery(key, index = 0) {
-    if (!projectGalleries[key]) return;
-    currentGalleryKey = key;
-    currentGalleryIndex = index;
-    const gallery = projectGalleries[key];
+    hoverTargets.forEach((target) => {
+      target.addEventListener('mouseenter', () => {
+        document.body.classList.add('cursor-hover');
+      });
+      target.addEventListener('mouseleave', () => {
+        document.body.classList.remove('cursor-hover');
+      });
+    });
+  }
 
-    const modal = document.getElementById('gallery-modal');
-    const title = document.getElementById('gallery-modal-title');
-    const strip = document.getElementById('gallery-thumbnails');
+  // --- 4. Live Indian Standard Time (IST) Clock ---
+  function initLiveClock() {
+    const timeEl = document.getElementById('live-time');
+    const footerClock = document.querySelector('.live-clock-footer');
 
-    title.textContent = gallery.title;
+    function update() {
+      try {
+        const now = new Date();
+        const options = {
+          timeZone: 'Asia/Kolkata',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        };
+        const istString = now.toLocaleTimeString('en-US', options);
+        if (timeEl) timeEl.textContent = `${istString} IST`;
+        if (footerClock) footerClock.textContent = `${istString} IST`;
+      } catch (e) {
+        if (timeEl) timeEl.textContent = 'UTC+05:30';
+      }
+    }
 
-    // Build thumbnails
-    strip.innerHTML = '';
-    gallery.images.forEach((item, i) => {
-      const thumb = document.createElement('div');
-      thumb.className = `thumb-item ${i === index ? 'active' : ''}`;
-      thumb.innerHTML = `<img src="${item.src}" alt="Thumb ${i + 1}" loading="lazy">`;
-      thumb.onclick = () => {
-        setGalleryIndex(i);
+    update();
+    setInterval(update, 1000);
+  }
+
+  // --- 5. Sticky Navigation & ScrollSpy ---
+  function initNavigation() {
+    const header = document.getElementById('site-header');
+    const navLinks = document.querySelectorAll('.nav-link[data-scroll]');
+    const sections = document.querySelectorAll('section[id]');
+    const mobileToggle = document.getElementById('mobile-toggle');
+    const navLinksMenu = document.getElementById('nav-links');
+
+    // Sticky Header Shrink
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }, { passive: true });
+
+    // Mobile Menu Toggle
+    if (mobileToggle && navLinksMenu) {
+      mobileToggle.addEventListener('click', () => {
+        const isOpen = navLinksMenu.classList.toggle('mobile-open');
+        mobileToggle.setAttribute('aria-expanded', isOpen);
         sound.playClick();
-      };
-      strip.appendChild(thumb);
-    });
+      });
 
-    renderGalleryImage();
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    sound.playChirp(700, 0.08);
-  }
-
-  function setGalleryIndex(index) {
-    const gallery = projectGalleries[currentGalleryKey];
-    if (!gallery) return;
-    if (index < 0) index = gallery.images.length - 1;
-    if (index >= gallery.images.length) index = 0;
-    currentGalleryIndex = index;
-
-    // Update active thumb
-    const thumbs = document.querySelectorAll('.thumb-item');
-    thumbs.forEach((t, i) => {
-      t.classList.toggle('active', i === index);
-      if (i === index) t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    });
-
-    renderGalleryImage();
-  }
-
-  function renderGalleryImage() {
-    const gallery = projectGalleries[currentGalleryKey];
-    if (!gallery) return;
-    const item = gallery.images[currentGalleryIndex];
-
-    const mainImg = document.getElementById('gallery-main-img');
-    const caption = document.getElementById('gallery-caption');
-    const counter = document.getElementById('gallery-counter');
-
-    mainImg.src = item.src;
-    caption.textContent = item.caption;
-    counter.textContent = `${currentGalleryIndex + 1} / ${gallery.images.length}`;
-  }
-
-  function closeGallery() {
-    const modal = document.getElementById('gallery-modal');
-    if (modal) {
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-      sound.playClick();
+      // Close menu when clicking nav link
+      navLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          navLinksMenu.classList.remove('mobile-open');
+          mobileToggle.setAttribute('aria-expanded', false);
+        });
+      });
     }
+
+    // ScrollSpy for Active Links
+    function highlightNav() {
+      const scrollY = window.pageYOffset;
+
+      sections.forEach((current) => {
+        const sectionHeight = current.offsetHeight;
+        const sectionTop = current.offsetTop - 120;
+        const sectionId = current.getAttribute('id');
+
+        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+          navLinks.forEach((link) => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${sectionId}`) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightNav, { passive: true });
+
+    // Smooth Anchor Scroll
+    document.querySelectorAll('a[data-scroll]').forEach((anchor) => {
+      anchor.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('href');
+        if (targetId && targetId.startsWith('#')) {
+          e.preventDefault();
+          const targetEl = document.querySelector(targetId);
+          if (targetEl) {
+            const headerOffset = 80;
+            const elementPosition = targetEl.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: isReducedMotion ? 'auto' : 'smooth'
+            });
+            sound.playClick();
+          }
+        }
+      });
+    });
   }
 
-  // --- 6. Interactive Developer Console (Terminal Drawer) ---
+  // --- 6. Toast Notification System ---
+  function showToast(message, duration = 3000) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-item';
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add('out');
+      setTimeout(() => {
+        if (toast.parentElement) toast.parentElement.removeChild(toast);
+      }, 350);
+    }, duration);
+  }
+
+  // --- 7. Copy Email to Clipboard ---
+  function copyEmail() {
+    navigator.clipboard
+      .writeText(CONFIG.email)
+      .then(() => {
+        sound.playChime();
+        showToast(`Copied ${CONFIG.email} to clipboard! 📋`);
+      })
+      .catch(() => {
+        showToast('Please email directly: ' + CONFIG.email);
+      });
+  }
+
+  // --- 8. Interactive Systems Terminal Drawer [K] ---
   const terminalCommands = {
     help: () => `
-Available commands:
-  <span style="color:#60a5fa">about</span>      - Senior backend engineer background
-  <span style="color:#60a5fa">skills</span>     - Comprehensive technical architecture & languages
-  <span style="color:#60a5fa">projects</span>   - Production & academic software showcase
-  <span style="color:#60a5fa">exp</span>        - Industry internships & engineering experience
-  <span style="color:#60a5fa">certs</span>      - Verified cloud credentials (AWS & IBM)
-  <span style="color:#60a5fa">contact</span>    - Direct communication channels & email
-  <span style="color:#60a5fa">resume</span>     - Open verified curriculum vitae PDF
-  <span style="color:#60a5fa">theme</span>      - Toggle obsidian / studio light palette
-  <span style="color:#60a5fa">clear</span>      - Clear terminal screen
-`,
+Available system commands:
+  • <span class="term-highlight" onclick="PortfolioApp.runTermCmd('about')">about</span>       - Architectural background & engineering core
+  • <span class="term-highlight" onclick="PortfolioApp.runTermCmd('projects')">projects</span>    - Production systems, marketplaces & deep dives
+  • <span class="term-highlight" onclick="PortfolioApp.runTermCmd('experience')">experience</span>  - Internship at LaunchPad Technology & timeline
+  • <span class="term-highlight" onclick="PortfolioApp.runTermCmd('skills')">skills</span>      - Spring Boot, MySQL concurrency, REST APIs
+  • <span class="term-highlight" onclick="PortfolioApp.runTermCmd('contact')">contact</span>     - Transmit email, LinkedIn & GitHub coordinates
+  • <span class="term-highlight" onclick="PortfolioApp.runTermCmd('clear')">clear</span>       - Wipe terminal screen buffer
+  • <span class="term-highlight" onclick="PortfolioApp.runTermCmd('date')">date</span>        - Display active Indian Standard Time`,
+
     about: () => `
-<strong style="color:#f8fafc">Shaikh Noman</strong> — Software Developer Intern at <strong style="color:#60a5fa">LaunchPad Technology</strong> (August 2026 – Present) & Computer Science Engineering Undergraduate (9.32 CGPA).
-Specialized in Java Backend Systems, Spring Boot Microservices, Concurrency, MySQL Schema Optimization, and Generative AI workflows.
-`,
-    skills: () => `
-<strong style="color:#60a5fa">[Backend]</strong>     Java, Spring Boot, Hibernate, JSP/Servlet, Node.js, Express, REST APIs
-<strong style="color:#34d399">[Databases]</strong>   MySQL (Indexes, ACID, Stored Procedures), MongoDB
-<strong style="color:#f472b6">[Frontend]</strong>    React.js, JavaScript (ES6+), HTML5, CSS3, Modern UI Systems
-<strong style="color:#fbbf24">[Cloud & AI]</strong>   Google Build with AI, AWS Cloud Foundations, IBM Cloud, Git/GitHub, Maven
-<strong style="color:#a78bfa">[IoT & Hardware]</strong> Arduino UNO, NodeMCU (ESP8266), Python Telemetry
-`,
+<strong class="text-white">SHAIKH NOMAN</strong> — Software Developer & Backend Systems Architect
+Current Role: Software Developer Intern at LaunchPad Technology (Aug 2026 – Present)
+Academic Record: B.Tech Computer Science & Engineering (9.32 CGPA)
+Location: Surat, Gujarat, India (UTC +05:30)
+
+Specialization:
+Engineering thread-safe Java services in Spring Boot, designing normalized 3NF MySQL schemas with explicit composite indexing, and eliminating concurrency race conditions.`,
+
     projects: () => `
-1. <strong style="color:#60a5fa">BookMyEvent</strong>: Enterprise event ticket booking platform with real-time seat lock and payment simulation.
-2. <strong style="color:#60a5fa">SpotAdz</strong>: Billboard advertising booking marketplace with advertiser & administrative portals.
-3. <strong style="color:#60a5fa">Coding Craft</strong>: Interactive coding portal with real-time browser preview tutorials.
-4. <strong style="color:#60a5fa">Smart Home System</strong>: Multi-sensor IoT monitoring framework with real-time hazard alerts.
-`,
-    exp: () => `
-• <strong style="color:#34d399">Software Developer Intern</strong> @ LaunchPad Technology (<span style="color:#60a5fa">Aug 2026 – Present</span>)
-  Architecting backend services, full-stack application development, API integrations, and system scalability.
-• <strong style="color:#f8fafc">Java Developer Intern</strong> @ Royal Technosoft Pvt. Ltd. (Dec 2024 – Apr 2025)
-  Database modeling, Java web apps, backend logic & API implementation.
-• <strong style="color:#f8fafc">MERN Stack Intern</strong> @ LaunchPad Technology (Jun 2024 – Jul 2024)
-  Full stack web development, REST integration, debugging & quality assurance.
-`,
-    certs: () => `
-• <strong style="color:#60a5fa">Google for Developers: Build with AI Bootcamp</strong> (ID: 2026H2S09BWAIBAHM-P00226 | Sep 2026)
-• <strong style="color:#60a5fa">ISRO: Bharatiya Antariksh Hackathon 2026</strong> (ID: 2026H2SO6BAH-P00396 | ISRO & Hack2skill)
-• <strong style="color:#60a5fa">AWS Academy Graduate: Cloud Foundations</strong> (Issued Oct 2025) — Credly Verified
-• <strong style="color:#60a5fa">IBM Cloud Computing Fundamentals</strong> (Issued Sep 2025) — Credly Verified
-`,
+<strong class="text-white">Flagship Production Systems:</strong>
+1. <strong>SpotAdz</strong> — Commercial OOH Billboard Advertising Marketplace
+   [Spring Boot 3, MySQL, Date-Collision Prevention, B2B GST Invoicing]
+   Deep Dive: <a href="Screenshots/spotadz.html" class="text-accent underline">Screenshots/spotadz.html</a>
+
+2. <strong>BookMyEvent</strong> — High-Concurrency Event Ticketing Ecosystem
+   [Spring Boot 3, MySQL, Transient Seat Lock, Dynamic QR Verification]
+   Deep Dive: <a href="Screenshots/bookmyevent.html" class="text-accent underline">Screenshots/bookmyevent.html</a>
+
+3. <strong>Coding Craft</strong> — Interactive Web Learning Playground
+   [HTML5, CSS3 Architecture, JavaScript ES6+, Code Playground]
+   Live App: <a href="https://nomaan2288.github.io/Coding-Craft/" target="_blank" class="text-accent underline">nomaan2288.github.io/Coding-Craft/</a>
+
+4. <strong>Smart Home Safety</strong> — Multi-Sensor Hardware IoT Telemetry
+   [NodeMCU ESP8266, C++, Python, Alert Protocols, Published Paper]
+   Research Paper: <a href="IoT/Smart Home Safety & Awareness System .pdf" target="_blank" class="text-accent underline">Smart Home Safety.pdf</a>`,
+
+    skills: () => `
+<strong class="text-white">Engineering Arsenal:</strong>
+• <strong>Backend & Systems:</strong> Java 17/21, Spring Boot 3, Spring Data JPA, Hibernate ORM, Multithreading, HikariCP.
+• <strong>Databases & Storage:</strong> MySQL, 3NF Normalization, Indexing Optimization, ACID Transactions, Concurrency Locks.
+• <strong>Contract APIs & Web:</strong> RESTful APIs, DTO Pattern, JSON Schemas, HTML5/CSS3, Modern Vanilla JavaScript (ES6+).
+• <strong>Cloud & Hardware:</strong> Git/GitHub, Postman, AWS Cloud, IBM Cloud, NodeMCU ESP8266, Arduino C++, GenAI Workflows.`,
+
+    experience: () => `
+<strong class="text-white">Experience & Academics:</strong>
+• <strong>Software Developer Intern @ LaunchPad Technology</strong> (Aug 2026 – Present)
+  Architecting Spring Boot backend services, optimizing MySQL database schemas, and building RESTful microservices.
+• <strong>B.Tech in Computer Science & Engineering</strong> (2022 – 2026)
+  9.32 CGPA, Gold-standard distinction across 8 engineering semesters.`,
+
     contact: () => `
-Email:    <a href="mailto:shaikhnoman0652@gmail.com" style="color:#60a5fa">shaikhnoman0652@gmail.com</a>
-GitHub:   <a href="https://github.com/Nomaan2288" target="_blank" style="color:#60a5fa">github.com/Nomaan2288</a>
-LinkedIn: <a href="https://www.linkedin.com/in/shaikh-noman-m2288" target="_blank" style="color:#60a5fa">linkedin.com/in/shaikh-noman-m2288</a>
-Location: Gujarat, India (UTC +5:30)
-`,
-    resume: () => {
-      window.open('Resume/Noman Resume.pdf', '_blank');
-      return 'Opening Noman Resume.pdf in new tab...';
-    },
-    theme: () => {
-      toggleTheme();
-      return 'Toggled active interface color scheme.';
-    },
-    sudo: () => 'Permission denied: Visitors do not have root privileges, but you are welcome to hire me!',
-    date: () => new Date().toLocaleString()
+<strong class="text-white">Transmission Channels:</strong>
+• Email: <span class="text-accent">${CONFIG.email}</span>
+• GitHub: <a href="https://github.com/Nomaan2288" target="_blank" class="text-accent">github.com/Nomaan2288</a>
+• LinkedIn: <a href="https://linkedin.com/in/shaikh-noman" target="_blank" class="text-accent">linkedin.com/in/shaikh-noman</a>
+• Verified Resume: <a href="Resume/Noman Resume.pdf" target="_blank" class="text-accent">Noman Resume.pdf</a>`,
+
+    date: () => `Current Local IST: ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })}`,
+
+    sudo: () => `<span style="color:#f43f5e">Access denied: Visitors are restricted from root elevation, but you are welcome to hire Shaikh Noman!</span>`
   };
 
   function initTerminal() {
@@ -332,14 +486,13 @@ Location: Gujarat, India (UTC +5:30)
     const input = document.getElementById('terminal-cli-input');
     const output = document.getElementById('terminal-output');
 
-    if (!input || !output) return;
+    if (!modal || !input || !output) return;
 
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         const raw = input.value.trim();
         const cmd = raw.toLowerCase();
         input.value = '';
-
         if (!raw) return;
 
         sound.playClick();
@@ -352,16 +505,16 @@ Location: Gujarat, India (UTC +5:30)
         const line = document.createElement('div');
         line.style.marginBottom = '12px';
 
-        const prompt = `<div style="color:#94a3b8; font-size:0.8rem; margin-bottom:2px;"><span style="color:#3b82f6">guest@shaikh-noman</span>:<span style="color:#10b981">~</span>$ ${raw}</div>`;
+        const prompt = `<div style="color:#64748b; font-size:0.78rem; margin-bottom:2px;"><span style="color:#8fcaff">guest@shaikh-noman</span>:<span style="color:#34d399">~</span>$ ${raw}</div>`;
 
         let resp = '';
         if (terminalCommands[cmd]) {
           resp = typeof terminalCommands[cmd] === 'function' ? terminalCommands[cmd]() : terminalCommands[cmd];
         } else {
-          resp = `<span style="color:#f43f5e">Command not recognized: '${raw}'. Type <span style="color:#60a5fa; cursor:pointer;" onclick="runTermCmd('help')">help</span> for available commands.</span>`;
+          resp = `<span style="color:#f87171">Command not recognized: '${raw}'. Type <span style="color:#8fcaff; cursor:pointer;" onclick="PortfolioApp.runTermCmd('help')">help</span> for available commands.</span>`;
         }
 
-        line.innerHTML = prompt + `<div style="padding-left:8px; border-left: 2px solid rgba(59,130,246,0.3);">${resp}</div>`;
+        line.innerHTML = prompt + `<div style="padding-left:10px; border-left: 2px solid rgba(143,202,255,0.3); color:#d1d7e0;">${resp}</div>`;
         output.appendChild(line);
 
         const body = document.querySelector('.terminal-body');
@@ -382,9 +535,9 @@ Location: Gujarat, India (UTC +5:30)
     if (modal) {
       modal.classList.add('active');
       const input = document.getElementById('terminal-cli-input');
-      if (input) setTimeout(() => input.focus(), 100);
-      sound.playChirp(800, 0.08);
+      if (input) setTimeout(() => input.focus(), 120);
       document.body.style.overflow = 'hidden';
+      sound.playChime();
     }
   }
 
@@ -397,320 +550,48 @@ Location: Gujarat, India (UTC +5:30)
     }
   }
 
-  // --- 7. Project Filtering System ---
-  function initProjectFilters() {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const projectCards = document.querySelectorAll('.project-card-modern');
-
-    filterBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const cat = btn.getAttribute('data-filter');
-        filterBtns.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        sound.playClick();
-
-        projectCards.forEach((card) => {
-          const cardCat = card.getAttribute('data-category');
-          if (cat === 'all' || cardCat.includes(cat)) {
-            card.style.display = 'flex';
-            setTimeout(() => {
-              card.style.opacity = '1';
-              card.style.transform = 'translateY(0)';
-            }, 30);
-          } else {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(15px)';
-            setTimeout(() => {
-              card.style.display = 'none';
-            }, 250);
-          }
-        });
-      });
-    });
-  }
-
-  // --- 8. Copy Email to Clipboard with Toast ---
-  function showToast(message) {
-    const toast = document.getElementById('toast-feedback');
-    if (!toast) return;
-    toast.querySelector('.toast-msg').textContent = message;
-    toast.classList.add('show');
-    sound.playChirp(900, 0.05);
-
-    clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => {
-      toast.classList.remove('show');
-    }, 2800);
-  }
-
-  function copyEmail() {
-    const email = 'shaikhnoman0652@gmail.com';
-    navigator.clipboard.writeText(email).then(() => {
-      showToast('Copied shaikhnoman0652@gmail.com to clipboard! 📋');
-    }).catch(() => {
-      showToast('Failed to copy. Please use mailto link.');
-    });
-  }
-
-  // --- 9. EmailJS Form Handling & Direct Mail Client ---
-  function setFormField(form, name, value) {
-    let input = form.querySelector(`input[name="${name}"]`);
-    if (!input) {
-      input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = name;
-      form.appendChild(input);
-    }
-    input.value = value;
-  }
-
-  function openMailClient() {
-    const form = document.getElementById('contactForm');
-    const name = form ? (form.querySelector('[name="from_name"]')?.value.trim() || '') : '';
-    const email = form ? (form.querySelector('[name="reply_to"]')?.value.trim() || '') : '';
-    const msg = form ? (form.querySelector('[name="message"]')?.value.trim() || '') : '';
-
-    const subject = encodeURIComponent(name ? `Engineering Discussion — ${name}` : 'Software Engineering Opportunity');
-    const body = encodeURIComponent(`Hi Shaikh Noman,\n\n${msg || 'I would like to discuss an engineering opportunity with you.'}\n\nBest regards,\n${name}\n${email}`);
-    window.location.href = `mailto:shaikhnoman0652@gmail.com?subject=${subject}&body=${body}`;
-  }
-
-  function initEmailForm() {
-    const form = document.getElementById('contactForm');
-    const statusAlert = document.getElementById('form-status-alert');
-    const submitBtn = document.getElementById('form-submit-btn');
-
-    if (!form) return;
-
-    if (window.emailjs) {
-      emailjs.init("8_b-U2usEu90CDWvj");
-    }
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      sound.playClick();
-
-      const fromName = form.querySelector('[name="from_name"]').value.trim();
-      const userEmail = form.querySelector('[name="reply_to"]').value.trim();
-
-      // Ensure user's email is bound to all potential EmailJS template fields
-      setFormField(form, 'reply_to', userEmail);
-      setFormField(form, 'user_email', userEmail);
-      setFormField(form, 'from_email', userEmail);
-      setFormField(form, 'email', userEmail);
-      setFormField(form, 'sender_email', userEmail);
-      setFormField(form, 'to_name', 'Shaikh Noman');
-
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Sending Message...';
-      }
-
-      if (statusAlert) {
-        statusAlert.className = 'form-status-alert';
-        statusAlert.style.display = 'none';
-      }
-
-      if (!window.emailjs) {
-        openMailClient();
-        resetBtn();
-        return;
-      }
-
-      emailjs.sendForm("service_k0f6w2o", "template_5tb4il5", this)
-        .then(() => {
-          if (statusAlert) {
-            statusAlert.className = 'form-status-alert success';
-            statusAlert.innerHTML = '<i class="fas fa-check-circle"></i> <span>Thank you! Your message has been sent successfully. Noman will respond directly to ' + userEmail + '.</span>';
-            statusAlert.style.display = 'flex';
-          }
-          form.reset();
-          showToast('Message sent successfully! 🚀');
-          sound.playChirp(950, 0.12);
-          resetBtn();
-        })
-        .catch((err) => {
-          console.error(err);
-          showError('Unable to send via web gateway. You can send directly via your mail client.');
-          resetBtn();
-        });
-
-      function showError(msg) {
-        if (statusAlert) {
-          statusAlert.className = 'form-status-alert error';
-          statusAlert.innerHTML = `<i class="fas fa-exclamation-triangle"></i> <span>${msg}</span> <button type="button" class="btn btn-sm btn-outline-light ms-2" onclick="PortfolioApp.openMailClient()">Open Mail App</button>`;
-          statusAlert.style.display = 'flex';
-        }
-      }
-
-      function resetBtn() {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Send Message';
-        }
-      }
-    });
-  }
-
-  // --- 10. Scroll Progress, Navbar Scroll & Scroll to Top ---
-  function initScrollBehaviors() {
-    const progressBar = document.querySelector('.scroll-progress-bar');
-    const nav = document.querySelector('.navbar-custom');
-    const scrollTopBtn = document.querySelector('.btn-scroll-top');
-
-    window.addEventListener('scroll', () => {
-      const winScroll = document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
-
-      if (progressBar) progressBar.style.width = `${scrolled}%`;
-
-      if (nav) {
-        nav.classList.toggle('scrolled', winScroll > 40);
-      }
-
-      if (scrollTopBtn) {
-        scrollTopBtn.classList.toggle('visible', winScroll > 400);
-      }
-    }, { passive: true });
-
-    if (scrollTopBtn) {
-      scrollTopBtn.addEventListener('click', () => {
-        sound.playClick();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    }
-
-    // Mobile nav toggle
-    const mobileToggle = document.querySelector('.nav-mobile-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    if (mobileToggle && navLinks) {
-      mobileToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('mobile-open');
-        sound.playClick();
-      });
-
-      navLinks.querySelectorAll('a, button').forEach((link) => {
-        link.addEventListener('click', () => {
-          navLinks.classList.remove('mobile-open');
-        });
-      });
-    }
-
-    // Bespoke Mobile Bottom Dock Navigation & ScrollSpy
-    const dockTabs = document.querySelectorAll('.dock-tab');
-    if (dockTabs.length > 0) {
-      dockTabs.forEach((tab) => {
-        tab.addEventListener('click', (e) => {
-          const targetId = tab.getAttribute('href');
-          const targetElem = document.querySelector(targetId);
-          if (targetElem) {
-            e.preventDefault();
-            sound.playClick();
-            targetElem.scrollIntoView({ behavior: 'smooth' });
-            dockTabs.forEach((t) => t.classList.remove('active'));
-            tab.classList.add('active');
-          }
-        });
-      });
-
-      // Active Section ScrollSpy for Bottom Dock
-      const spySectionIds = ['hero', 'projects', 'skills', 'experience', 'contact'];
-      const spySections = spySectionIds.map((id) => document.getElementById(id)).filter(Boolean);
-
-      window.addEventListener('scroll', () => {
-        const scrollPosition = window.scrollY + window.innerHeight * 0.35;
-        let activeId = 'hero';
-        for (let i = 0; i < spySections.length; i++) {
-          const section = spySections[i];
-          if (section.offsetTop <= scrollPosition) {
-            activeId = section.id;
-          }
-        }
-        dockTabs.forEach((tab) => {
-          const href = tab.getAttribute('href');
-          if (href === `#${activeId}`) {
-            tab.classList.add('active');
-          } else {
-            tab.classList.remove('active');
-          }
-        });
-      }, { passive: true });
-    }
-  }
-
-  // --- 11. Touch Swipe Gesture Handler for Lightbox Gallery ---
-  function initGalleryTouchSwipe() {
-    const stage = document.querySelector('.gallery-stage');
-    if (!stage) return;
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
-
-    stage.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
-    }, { passive: true });
-
-    stage.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      touchEndY = e.changedTouches[0].screenY;
-      const deltaX = touchEndX - touchStartX;
-      const deltaY = touchEndY - touchStartY;
-
-      // Only trigger if horizontal swipe is significantly stronger than vertical scroll
-      if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-        if (deltaX < 0) {
-          // Swipe left -> Next Image
-          setGalleryIndex(currentGalleryIndex + 1);
-          sound.playClick();
-        } else {
-          // Swipe right -> Previous Image
-          setGalleryIndex(currentGalleryIndex - 1);
-          sound.playClick();
-        }
-      }
-    }, { passive: true });
-  }
-
-  // --- 12. Staggered IntersectionObserver Reveal ---
+  // --- 9. Reveal on Scroll (Intersection Observer) ---
   function initScrollReveal() {
-    const reveals = document.querySelectorAll('.reveal-on-scroll');
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          obs.unobserve(entry.target);
-        }
-      });
-    }, {
-      threshold: 0.12,
-      rootMargin: '0px 0px -40px 0px'
-    });
+    const nodes = document.querySelectorAll('.reveal-node');
+    if (!nodes.length) return;
 
-    reveals.forEach((el) => observer.observe(el));
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        root: null,
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px'
+      }
+    );
+
+    nodes.forEach((node) => observer.observe(node));
   }
 
-  // --- 12. Global Keyboard Shortcuts ---
+  // --- 10. Global Keyboard Shortcuts ---
   function initKeyboardShortcuts() {
     window.addEventListener('keydown', (e) => {
-      // Ignore if typing inside input / textarea
+      // Ignore if user is inside an input or textarea
       if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
         if (e.key === 'Escape') {
           closeTerminal();
-          closeGallery();
         }
         return;
       }
 
       // DO NOT intercept when modifier keys (Ctrl, Cmd, Alt) are pressed
-      // This ensures native system & browser shortcuts (Ctrl+C to copy selected text, Ctrl+V, Ctrl+T, Ctrl+K, Cmd+C) work natively without interference
+      // This guarantees native browser shortcuts (Ctrl+C copy text, Ctrl+V, etc.) work without interference
       if (e.ctrlKey || e.metaKey || e.altKey) {
         return;
       }
 
-      // DO NOT trigger single-key shortcut if user has active text selected on the page
+      // DO NOT trigger standalone shortcuts if user has active text selected on the page
       const currentSelection = window.getSelection ? window.getSelection().toString() : '';
       if (currentSelection && currentSelection.trim().length > 0) {
         return;
@@ -718,87 +599,43 @@ Location: Gujarat, India (UTC +5:30)
 
       const key = e.key.toLowerCase();
 
-      if (key === 't') {
+      if (key === 'k') {
         e.preventDefault();
-        toggleTheme();
-      } else if (key === 'k') {
-        e.preventDefault();
-        const term = document.getElementById('terminal-modal');
-        if (term && term.classList.contains('active')) {
+        const modal = document.getElementById('terminal-modal');
+        if (modal && modal.classList.contains('active')) {
           closeTerminal();
         } else {
           openTerminal();
         }
-      } else if (key === 'm') {
-        e.preventDefault();
-        sound.toggle();
       } else if (key === 'c') {
         e.preventDefault();
         copyEmail();
+      } else if (key === 'm') {
+        e.preventDefault();
+        sound.toggle();
       } else if (e.key === 'Escape') {
         closeTerminal();
-        closeGallery();
-      } else if (e.key === 'ArrowLeft') {
-        const modal = document.getElementById('gallery-modal');
-        if (modal && modal.classList.contains('active')) {
-          setGalleryIndex(currentGalleryIndex - 1);
-        }
-      } else if (e.key === 'ArrowRight') {
-        const modal = document.getElementById('gallery-modal');
-        if (modal && modal.classList.contains('active')) {
-          setGalleryIndex(currentGalleryIndex + 1);
-        }
       }
     });
   }
 
-  // --- 13. Expose Public Functions ---
-  window.PortfolioApp = {
-    toggleTheme,
-    toggleSound: () => sound.toggle(),
-    openTerminal,
-    closeTerminal,
-    openGallery,
-    closeGallery,
-    setGalleryIndex,
-    copyEmail,
-    openMailClient,
-    nextGalleryImg: () => setGalleryIndex(currentGalleryIndex + 1),
-    prevGalleryImg: () => setGalleryIndex(currentGalleryIndex - 1)
-  };
-
-  // --- Document Ready Initializer ---
+  // --- 11. Initialization on DOM Ready ---
   document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
-    initButtonInteractions();
-    initTimeClock();
-    initProjectFilters();
-    initEmailForm();
+    initStarfield();
+    initCursor();
+    initLiveClock();
+    initNavigation();
     initTerminal();
-    initScrollBehaviors();
-    initGalleryTouchSwipe();
     initScrollReveal();
     initKeyboardShortcuts();
-
-    // Typed hero loop if Typed.js available
-    const typedTarget = document.getElementById('typed-hero');
-    if (typedTarget && window.Typed) {
-      new Typed('#typed-hero', {
-        strings: [
-          'Java Backend Specialist',
-          'Spring Boot & Microservices',
-          'Full Stack Web Architect',
-          'REST API & Distributed Systems'
-        ],
-        typeSpeed: 60,
-        backSpeed: 30,
-        backDelay: 1800,
-        loop: true,
-        showCursor: true,
-        cursorChar: '_'
-      });
-    }
   });
 
+  // --- 12. Public API Exposure ---
+  window.PortfolioApp = {
+    openTerminal,
+    closeTerminal,
+    runTermCmd: (cmd) => window.runTermCmd && window.runTermCmd(cmd),
+    copyEmail,
+    toggleSound: () => sound.toggle()
+  };
 })();
-

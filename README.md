@@ -1,8 +1,8 @@
-# Shaikh Noman — Senior Software Developer Portfolio
+# Shaikh Noman — Software Developer & Backend Systems Architect
 
 <div align="center">
 
-  [![Live Portfolio](https://img.shields.io/badge/🌐_Live_Portfolio-Visit_Website-6366f1?style=for-the-badge&logo=googlechrome&logoColor=white)](https://nomaan2288.github.io/Portfolio/)
+  [![Live Portfolio](https://img.shields.io/badge/🌐_Live_Portfolio-Visit_Website-8fcaff?style=for-the-badge&logo=googlechrome&logoColor=06080d)](https://nomaan2288.github.io/Portfolio/)
   [![GitHub Profile](https://img.shields.io/badge/GitHub-Nomaan2288-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Nomaan2288)
   [![LinkedIn](https://img.shields.io/badge/LinkedIn-Shaikh_Noman-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/shaikh-noman-m2288)
 
@@ -11,93 +11,59 @@
   **Software Developer Intern @ LaunchPad Technology** • **B.Tech Computer Science & Engineering (9.32 CGPA)**
 
   ```
-  Java • Spring Boot • MySQL • Distributed Systems • REST APIs • React.js • GenAI Workflows
+  Java 17/21 • Spring Boot 3 • MySQL Concurrency • REST APIs • ACID Persistence • GenAI Workflows
   ```
 
 </div>
 
 ---
 
-## ⚡ Architectural Overview
+## ⚡ Celestial Editorial Architecture
 
-A bespoke, production-grade personal developer portfolio engineered with **zero external bloated UI frameworks**, prioritizing maximum Lighthouse performance, fluid motion design, keyboard accessibility, and a dedicated native app-style mobile experience.
+A bespoke, production-grade personal developer portfolio engineered with **zero external bloated CSS frameworks**, synthesized from high-fashion editorial typography and dark cosmic atmosphere (inspired by award-winning portfolios like Aahana Surya and Redoyanul Haque).
 
-- **Frontend Core**: Semantic HTML5, CSS3 Custom Properties (Design Tokens), Vanilla JavaScript (ES6+ Modules).
-- **Mobile Experience**: Bespoke bottom floating glassmorphic navigation dock (`.mobile-bottom-dock`), touch-swipeable screenshot lightbox gallery, and momentum-scroll filter strips.
-- **Audio Haptics**: Native Web Audio API sound synthesis (synthesized click and confirmation chirps without audio file latency).
-- **Interactive Console**: In-browser terminal emulator (`$ open_terminal` / shortcut `[K]`) with interactive CLI commands.
-- **Form Architecture**: Direct user reply-to mapping via EmailJS with client-side validation and native mail app fallbacks.
+- **Visual Ground & Atmosphere**: Deep celestial obsidian void (`#06080d`, `#0a0e17`) with dual luminous accents (ethereal sky-blue `#8fcaff` and radiant violet `#c2a4ff`), custom canvas starfield with drifting cosmic dust, and film grain texture.
+- **Typography Pairing**: High-contrast pairing of **Instrument Serif** (display italic highlights), **Plus Jakarta Sans** (clean geometric sans for high-readability body copy), and **JetBrains Mono** (technical metadata, telemetry, and CLI).
+- **Precision Reticle Cursor**: Snapping interactive reticle cursor that tracks the pointer and magnetically locks/expands over buttons, links, and cards.
+- **Kinetic Marquee Ribbon**: Flowing infinite ticker showcasing core technical proficiencies.
+- **Interactive Systems Terminal [K]**: In-browser CLI emulator supporting system commands (`help`, `about`, `projects`, `experience`, `skills`, `contact`, `clear`, `date`).
+- **Telemetry & Live Clock**: Live Indian Standard Time (IST, UTC+5:30) synchronized with Surat, Gujarat, India.
+- **Audio Ambience Engine**: Web Audio API sound synthesis with synthesized sine and triangle frequency feedback (toggled via `[M]` key or sound button).
 
 ---
 
-## 🚀 Key Production Projects
+## 🚀 Key Production Projects & Case Studies
 
-| Project | Domain | Key Architecture & Capabilities | Gallery / Links |
+| Project | Domain | Architecture Highlights | Documentation / Links |
 | :--- | :--- | :--- | :--- |
-| **BookMyEvent** | Enterprise Backend | Spring Boot, MySQL ACID transactions, real-time seat lock algorithm, OTP password recovery, admin analytics. | [Architecture Deep Dive](Screenshots/bookmyevent.html) |
-| **SpotAdz** | Commercial Marketplace | Spring Boot, role-based access control (RBAC), outdoor billboard availability calendar, invoice ledgers. | [Architecture Deep Dive](Screenshots/spotadz.html) |
-| **Coding Craft** | Frontend & Education | Interactive web coding portal and playground with curated developer tracks. | [Live Portal](https://nomaan2288.github.io/Coding-Craft/) |
-| **Smart Home Safety** | IoT & Embedded | ESP8266 (NodeMCU), Arduino, MQ2 gas telemetry, flame sensor hardware interrupts, buzzer safety triggers. | [Project Specs](IoT/Smart%20Home%20Safety%20&%20Awareness%20System%20.pdf) |
+| **SpotAdz** | Commercial Media Marketplace | Spring Boot 3, MySQL, date collision-free calendar scheduling, multi-tenant RBAC session routing, dynamic B2B GST invoicing & ledgers. | [Read Architecture Deep Dive](Screenshots/spotadz.html) |
+| **BookMyEvent** | High-Concurrency Event Ticketing | Spring Boot 3, MySQL, transient seat-locking concurrency algorithm, OTP password recovery, dynamic cryptographic QR tickets. | [Read Architecture Deep Dive](Screenshots/bookmyevent.html) |
+| **Coding Craft** | Interactive Frontend Education | HTML5, CSS3 Architecture, modern Vanilla JavaScript (ES6+), real-time browser coding playground & curriculum modules. | [Launch Live Portal](https://nomaan2288.github.io/Coding-Craft/) • [GitHub](https://github.com/Nomaan2288/Coding-Craft) |
+| **Smart Home Safety** | Embedded Hardware IoT Telemetry | NodeMCU (ESP8266), C++, Python backend, flame/rain/soil/voltage sensors, automated emergency power cut-off. | [Read Research Paper PDF](IoT/Smart Home Safety%20&%20Awareness%20System%20.pdf) |
 
 ---
 
-## 📜 Verified Engineering Credentials
+## 🛠️ Technical Arsenal
 
-- **Google for Developers & Hack2skill**: *Build with AI Bootcamp, Ahmedabad* (Sep 2026)  
-  👉 [Verify Credential](https://certificate.hack2skill.com/verify/2026H2S09BWAIBAHM-P00226) • [PDF](Certifications/Google-Build-With-AI-Bootcamp-Certificate.pdf)
-- **Indian Space Research Organisation (ISRO)**: *Bharatiya Antariksh Hackathon 2026*  
-  👉 [Verify Credential](https://certificate.hack2skill.com/verify/2026H2S06BAH-P00396) • [PDF](Certifications/ISRO-Antariksh-Hackathon-Certificate.pdf)
-- **AWS Academy**: *Cloud Foundations & Architecture*
-- **IBM SkillsBuild**: *Cloud Computing Specialization*
+- **Back-End & Concurrency**: Java 17/21, Spring Boot 3, Spring Data JPA, Hibernate ORM, Multithreading, HikariCP Connection Pooling, OOP & SOLID Design.
+- **Relational Databases & Storage**: MySQL, 3NF Schema Normalization, Composite Indexing, ACID Transaction Management, Pessimistic/Optimistic Concurrency Locks.
+- **Interface & API Contracts**: Contract-First REST APIs, DTO Segregation, JSON Schemas, Semantic HTML5, Modern CSS Design Tokens, Vanilla JavaScript (ES6+).
+- **Cloud, Tools & IoT**: Git / GitHub, Postman, AWS Cloud, IBM Cloud, NodeMCU (ESP8266), Arduino C++, Generative AI Workflows.
 
 ---
 
-## 📱 Mobile-First Experience Features
+## ⌨️ Global Shortcuts
 
-- **Thumb-Zone Navigation**: Floating dock positioned within natural thumb reach with real-time ScrollSpy section detection.
-- **Touch Gesture Lightbox**: Swipe left and right directly on screenshots with native inertia physics.
-- **Horizontal Scroll Chips**: Project filters and tech stack badges behave like native mobile segmented controls.
-- **Anti-Zoom Optimization**: Input sizing locked at 16px to prevent iOS Safari auto-zoom on field focus.
-
----
-
-## ⌨️ Desktop Power Shortcuts
-
-| Shortcut | Action |
-| :--- | :--- |
-| `[T]` | Toggle Theme (Obsidian Dark / Clean Studio Light) |
-| `[K]` | Launch Developer Terminal Console Drawer |
-| `[M]` | Toggle Interface Audio Haptics |
-| `[C]` | Copy Direct Email to Clipboard |
-| `[ESC]` | Dismiss Active Modal / Drawer / Lightbox |
+- <kbd>K</kbd> — Open/Close Interactive Systems Terminal
+- <kbd>C</kbd> — Copy Contact Email to Clipboard (`shaikhnoman0652@gmail.com`)
+- <kbd>M</kbd> — Toggle Interface Audio Feedback
+- <kbd>Esc</kbd> — Dismiss Terminal Drawer / Overlays
 
 ---
 
-## 🛠️ Local Development & Deployment
-
-This project requires no complex build tools or node compiler steps. Simply clone and serve:
-
-```bash
-# Clone the repository
-git clone https://github.com/Nomaan2288/Portfolio.git
-
-# Navigate to project directory
-cd Portfolio
-
-# Launch locally using Python
-python -m http.server 8000
-
-# Or launch using Node
-npx serve .
-```
-
-Open `http://localhost:8000` in your browser.
-
----
-
-## 📬 Contact & Connect
+## 📬 Contact Coordinates
 
 - **Email**: [shaikhnoman0652@gmail.com](mailto:shaikhnoman0652@gmail.com)
 - **LinkedIn**: [linkedin.com/in/shaikh-noman-m2288](https://www.linkedin.com/in/shaikh-noman-m2288)
 - **GitHub**: [github.com/Nomaan2288](https://github.com/Nomaan2288)
-- **Verified Resume**: [Resume PDF](Resume/Noman%20Resume.pdf)
+- **Verified Resume**: [Resume/Noman Resume.pdf](Resume/Noman%20Resume.pdf)
