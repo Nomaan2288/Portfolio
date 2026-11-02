@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Shaikh Noman — Software Developer & Backend Systems Architect</title>
+    <script>
+      // Single Page Apps for GitHub Pages
+      // Mitigates 404s when navigating directly or refreshing on client routes like /play
+      var path = window.location.pathname;
+      var repo = '/Portfolio';
+      var route = path.startsWith(repo) ? path.slice(repo.length) : path;
+      var search = window.location.search;
+      var hash = window.location.hash;
+      var target = (path.startsWith(repo) ? repo : '') + '/index.html' + (route && route !== '/' ? '#' + route : '') + (search || '') + (hash || '');
+      window.location.replace(target);
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to <a href="./index.html">Shaikh Noman Portfolio</a>...</p>
+  </body>
+</html>
