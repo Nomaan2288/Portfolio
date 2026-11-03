@@ -40,7 +40,7 @@ A bespoke portfolio reconstructed with the exact production architecture, 3D Thr
 | **SpotAdz** | Commercial Media Marketplace | Spring Boot 3, MySQL, date collision-free calendar scheduling, multi-tenant RBAC session routing, dynamic B2B GST invoicing & ledgers. | [Read Architecture Deep Dive](Screenshots/spotadz.html) |
 | **BookMyEvents** | High-Concurrency Event Ticketing | Spring Boot 3, MySQL, transient seat-locking concurrency algorithm, OTP password recovery, dynamic cryptographic QR tickets. | [Read Architecture Deep Dive](Screenshots/bookmyevent.html) |
 | **Coding Craft** | Interactive Frontend Education | HTML5, CSS3 Architecture, modern Vanilla JavaScript (ES6+), real-time browser coding playground & curriculum modules. | [Launch Live Portal](https://nomaan2288.github.io/Coding-Craft/) • [GitHub](https://github.com/Nomaan2288/Coding-Craft) |
-| **Smart Home Safety System** | Embedded Hardware IoT Telemetry | NodeMCU (ESP8266), C++, Python backend, flame/rain/soil/voltage sensors, automated emergency power cut-off. | [Read Research Paper PDF](IoT/Smart Home Safety%20&%20Awareness%20System%20.pdf) |
+| **Smart Home Safety Awarness System** | Embedded Hardware IoT Telemetry | NodeMCU (ESP8266), C++, Python backend, flame/rain/soil/voltage sensors, automated emergency power cut-off. | [Read Research Paper PDF](IoT/Smart Home Safety%20&%20Awareness%20System%20.pdf) |
 
 ---
 
